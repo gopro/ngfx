@@ -1,0 +1,31 @@
+#version 320 es
+precision highp float;
+
+layout (std140, set = 0, binding = 0) uniform UBO_CS {
+	int src0_w, src0_h, src1t_w, src1t_h, dst_w, dst_h;
+}; 
+layout(std430, set = 1, binding = 0) buffer srcBuffer0 {
+	float data[];
+} src0;
+layout(std430, set = 2, binding = 0) buffer srcBuffer1 {
+	float data[];
+} src1t;
+layout(std430, set = 3, binding = 0) buffer dstBuffer {
+	float data[];
+} dst;
+
+#define VEC4_LOAD(src, j) vec4(src.data[j], src.data[j+1], src.data[j+2], src.data[j+3])
+
+void main() {
+	int dst_col = int(gl_GlobalInvocationID[0]), dst_row = int(gl_GlobalInvocationID[1]);
+	int dst_offset = dst_row * dst_w + dst_col;
+	int src0_offset = dst_row * src0_w;
+	int src1t_offset = dst_col * src1t_h;
+	float c = 0.0f;
+	for (int j = 0; j < src0_w; j += 4) {
+		vec4 a0 = VEC4_LOAD(src0, src0_offset + j), b0 = VEC4_LOAD(src1t, src1t_offset + j);
+		c += dot(a0, b0);
+	}
+	dst.data[dst_offset] = c;
+}
+
