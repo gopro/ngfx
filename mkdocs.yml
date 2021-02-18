@@ -1,0 +1,9 @@
+site_name: NGFX API Documentation
+repo_url: https://github.com/gopro/ngfx
+theme:
+  name: 'material'
+markdown_extensions:
+  - admonition
+nav:
+  - Home: /ngfx/api/Classes
+  - Classes: /ngfx/api/Classes
