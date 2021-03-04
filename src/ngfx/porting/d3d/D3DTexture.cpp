@@ -305,7 +305,7 @@ void D3DTexture::uploadFn(D3DCommandList* cmdList, void* data, uint32_t size, D3
 
 void D3DTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y, uint32_t z, int32_t w, int32_t h, int32_t d, int32_t arrayLayers) {
     auto& copyCommandList = ctx->d3dCopyCommandList;
-
+    const bool flipY = true;
     if (w == -1) w = this->w;
     if (h == -1) h = this->h;
     if (d == -1) d = this->d;
@@ -328,11 +328,13 @@ void D3DTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y, uin
     ctx->d3dCommandQueue.waitIdle();
 
     void* readbackBufferPtr = readbackBuffer.map();
-    uint8_t* srcPtr = (uint8_t*)readbackBufferPtr, * dstPtr = (uint8_t*)data;
+    uint8_t *srcPtr = (uint8_t*)readbackBufferPtr, 
+        *dstPtr = &((uint8_t*)data)[ flipY ? (uint64_t(h)-1) * rowSizeBytes : 0 ];
+    int64_t dstInc = flipY ? -rowSizeBytes : rowSizeBytes;
     for (uint32_t j = 0; j < uint32_t(h); j++) {
         memcpy(dstPtr, srcPtr, rowSizeBytes);
         srcPtr += footprint.Footprint.RowPitch;
-        dstPtr += rowSizeBytes;
+        dstPtr += dstInc;
     }
     readbackBuffer.unmap();
 }
