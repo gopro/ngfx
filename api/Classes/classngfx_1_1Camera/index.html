@@ -1,0 +1,685 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>ngfx::Camera - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ngfxcamera" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ngfx::Camera
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/docs" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Namespaces" class="md-nav__link">
+        Namespaces
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Modules" class="md-nav__link">
+        Modules
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Files" class="md-nav__link">
+        Files
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Pages" class="md-nav__link">
+        Related Pages
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Examples" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#public-functions" class="md-nav__link">
+    Public Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-attributes" class="md-nav__link">
+    Public Attributes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-functions-documentation" class="md-nav__link">
+    Public Functions Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Public Functions Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-camera" class="md-nav__link">
+    function ~Camera
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-onkey" class="md-nav__link">
+    function onKey
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-onscroll" class="md-nav__link">
+    function onScroll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-oncursorpos" class="md-nav__link">
+    function onCursorPos
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-onmousebutton" class="md-nav__link">
+    function onMouseButton
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-update" class="md-nav__link">
+    function update
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-attributes-documentation" class="md-nav__link">
+    Public Attributes Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Public Attributes Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-panx" class="md-nav__link">
+    variable panX
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-pany" class="md-nav__link">
+    variable panY
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-zoom" class="md-nav__link">
+    variable zoom
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-yaw" class="md-nav__link">
+    variable yaw
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-pitch" class="md-nav__link">
+    variable pitch
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-roll" class="md-nav__link">
+    variable roll
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-viewmat" class="md-nav__link">
+    variable viewMat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-state" class="md-nav__link">
+    variable state
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-x" class="md-nav__link">
+    variable x
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-y" class="md-nav__link">
+    variable y
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="ngfxcamera">ngfx::Camera</h1>
+<p>Inherits from InputListener</p>
+<h2 id="public-functions">Public Functions</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>virtual</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#function-~camera">~Camera</a></strong>()</td>
+</tr>
+<tr>
+<td>void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#function-onkey">onKey</a></strong>(KeyCode keyCode, InputAction keyAction) override</td>
+</tr>
+<tr>
+<td>void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#function-onscroll">onScroll</a></strong>(double xoffset, double yoffset) override</td>
+</tr>
+<tr>
+<td>void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#function-oncursorpos">onCursorPos</a></strong>(double x, double y) override</td>
+</tr>
+<tr>
+<td>void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#function-onmousebutton">onMouseButton</a></strong>(MouseButton button, InputAction action) override</td>
+</tr>
+<tr>
+<td>void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#function-update">update</a></strong>()</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-attributes">Public Attributes</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>float</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-panx">panX</a></strong></td>
+</tr>
+<tr>
+<td>float</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-pany">panY</a></strong></td>
+</tr>
+<tr>
+<td>float</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-zoom">zoom</a></strong></td>
+</tr>
+<tr>
+<td>float</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-yaw">yaw</a></strong></td>
+</tr>
+<tr>
+<td>float</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-pitch">pitch</a></strong></td>
+</tr>
+<tr>
+<td>float</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-roll">roll</a></strong></td>
+</tr>
+<tr>
+<td>mat4</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-viewmat">viewMat</a></strong></td>
+</tr>
+<tr>
+<td>uint32_t</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-state">state</a></strong></td>
+</tr>
+<tr>
+<td>double</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-x">x</a></strong></td>
+</tr>
+<tr>
+<td>double</td>
+<td><strong><a href="/api/Classes/classngfx_1_1Camera/#variable-y">y</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-functions-documentation">Public Functions Documentation</h2>
+<h3 id="function-camera">function ~Camera</h3>
+<pre><code class="language-cpp">inline virtual ~Camera()
+</code></pre>
+<p>Destroy the camera </p>
+<h3 id="function-onkey">function onKey</h3>
+<pre><code class="language-cpp">void onKey(
+    KeyCode keyCode,
+    InputAction keyAction
+) override
+</code></pre>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>keyCode</strong> The key code </li>
+<li><strong>keyAction</strong> The key action </li>
+</ul>
+<p>Handle key press input event </p>
+<h3 id="function-onscroll">function onScroll</h3>
+<pre><code class="language-cpp">void onScroll(
+    double xoffset,
+    double yoffset
+) override
+</code></pre>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>xoffset</strong> The relative x offset </li>
+<li><strong>yoffset</strong> The relative y offset </li>
+</ul>
+<p>Handle scroll input event </p>
+<h3 id="function-oncursorpos">function onCursorPos</h3>
+<pre><code class="language-cpp">void onCursorPos(
+    double x,
+    double y
+) override
+</code></pre>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>x</strong> The relative x movement </li>
+<li><strong>y</strong> The relative y movement </li>
+</ul>
+<p>Handle cursor move event </p>
+<h3 id="function-onmousebutton">function onMouseButton</h3>
+<pre><code class="language-cpp">void onMouseButton(
+    MouseButton button,
+    InputAction action
+) override
+</code></pre>
+<p><strong>Parameters</strong>: </p>
+<ul>
+<li><strong>button</strong> The mouse button </li>
+<li><strong>action</strong> The mouse button event </li>
+</ul>
+<p>Handle mouse button event </p>
+<h3 id="function-update">function update</h3>
+<pre><code class="language-cpp">void update()
+</code></pre>
+<p>Update camera parameters This function is called once per frame </p>
+<h2 id="public-attributes-documentation">Public Attributes Documentation</h2>
+<h3 id="variable-panx">variable panX</h3>
+<pre><code class="language-cpp">float panX = 0.0f;
+</code></pre>
+<p>The camera pan along the x axis </p>
+<h3 id="variable-pany">variable panY</h3>
+<pre><code class="language-cpp">float panY = 0.0f;
+</code></pre>
+<p>The camera pan along the y axis </p>
+<h3 id="variable-zoom">variable zoom</h3>
+<pre><code class="language-cpp">float zoom = 0.0f;
+</code></pre>
+<p>The camera zoom </p>
+<h3 id="variable-yaw">variable yaw</h3>
+<pre><code class="language-cpp">float yaw = 0.0f;
+</code></pre>
+<p>The camera yaw (radians) </p>
+<h3 id="variable-pitch">variable pitch</h3>
+<pre><code class="language-cpp">float pitch = 0.0f;
+</code></pre>
+<p>The camera pitch (radians) </p>
+<h3 id="variable-roll">variable roll</h3>
+<pre><code class="language-cpp">float roll = 0.0f;
+</code></pre>
+<p>The camera roll (radians) The camera view matrix </p>
+<h3 id="variable-viewmat">variable viewMat</h3>
+<pre><code class="language-cpp">mat4 viewMat;
+</code></pre>
+<h3 id="variable-state">variable state</h3>
+<pre><code class="language-cpp">uint32_t state = 0;
+</code></pre>
+<h3 id="variable-x">variable x</h3>
+<pre><code class="language-cpp">double x = -1.0;
+</code></pre>
+<h3 id="variable-y">variable y</h3>
+<pre><code class="language-cpp">double y = -1.0;
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 09:47:41 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

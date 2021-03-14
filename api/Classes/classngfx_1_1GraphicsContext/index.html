@@ -1,0 +1,947 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>ngfx::GraphicsContext - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ngfxgraphicscontext" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ngfx::GraphicsContext
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/docs" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Namespaces" class="md-nav__link">
+        Namespaces
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Modules" class="md-nav__link">
+        Modules
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Files" class="md-nav__link">
+        Files
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Pages" class="md-nav__link">
+        Related Pages
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/api/Examples" class="md-nav__link">
+        Examples
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#public-classes" class="md-nav__link">
+    Public Classes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-functions" class="md-nav__link">
+    Public Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-attributes" class="md-nav__link">
+    Public Attributes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protected-attributes" class="md-nav__link">
+    Protected Attributes
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-functions-documentation" class="md-nav__link">
+    Public Functions Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Public Functions Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-create" class="md-nav__link">
+    function create
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-graphicscontext" class="md-nav__link">
+    function ~GraphicsContext
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-setsurface" class="md-nav__link">
+    function setSurface
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-beginrenderpass" class="md-nav__link">
+    function beginRenderPass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-beginoffscreenrenderpass" class="md-nav__link">
+    function beginOffscreenRenderPass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-endrenderpass" class="md-nav__link">
+    function endRenderPass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-endoffscreenrenderpass" class="md-nav__link">
+    function endOffscreenRenderPass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-submit" class="md-nav__link">
+    function submit
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-drawcommandbuffer" class="md-nav__link">
+    function drawCommandBuffer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-copycommandbuffer" class="md-nav__link">
+    function copyCommandBuffer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-computecommandbuffer" class="md-nav__link">
+    function computeCommandBuffer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-getrenderpass" class="md-nav__link">
+    function getRenderPass
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#public-attributes-documentation" class="md-nav__link">
+    Public Attributes Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Public Attributes Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-device" class="md-nav__link">
+    variable device
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-numdrawcommandbuffers" class="md-nav__link">
+    variable numDrawCommandBuffers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-swapchainframebuffers" class="md-nav__link">
+    variable swapchainFramebuffers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-queue" class="md-nav__link">
+    variable queue
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-defaultrenderpass" class="md-nav__link">
+    variable defaultRenderPass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-defaultoffscreenrenderpass" class="md-nav__link">
+    variable defaultOffscreenRenderPass
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-swapchain" class="md-nav__link">
+    variable swapchain
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-surface" class="md-nav__link">
+    variable surface
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-currentimageindex" class="md-nav__link">
+    variable currentImageIndex
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-framefences" class="md-nav__link">
+    variable frameFences
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-computefence" class="md-nav__link">
+    variable computeFence
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-presentcompletesemaphore" class="md-nav__link">
+    variable presentCompleteSemaphore
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-rendercompletesemaphore" class="md-nav__link">
+    variable renderCompleteSemaphore
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-pipelinecache" class="md-nav__link">
+    variable pipelineCache
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-surfaceformat" class="md-nav__link">
+    variable surfaceFormat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-defaultoffscreensurfaceformat" class="md-nav__link">
+    variable defaultOffscreenSurfaceFormat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-depthformat" class="md-nav__link">
+    variable depthFormat
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-clearcolor" class="md-nav__link">
+    variable clearColor
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protected-attributes-documentation" class="md-nav__link">
+    Protected Attributes Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Protected Attributes Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variable-debug" class="md-nav__link">
+    variable debug
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-enabledepthstencil" class="md-nav__link">
+    variable enableDepthStencil
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="ngfxgraphicscontext">ngfx::GraphicsContext</h1>
+<h2 id="public-classes">Public Classes</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>struct</td>
+<td><strong><a href="/api/Classes/structngfx_1_1GraphicsContext_1_1AttachmentDescription/">AttachmentDescription</a></strong></td>
+</tr>
+<tr>
+<td>struct</td>
+<td><strong><a href="/api/Classes/structngfx_1_1GraphicsContext_1_1RenderPassConfig/">RenderPassConfig</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-functions">Public Functions</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1GraphicsContext/">GraphicsContext</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-create">create</a></strong>(const char * appName, bool enableDepthStencil =false, bool debug =true)</td>
+</tr>
+<tr>
+<td>virtual</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-~graphicscontext">~GraphicsContext</a></strong>()</td>
+</tr>
+<tr>
+<td>virtual void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-setsurface">setSurface</a></strong>(<a href="/api/Classes/classngfx_1_1Surface/">Surface</a> * surface) =0</td>
+</tr>
+<tr>
+<td>virtual void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-beginrenderpass">beginRenderPass</a></strong>(<a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> * commandBuffer, <a href="/api/Classes/classngfx_1_1Graphics/">Graphics</a> * graphics)</td>
+</tr>
+<tr>
+<td>virtual void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-beginoffscreenrenderpass">beginOffscreenRenderPass</a></strong>(<a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> * commandBuffer, <a href="/api/Classes/classngfx_1_1Graphics/">Graphics</a> * graphics, <a href="/api/Classes/classngfx_1_1Framebuffer/">Framebuffer</a> * outputFramebuffer)</td>
+</tr>
+<tr>
+<td>virtual void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-endrenderpass">endRenderPass</a></strong>(<a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> * commandBuffer, <a href="/api/Classes/classngfx_1_1Graphics/">Graphics</a> * graphics)</td>
+</tr>
+<tr>
+<td>virtual void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-endoffscreenrenderpass">endOffscreenRenderPass</a></strong>(<a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> * commandBuffer, <a href="/api/Classes/classngfx_1_1Graphics/">Graphics</a> * graphics)</td>
+</tr>
+<tr>
+<td>virtual void</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-submit">submit</a></strong>(<a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> * commandBuffer)</td>
+</tr>
+<tr>
+<td>virtual <a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-drawcommandbuffer">drawCommandBuffer</a></strong>(int32_t index =-1) =0</td>
+</tr>
+<tr>
+<td>virtual <a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-copycommandbuffer">copyCommandBuffer</a></strong>() =0</td>
+</tr>
+<tr>
+<td>virtual <a href="/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-computecommandbuffer">computeCommandBuffer</a></strong>() =0</td>
+</tr>
+<tr>
+<td>virtual <a href="/api/Classes/classngfx_1_1RenderPass/">RenderPass</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#function-getrenderpass">getRenderPass</a></strong>(<a href="/api/Classes/structngfx_1_1GraphicsContext_1_1RenderPassConfig/">RenderPassConfig</a> config) =0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-attributes">Public Attributes</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1Device/">Device</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-device">device</a></strong></td>
+</tr>
+<tr>
+<td>uint32_t</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-numdrawcommandbuffers">numDrawCommandBuffers</a></strong></td>
+</tr>
+<tr>
+<td>std::vector&lt; <a href="/api/Classes/classngfx_1_1Framebuffer/">Framebuffer</a> * &gt;</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-swapchainframebuffers">swapchainFramebuffers</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1Queue/">Queue</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-queue">queue</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1RenderPass/">RenderPass</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-defaultrenderpass">defaultRenderPass</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1RenderPass/">RenderPass</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-defaultoffscreenrenderpass">defaultOffscreenRenderPass</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1Swapchain/">Swapchain</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-swapchain">swapchain</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1Surface/">Surface</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-surface">surface</a></strong></td>
+</tr>
+<tr>
+<td>uint32_t</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-currentimageindex">currentImageIndex</a></strong></td>
+</tr>
+<tr>
+<td>std::vector&lt; <a href="/api/Classes/classngfx_1_1Fence/">Fence</a> * &gt;</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-framefences">frameFences</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1Fence/">Fence</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-computefence">computeFence</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1Semaphore/">Semaphore</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-presentcompletesemaphore">presentCompleteSemaphore</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1Semaphore/">Semaphore</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-rendercompletesemaphore">renderCompleteSemaphore</a></strong></td>
+</tr>
+<tr>
+<td><a href="/api/Classes/classngfx_1_1PipelineCache/">PipelineCache</a> *</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-pipelinecache">pipelineCache</a></strong></td>
+</tr>
+<tr>
+<td>PixelFormat</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-surfaceformat">surfaceFormat</a></strong></td>
+</tr>
+<tr>
+<td>PixelFormat</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-defaultoffscreensurfaceformat">defaultOffscreenSurfaceFormat</a></strong></td>
+</tr>
+<tr>
+<td>PixelFormat</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-depthformat">depthFormat</a></strong></td>
+</tr>
+<tr>
+<td>glm::vec4</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-clearcolor">clearColor</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="protected-attributes">Protected Attributes</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bool</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-debug">debug</a></strong></td>
+</tr>
+<tr>
+<td>bool</td>
+<td><strong><a href="/api/Classes/classngfx_1_1GraphicsContext/#variable-enabledepthstencil">enableDepthStencil</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="public-functions-documentation">Public Functions Documentation</h2>
+<h3 id="function-create">function create</h3>
+<pre><code class="language-cpp">static GraphicsContext * create(
+    const char * appName,
+    bool enableDepthStencil =false,
+    bool debug =true
+)
+</code></pre>
+<h3 id="function-graphicscontext">function ~GraphicsContext</h3>
+<pre><code class="language-cpp">inline virtual ~GraphicsContext()
+</code></pre>
+<h3 id="function-setsurface">function setSurface</h3>
+<pre><code class="language-cpp">virtual void setSurface(
+    Surface * surface
+) =0
+</code></pre>
+<h3 id="function-beginrenderpass">function beginRenderPass</h3>
+<pre><code class="language-cpp">inline virtual void beginRenderPass(
+    CommandBuffer * commandBuffer,
+    Graphics * graphics
+)
+</code></pre>
+<h3 id="function-beginoffscreenrenderpass">function beginOffscreenRenderPass</h3>
+<pre><code class="language-cpp">inline virtual void beginOffscreenRenderPass(
+    CommandBuffer * commandBuffer,
+    Graphics * graphics,
+    Framebuffer * outputFramebuffer
+)
+</code></pre>
+<h3 id="function-endrenderpass">function endRenderPass</h3>
+<pre><code class="language-cpp">inline virtual void endRenderPass(
+    CommandBuffer * commandBuffer,
+    Graphics * graphics
+)
+</code></pre>
+<h3 id="function-endoffscreenrenderpass">function endOffscreenRenderPass</h3>
+<pre><code class="language-cpp">inline virtual void endOffscreenRenderPass(
+    CommandBuffer * commandBuffer,
+    Graphics * graphics
+)
+</code></pre>
+<h3 id="function-submit">function submit</h3>
+<pre><code class="language-cpp">inline virtual void submit(
+    CommandBuffer * commandBuffer
+)
+</code></pre>
+<h3 id="function-drawcommandbuffer">function drawCommandBuffer</h3>
+<pre><code class="language-cpp">virtual CommandBuffer * drawCommandBuffer(
+    int32_t index =-1
+) =0
+</code></pre>
+<h3 id="function-copycommandbuffer">function copyCommandBuffer</h3>
+<pre><code class="language-cpp">virtual CommandBuffer * copyCommandBuffer() =0
+</code></pre>
+<h3 id="function-computecommandbuffer">function computeCommandBuffer</h3>
+<pre><code class="language-cpp">virtual CommandBuffer * computeCommandBuffer() =0
+</code></pre>
+<h3 id="function-getrenderpass">function getRenderPass</h3>
+<pre><code class="language-cpp">virtual RenderPass * getRenderPass(
+    RenderPassConfig config
+) =0
+</code></pre>
+<h2 id="public-attributes-documentation">Public Attributes Documentation</h2>
+<h3 id="variable-device">variable device</h3>
+<pre><code class="language-cpp">Device * device;
+</code></pre>
+<h3 id="variable-numdrawcommandbuffers">variable numDrawCommandBuffers</h3>
+<pre><code class="language-cpp">uint32_t numDrawCommandBuffers = 0;
+</code></pre>
+<h3 id="variable-swapchainframebuffers">variable swapchainFramebuffers</h3>
+<pre><code class="language-cpp">std::vector&lt; Framebuffer * &gt; swapchainFramebuffers;
+</code></pre>
+<h3 id="variable-queue">variable queue</h3>
+<pre><code class="language-cpp">Queue * queue = nullptr;
+</code></pre>
+<h3 id="variable-defaultrenderpass">variable defaultRenderPass</h3>
+<pre><code class="language-cpp">RenderPass * defaultRenderPass = nullptr;
+</code></pre>
+<h3 id="variable-defaultoffscreenrenderpass">variable defaultOffscreenRenderPass</h3>
+<pre><code class="language-cpp">RenderPass * defaultOffscreenRenderPass = nullptr;
+</code></pre>
+<h3 id="variable-swapchain">variable swapchain</h3>
+<pre><code class="language-cpp">Swapchain * swapchain = nullptr;
+</code></pre>
+<h3 id="variable-surface">variable surface</h3>
+<pre><code class="language-cpp">Surface * surface = nullptr;
+</code></pre>
+<h3 id="variable-currentimageindex">variable currentImageIndex</h3>
+<pre><code class="language-cpp">uint32_t currentImageIndex = 0;
+</code></pre>
+<h3 id="variable-framefences">variable frameFences</h3>
+<pre><code class="language-cpp">std::vector&lt; Fence * &gt; frameFences;
+</code></pre>
+<h3 id="variable-computefence">variable computeFence</h3>
+<pre><code class="language-cpp">Fence * computeFence = nullptr;
+</code></pre>
+<h3 id="variable-presentcompletesemaphore">variable presentCompleteSemaphore</h3>
+<pre><code class="language-cpp">Semaphore * presentCompleteSemaphore = nullptr;
+</code></pre>
+<h3 id="variable-rendercompletesemaphore">variable renderCompleteSemaphore</h3>
+<pre><code class="language-cpp">Semaphore * renderCompleteSemaphore = nullptr;
+</code></pre>
+<h3 id="variable-pipelinecache">variable pipelineCache</h3>
+<pre><code class="language-cpp">PipelineCache * pipelineCache = nullptr;
+</code></pre>
+<h3 id="variable-surfaceformat">variable surfaceFormat</h3>
+<pre><code class="language-cpp">PixelFormat surfaceFormat = PIXELFORMAT_UNDEFINED;
+</code></pre>
+<h3 id="variable-defaultoffscreensurfaceformat">variable defaultOffscreenSurfaceFormat</h3>
+<pre><code class="language-cpp">PixelFormat defaultOffscreenSurfaceFormat = PIXELFORMAT_UNDEFINED;
+</code></pre>
+<h3 id="variable-depthformat">variable depthFormat</h3>
+<pre><code class="language-cpp">PixelFormat depthFormat = PIXELFORMAT_UNDEFINED;
+</code></pre>
+<h3 id="variable-clearcolor">variable clearColor</h3>
+<pre><code class="language-cpp">glm::vec4 clearColor = glm::vec4(0.0f);
+</code></pre>
+<h2 id="protected-attributes-documentation">Protected Attributes Documentation</h2>
+<h3 id="variable-debug">variable debug</h3>
+<pre><code class="language-cpp">bool debug = false;
+</code></pre>
+<h3 id="variable-enabledepthstencil">variable enableDepthStencil</h3>
+<pre><code class="language-cpp">bool enableDepthStencil = false;
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 09:47:41 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>
