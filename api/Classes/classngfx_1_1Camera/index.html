@@ -381,7 +381,7 @@
                 
                 
                 <h1 id="ngfxcamera">ngfx::Camera</h1>
-<p>Inherits from InputListener</p>
+<p>Inherits from <a href="/ngfx/api/Classes/classngfx_1_1InputListener/">ngfx::InputListener</a></p>
 <h2 id="public-functions">Public Functions</h2>
 <table>
 <thead>
@@ -396,19 +396,19 @@
 <td><strong><a href="/ngfx/api/Classes/classngfx_1_1Camera/#function-~camera">~Camera</a></strong>()</td>
 </tr>
 <tr>
-<td>void</td>
+<td>virtual void</td>
 <td><strong><a href="/ngfx/api/Classes/classngfx_1_1Camera/#function-onkey">onKey</a></strong>(KeyCode keyCode, InputAction keyAction) override</td>
 </tr>
 <tr>
-<td>void</td>
+<td>virtual void</td>
 <td><strong><a href="/ngfx/api/Classes/classngfx_1_1Camera/#function-onscroll">onScroll</a></strong>(double xoffset, double yoffset) override</td>
 </tr>
 <tr>
-<td>void</td>
+<td>virtual void</td>
 <td><strong><a href="/ngfx/api/Classes/classngfx_1_1Camera/#function-oncursorpos">onCursorPos</a></strong>(double x, double y) override</td>
 </tr>
 <tr>
-<td>void</td>
+<td>virtual void</td>
 <td><strong><a href="/ngfx/api/Classes/classngfx_1_1Camera/#function-onmousebutton">onMouseButton</a></strong>(MouseButton button, InputAction action) override</td>
 </tr>
 <tr>
@@ -474,7 +474,7 @@
 </code></pre>
 <p>Destroy the camera </p>
 <h3 id="function-onkey">function onKey</h3>
-<pre><code class="language-cpp">void onKey(
+<pre><code class="language-cpp">virtual void onKey(
     KeyCode keyCode,
     InputAction keyAction
 ) override
@@ -484,9 +484,10 @@
 <li><strong>keyCode</strong> The key code </li>
 <li><strong>keyAction</strong> The key action </li>
 </ul>
+<p><strong>Reimplements</strong>: <a href="/ngfx/api/Classes/classngfx_1_1InputListener/#function-onkey">ngfx::InputListener::onKey</a></p>
 <p>Handle key press input event </p>
 <h3 id="function-onscroll">function onScroll</h3>
-<pre><code class="language-cpp">void onScroll(
+<pre><code class="language-cpp">virtual void onScroll(
     double xoffset,
     double yoffset
 ) override
@@ -496,9 +497,10 @@
 <li><strong>xoffset</strong> The relative x offset </li>
 <li><strong>yoffset</strong> The relative y offset </li>
 </ul>
+<p><strong>Reimplements</strong>: <a href="/ngfx/api/Classes/classngfx_1_1InputListener/#function-onscroll">ngfx::InputListener::onScroll</a></p>
 <p>Handle scroll input event </p>
 <h3 id="function-oncursorpos">function onCursorPos</h3>
-<pre><code class="language-cpp">void onCursorPos(
+<pre><code class="language-cpp">virtual void onCursorPos(
     double x,
     double y
 ) override
@@ -508,9 +510,10 @@
 <li><strong>x</strong> The relative x movement </li>
 <li><strong>y</strong> The relative y movement </li>
 </ul>
+<p><strong>Reimplements</strong>: <a href="/ngfx/api/Classes/classngfx_1_1InputListener/#function-oncursorpos">ngfx::InputListener::onCursorPos</a></p>
 <p>Handle cursor move event </p>
 <h3 id="function-onmousebutton">function onMouseButton</h3>
-<pre><code class="language-cpp">void onMouseButton(
+<pre><code class="language-cpp">virtual void onMouseButton(
     MouseButton button,
     InputAction action
 ) override
@@ -520,6 +523,7 @@
 <li><strong>button</strong> The mouse button </li>
 <li><strong>action</strong> The mouse button event </li>
 </ul>
+<p><strong>Reimplements</strong>: <a href="/ngfx/api/Classes/classngfx_1_1InputListener/#function-onmousebutton">ngfx::InputListener::onMouseButton</a></p>
 <p>Handle mouse button event </p>
 <h3 id="function-update">function update</h3>
 <pre><code class="language-cpp">void update()
@@ -563,7 +567,7 @@
 <pre><code class="language-cpp">double y = -1.0;
 </code></pre>
 <hr />
-<p>Updated on 14 March 2021 at 11:27:44 Pacific Daylight Time</p>
+<p>Updated on 14 March 2021 at 11:29:17 Pacific Daylight Time</p>
                 
                   
                 
