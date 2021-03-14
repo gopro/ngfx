@@ -1,0 +1,592 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>src/ngfx/porting/windows/WWindow.cpp - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srcngfxportingwindowswwindowcpp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              src/ngfx/porting/windows/WWindow.cpp
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defines" class="md-nav__link">
+    Defines
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions-documentation" class="md-nav__link">
+    Functions Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-windowproc" class="md-nav__link">
+    function windowProc
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#macro-documentation" class="md-nav__link">
+    Macro Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Macro Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-window_class_name" class="md-nav__link">
+    define WINDOW_CLASS_NAME
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    Source code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="srcngfxportingwindowswwindowcpp">src/ngfx/porting/windows/WWindow.cpp</h1>
+<h2 id="functions">Functions</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LRESULT</td>
+<td><strong><a href="/ngfx/api/Files/WWindow_8cpp/#function-windowproc">windowProc</a></strong>(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="defines">Defines</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/WWindow_8cpp/#define-window_class_name">WINDOW_CLASS_NAME</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions-documentation">Functions Documentation</h2>
+<h3 id="function-windowproc">function windowProc</h3>
+<pre><code class="language-cpp">LRESULT windowProc(
+    HWND hWnd,
+    UINT message,
+    WPARAM wParam,
+    LPARAM lParam
+)
+</code></pre>
+<h2 id="macro-documentation">Macro Documentation</h2>
+<h3 id="define-window_class_name">define WINDOW_CLASS_NAME</h3>
+<pre><code class="language-cpp">#define WINDOW_CLASS_NAME L&quot;WWindow&quot;
+</code></pre>
+<h2 id="source-code">Source code</h2>
+<pre><code class="language-cpp">/*
+ * Copyright 2020 GoPro Inc.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#include &quot;ngfx/porting/windows/WWindow.h&quot;
+#include &quot;ngfx/core/DebugUtil.h&quot;
+#include &quot;ngfx/core/StringUtil.h&quot;
+#include &lt;windowsx.h&gt;
+using namespace ngfx;
+#define WINDOW_CLASS_NAME L&quot;WWindow&quot;
+
+WWindow::Monitor WWindow::getPrimaryMonitor() {
+  DWORD adapterIndex, displayIndex;
+  DISPLAY_DEVICEW adapter, display;
+  // get primary adapter
+  for (adapterIndex = 0;; adapterIndex++) {
+    ZeroMemory(&amp;adapter, sizeof(adapter));
+    adapter.cb = sizeof(adapter);
+    if (!EnumDisplayDevicesW(NULL, adapterIndex, &amp;adapter, 0))
+      break;
+    if (!(adapter.StateFlags &amp; DISPLAY_DEVICE_ACTIVE))
+      continue;
+    if (adapter.StateFlags &amp; DISPLAY_DEVICE_PRIMARY_DEVICE)
+      break;
+  }
+  // get primary display
+  for (displayIndex = 0;; displayIndex++) {
+    ZeroMemory(&amp;display, sizeof(display));
+    display.cb = sizeof(display);
+    if (!EnumDisplayDevicesW(adapter.DeviceName, displayIndex, &amp;display, 0))
+      break;
+    if (display.StateFlags &amp; DISPLAY_DEVICE_ACTIVE)
+      break;
+  }
+  return {adapter, display};
+}
+
+WWindow::VideoMode WWindow::getVideoMode(const Monitor &amp;monitor) {
+  DEVMODEW dm;
+  ZeroMemory(&amp;dm, sizeof(dm));
+  dm.dmSize = sizeof(dm);
+  EnumDisplaySettingsW(monitor.adapter.DeviceName, ENUM_CURRENT_SETTINGS, &amp;dm);
+  return {int(dm.dmPelsWidth), int(dm.dmPelsHeight)};
+}
+
+LRESULT windowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+  WWindow *thiz =
+      reinterpret_cast&lt;WWindow *&gt;(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+  switch (message) {
+  case WM_CREATE: {
+    LPCREATESTRUCT pCreateStruct = reinterpret_cast&lt;LPCREATESTRUCT&gt;(lParam);
+    SetWindowLongPtr(hWnd, GWLP_USERDATA,
+                     reinterpret_cast&lt;LONG_PTR&gt;(pCreateStruct-&gt;lpCreateParams));
+    return 0;
+  }
+  case WM_KEYDOWN: {
+    if (thiz-&gt;onKey)
+      thiz-&gt;onKey(KeyCode(wParam), PRESS);
+    return 0;
+  }
+  case WM_KEYUP: {
+    if (thiz-&gt;onKey)
+      thiz-&gt;onKey(KeyCode(wParam), RELEASE);
+    return 0;
+  }
+  case WM_MOUSEWHEEL: {
+    if (thiz-&gt;onScroll)
+      thiz-&gt;onScroll(0.0, GET_WHEEL_DELTA_WPARAM(wParam) / double(WHEEL_DELTA));
+    return 0;
+  }
+  case WM_LBUTTONDOWN: {
+    if (thiz-&gt;onMouseButton)
+      thiz-&gt;onMouseButton(MOUSE_BUTTON_LEFT, InputAction(PRESS));
+    return 0;
+  }
+  case WM_MBUTTONDOWN: {
+    if (thiz-&gt;onMouseButton)
+      thiz-&gt;onMouseButton(MOUSE_BUTTON_MIDDLE, InputAction(PRESS));
+    return 0;
+  }
+  case WM_RBUTTONDOWN: {
+    if (thiz-&gt;onMouseButton)
+      thiz-&gt;onMouseButton(MOUSE_BUTTON_RIGHT, InputAction(PRESS));
+    return 0;
+  }
+  case WM_LBUTTONUP: {
+    if (thiz-&gt;onMouseButton)
+      thiz-&gt;onMouseButton(MOUSE_BUTTON_LEFT, InputAction(RELEASE));
+    return 0;
+  }
+  case WM_MBUTTONUP: {
+    if (thiz-&gt;onMouseButton)
+      thiz-&gt;onMouseButton(MOUSE_BUTTON_MIDDLE, InputAction(RELEASE));
+    return 0;
+  }
+  case WM_RBUTTONUP: {
+    if (thiz-&gt;onMouseButton)
+      thiz-&gt;onMouseButton(MOUSE_BUTTON_RIGHT, InputAction(RELEASE));
+    return 0;
+  }
+  case WM_MOUSEMOVE: {
+    if (thiz-&gt;onCursorPos)
+      thiz-&gt;onCursorPos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+    return 0;
+  }
+  case WM_PAINT: {
+    thiz-&gt;onUpdate();
+    thiz-&gt;onPaint();
+    return 0;
+  }
+  case WM_DESTROY:
+    PostQuitMessage(0);
+    return 0;
+  }
+  return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+void WWindow::registerWindowClass() {
+  WNDCLASSEXW wc = {};
+  wc.cbSize = sizeof(wc);
+  wc.style = CS_HREDRAW | CS_VREDRAW;
+  wc.lpfnWndProc = (WNDPROC)windowProc;
+  wc.hInstance = GetModuleHandleW(NULL);
+  wc.hCursor = LoadCursorW(NULL, IDC_ARROW);
+  wc.lpszClassName = WINDOW_CLASS_NAME;
+  wc.hIcon = HICON(LoadImageW(NULL, IDI_APPLICATION, IMAGE_ICON, 0, 0,
+                              LR_DEFAULTSIZE | LR_SHARED));
+  if (!RegisterClassExW(&amp;wc))
+    NGFX_ERR(&quot;&quot;);
+}
+
+void WWindow::createWindow(int w, int h, const char *title) {
+  const wchar_t *wTitle = StringUtil::toWString(title).c_str();
+  auto &amp;hWnd = d3dSurface.v;
+  RECT rect = {0, 0, w, h};
+  DWORD style = WS_POPUP; // WS_OVERLAPPED_WINDOW;
+  AdjustWindowRect(&amp;rect, style, FALSE);
+  hWnd = CreateWindow(WINDOW_CLASS_NAME, wTitle, style, 0, 0,
+                      rect.right - rect.left, rect.bottom - rect.top, nullptr,
+                      nullptr, GetModuleHandleW(NULL), this);
+  assert(hWnd);
+  ShowWindow(hWnd, SW_SHOWNA);
+}
+
+void WWindow::getFramebufferSize(int *w, int *h) {
+  RECT area;
+  auto &amp;hWnd = d3dSurface.v;
+  GetClientRect(hWnd, &amp;area);
+  if (w)
+    *w = area.right;
+  if (h)
+    *h = area.bottom;
+}
+void WWindow::create(GraphicsContext *graphicsContext, const char *title,
+                     std::function&lt;void(Window *thiz)&gt; onWindowCreated, int w,
+                     int h) {
+  this-&gt;w = w;
+  this-&gt;h = h;
+  auto monitor = getPrimaryMonitor();
+  auto videoMode = getVideoMode(monitor);
+  if (w == Window::DISPLAY_WIDTH)
+    w = videoMode.width;
+  if (h == Window::DISPLAY_HEIGHT)
+    h = videoMode.height;
+  registerWindowClass();
+  createWindow(w, h, title);
+  getFramebufferSize(&amp;w, &amp;h);
+  this-&gt;w = w;
+  this-&gt;h = h;
+  d3dSurface.w = w;
+  d3dSurface.h = h;
+  surface = &amp;d3dSurface;
+  onWindowCreated(this);
+}
+
+bool WWindow::shouldClose() { return (msg.message == WM_QUIT); }
+
+void WWindow::pollEvents() {
+  if (PeekMessage(&amp;msg, NULL, 0, 0, PM_REMOVE)) {
+    TranslateMessage(&amp;msg);
+    DispatchMessage(&amp;msg);
+  }
+}
+WWindow::~WWindow() {}
+void WWindow::destroySurface() {}
+
+Window *Window::create(GraphicsContext *graphicsContext, const char *title,
+                       std::function&lt;void(Window *thiz)&gt; onWindowCreated, int w,
+                       int h) {
+  auto window = new WWindow();
+  window-&gt;create(graphicsContext, title, onWindowCreated, w, h);
+  return window;
+}
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 11:32:35 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -520,6 +520,7 @@
                 
                 
                 <h1 id="ngfxgraphicscontext">ngfx::GraphicsContext</h1>
+<p>Inherited by <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphicsContext/">ngfx::D3DGraphicsContext</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphicsContext/">ngfx::MTLGraphicsContext</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKGraphicsContext/">ngfx::VKGraphicsContext</a></p>
 <h2 id="public-classes">Public Classes</h2>
 <table>
 <thead>
@@ -716,6 +717,7 @@
     Surface * surface
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphicsContext/#function-setsurface">ngfx::MTLGraphicsContext::setSurface</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphicsContext/#function-setsurface">ngfx::D3DGraphicsContext::setSurface</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKGraphicsContext/#function-setsurface">ngfx::VKGraphicsContext::setSurface</a></p>
 <h3 id="function-beginrenderpass">function beginRenderPass</h3>
 <pre><code class="language-cpp">inline virtual void beginRenderPass(
     CommandBuffer * commandBuffer,
@@ -746,22 +748,27 @@
     CommandBuffer * commandBuffer
 )
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphicsContext/#function-submit">ngfx::MTLGraphicsContext::submit</a></p>
 <h3 id="function-drawcommandbuffer">function drawCommandBuffer</h3>
 <pre><code class="language-cpp">virtual CommandBuffer * drawCommandBuffer(
     int32_t index =-1
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphicsContext/#function-drawcommandbuffer">ngfx::MTLGraphicsContext::drawCommandBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphicsContext/#function-drawcommandbuffer">ngfx::D3DGraphicsContext::drawCommandBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKGraphicsContext/#function-drawcommandbuffer">ngfx::VKGraphicsContext::drawCommandBuffer</a></p>
 <h3 id="function-copycommandbuffer">function copyCommandBuffer</h3>
 <pre><code class="language-cpp">virtual CommandBuffer * copyCommandBuffer() =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphicsContext/#function-copycommandbuffer">ngfx::MTLGraphicsContext::copyCommandBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphicsContext/#function-copycommandbuffer">ngfx::D3DGraphicsContext::copyCommandBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKGraphicsContext/#function-copycommandbuffer">ngfx::VKGraphicsContext::copyCommandBuffer</a></p>
 <h3 id="function-computecommandbuffer">function computeCommandBuffer</h3>
 <pre><code class="language-cpp">virtual CommandBuffer * computeCommandBuffer() =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphicsContext/#function-computecommandbuffer">ngfx::MTLGraphicsContext::computeCommandBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphicsContext/#function-computecommandbuffer">ngfx::D3DGraphicsContext::computeCommandBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKGraphicsContext/#function-computecommandbuffer">ngfx::VKGraphicsContext::computeCommandBuffer</a></p>
 <h3 id="function-getrenderpass">function getRenderPass</h3>
 <pre><code class="language-cpp">virtual RenderPass * getRenderPass(
     RenderPassConfig config
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphicsContext/#function-getrenderpass">ngfx::MTLGraphicsContext::getRenderPass</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphicsContext/#function-getrenderpass">ngfx::D3DGraphicsContext::getRenderPass</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKGraphicsContext/#function-getrenderpass">ngfx::VKGraphicsContext::getRenderPass</a></p>
 <h2 id="public-attributes-documentation">Public Attributes Documentation</h2>
 <h3 id="variable-device">variable device</h3>
 <pre><code class="language-cpp">Device * device;
@@ -825,7 +832,7 @@
 <pre><code class="language-cpp">bool enableDepthStencil = false;
 </code></pre>
 <hr />
-<p>Updated on 14 March 2021 at 11:29:17 Pacific Daylight Time</p>
+<p>Updated on 14 March 2021 at 11:32:31 Pacific Daylight Time</p>
                 
                   
                 

@@ -1,0 +1,622 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>src/ngfx/porting/d3d/D3DGraphics.cpp - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srcngfxportingd3dd3dgraphicscpp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              src/ngfx/porting/d3d/D3DGraphics.cpp
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions-documentation" class="md-nav__link">
+    Functions Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-resourcebarrier" class="md-nav__link">
+    function resourceBarrier
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    Source code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="srcngfxportingd3dd3dgraphicscpp">src/ngfx/porting/d3d/D3DGraphics.cpp</h1>
+<h2 id="functions">Functions</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>void</td>
+<td><strong><a href="/ngfx/api/Files/D3DGraphics_8cpp/#function-resourcebarrier">resourceBarrier</a></strong>(<a href="/ngfx/api/Classes/classngfx_1_1D3DCommandList/">D3DCommandList</a> * cmdList, <a href="/ngfx/api/Classes/structngfx_1_1D3DFramebuffer_1_1D3DAttachment/">D3DFramebuffer::D3DAttachment</a> * p, D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState, UINT subresourceIndex =D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions-documentation">Functions Documentation</h2>
+<h3 id="function-resourcebarrier">function resourceBarrier</h3>
+<pre><code class="language-cpp">static void resourceBarrier(
+    D3DCommandList * cmdList,
+    D3DFramebuffer::D3DAttachment * p,
+    D3D12_RESOURCE_STATES currentState,
+    D3D12_RESOURCE_STATES newState,
+    UINT subresourceIndex =D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES
+)
+</code></pre>
+<h2 id="source-code">Source code</h2>
+<pre><code class="language-cpp">/*
+ * Copyright 2020 GoPro Inc.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#include &quot;ngfx/porting/d3d/D3DGraphics.h&quot;
+#include &quot;ngfx/porting/d3d/D3DBuffer.h&quot;
+#include &quot;ngfx/porting/d3d/D3DCommandList.h&quot;
+#include &quot;ngfx/porting/d3d/D3DComputePipeline.h&quot;
+#include &quot;ngfx/porting/d3d/D3DDebugUtil.h&quot;
+#include &quot;ngfx/porting/d3d/D3DGraphicsPipeline.h&quot;
+#include &quot;ngfx/porting/d3d/D3DTexture.h&quot;
+#include &lt;glm/gtc/type_ptr.hpp&gt;
+using namespace ngfx;
+
+void D3DGraphics::bindComputePipeline(CommandBuffer *commandBuffer,
+                                      ComputePipeline *computePipeline) {
+  auto d3dCtx = d3d(ctx);
+
+  auto d3dCommandList = d3d(commandBuffer)-&gt;v;
+  auto d3dComputePipeline = d3d(computePipeline);
+  D3D_TRACE(d3dCommandList-&gt;SetPipelineState(
+      d3dComputePipeline-&gt;d3dPipelineState.Get()));
+  D3D_TRACE(d3dCommandList-&gt;SetComputeRootSignature(
+      d3dComputePipeline-&gt;d3dRootSignature.Get()));
+  auto cbvSrvUavHeap = d3dCtx-&gt;d3dCbvSrvUavDescriptorHeap.v.Get();
+  auto samplerDescriptorHeap = d3dCtx-&gt;d3dSamplerDescriptorHeap.v.Get();
+  std::vector&lt;ID3D12DescriptorHeap *&gt; descriptorHeaps = {cbvSrvUavHeap,
+                                                         samplerDescriptorHeap};
+  D3D_TRACE(d3dCommandList-&gt;SetDescriptorHeaps(UINT(descriptorHeaps.size()),
+                                               descriptorHeaps.data()));
+  currentPipeline = computePipeline;
+}
+
+void D3DGraphics::bindGraphicsPipeline(CommandBuffer *commandBuffer,
+                                       GraphicsPipeline *graphicsPipeline) {
+  auto d3dCommandList = d3d(commandBuffer)-&gt;v;
+  auto d3dGraphicsPipeline = d3d(graphicsPipeline);
+  D3D_TRACE(d3dCommandList-&gt;SetPipelineState(
+      d3dGraphicsPipeline-&gt;d3dPipelineState.Get()));
+  D3D_TRACE(d3dCommandList-&gt;IASetPrimitiveTopology(
+      d3dGraphicsPipeline-&gt;d3dPrimitiveTopology));
+  D3D_TRACE(d3dCommandList-&gt;SetGraphicsRootSignature(
+      d3dGraphicsPipeline-&gt;d3dRootSignature.Get()));
+  currentPipeline = graphicsPipeline;
+}
+
+void D3DGraphics::bindUniformBuffer(CommandBuffer *commandBuffer,
+                                    Buffer *buffer, uint32_t binding,
+                                    ShaderStageFlags shaderStageFlags) {
+  auto d3dCommandList = d3d(commandBuffer)-&gt;v.Get();
+  auto d3dBuffer = d3d(buffer);
+  if (D3DGraphicsPipeline *graphicsPipeline =
+          dynamic_cast&lt;D3DGraphicsPipeline *&gt;(currentPipeline)) {
+    D3D_TRACE(d3dCommandList-&gt;SetGraphicsRootConstantBufferView(
+        binding, d3dBuffer-&gt;v-&gt;GetGPUVirtualAddress()));
+  } else if (D3DComputePipeline *computePipeline =
+                 dynamic_cast&lt;D3DComputePipeline *&gt;(currentPipeline)) {
+    D3D_TRACE(d3dCommandList-&gt;SetComputeRootConstantBufferView(
+        binding, d3dBuffer-&gt;v-&gt;GetGPUVirtualAddress()));
+  }
+}
+
+void D3DGraphics::bindIndexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
+                                  IndexFormat indexFormat) {
+  auto d3dBuffer = d3d(buffer);
+  D3D12_INDEX_BUFFER_VIEW ib;
+  ib.BufferLocation = d3dBuffer-&gt;v-&gt;GetGPUVirtualAddress();
+  ib.Format = DXGI_FORMAT(indexFormat);
+  ib.SizeInBytes = d3dBuffer-&gt;size;
+  d3d(commandBuffer)-&gt;v-&gt;IASetIndexBuffer(&amp;ib);
+}
+
+void D3DGraphics::bindVertexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
+                                   uint32_t location, uint32_t stride) {
+  auto d3dBuffer = d3d(buffer);
+  D3D12_VERTEX_BUFFER_VIEW vb;
+  vb.BufferLocation = d3dBuffer-&gt;v-&gt;GetGPUVirtualAddress();
+  vb.StrideInBytes = stride;
+  vb.SizeInBytes = d3dBuffer-&gt;size;
+  d3d(commandBuffer)-&gt;v-&gt;IASetVertexBuffers(location, 1, &amp;vb);
+}
+
+void D3DGraphics::bindStorageBuffer(CommandBuffer *commandBuffer,
+                                    Buffer *buffer, uint32_t binding,
+                                    ShaderStageFlags shaderStageFlags) {
+  auto d3dCommandList = d3d(commandBuffer)-&gt;v.Get();
+  auto d3dBuffer = d3d(buffer);
+  // TODO encode access flags as read-only or read-write
+  if (D3DGraphicsPipeline *graphicsPipeline =
+          dynamic_cast&lt;D3DGraphicsPipeline *&gt;(currentPipeline)) {
+    D3D_TRACE(d3dCommandList-&gt;SetGraphicsRootShaderResourceView(
+        binding, d3dBuffer-&gt;v-&gt;GetGPUVirtualAddress()));
+  } else if (D3DComputePipeline *computePipeline =
+                 dynamic_cast&lt;D3DComputePipeline *&gt;(currentPipeline)) {
+    D3D_TRACE(d3dCommandList-&gt;SetComputeRootUnorderedAccessView(
+        binding, d3dBuffer-&gt;v-&gt;GetGPUVirtualAddress()));
+  }
+}
+
+void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
+                              uint32_t set) {
+  auto d3dCommandList = d3d(commandBuffer)-&gt;v.Get();
+  auto d3dTexture = d3d(texture);
+  if (D3DGraphicsPipeline *graphicsPipeline =
+          dynamic_cast&lt;D3DGraphicsPipeline *&gt;(currentPipeline)) {
+    D3D_TRACE(d3dCommandList-&gt;SetGraphicsRootDescriptorTable(
+        set, d3dTexture-&gt;defaultSrvDescriptor.gpuHandle));
+    D3D_TRACE(d3dCommandList-&gt;SetGraphicsRootDescriptorTable(
+        set + 1, d3dTexture-&gt;defaultSamplerDescriptor.gpuHandle));
+  } else if (D3DComputePipeline *computePipeline =
+                 dynamic_cast&lt;D3DComputePipeline *&gt;(currentPipeline)) {
+    D3D_TRACE(d3dCommandList-&gt;SetComputeRootDescriptorTable(
+        set, d3dTexture-&gt;defaultSrvDescriptor.gpuHandle));
+    D3D_TRACE(d3dCommandList-&gt;SetComputeRootDescriptorTable(
+        set + 1, d3dTexture-&gt;defaultSamplerDescriptor.gpuHandle));
+  }
+}
+
+static void resourceBarrier(
+    D3DCommandList *cmdList, D3DFramebuffer::D3DAttachment *p,
+    D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState,
+    UINT subresourceIndex = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES) {
+  if (p-&gt;texture)
+    p-&gt;texture-&gt;resourceBarrier(cmdList, newState, subresourceIndex);
+  else {
+    CD3DX12_RESOURCE_BARRIER resourceBarrier =
+        CD3DX12_RESOURCE_BARRIER::Transition(p-&gt;resource, currentState,
+                                             newState, p-&gt;subresourceIndex);
+    D3D_TRACE(cmdList-&gt;v-&gt;ResourceBarrier(1, &amp;resourceBarrier));
+  }
+}
+void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
+                                  RenderPass *renderPass,
+                                  Framebuffer *framebuffer,
+                                  glm::vec4 clearColor, float clearDepth,
+                                  uint32_t clearStencil) {
+  auto d3dCtx = d3d(ctx);
+  auto d3dRenderPass = d3d(renderPass);
+  auto d3dCommandList = d3d(commandBuffer);
+  auto d3dFramebuffer = d3d(framebuffer);
+  auto &amp;colorAttachments = d3dFramebuffer-&gt;colorAttachments;
+  auto &amp;resolveAttachments = d3dFramebuffer-&gt;resolveAttachments;
+  auto depthStencilAttachment = d3dFramebuffer-&gt;depthStencilAttachment;
+  if (!resolveAttachments.empty()) {
+    for (auto &amp;colorAttachment : colorAttachments) {
+      resourceBarrier(d3dCommandList, colorAttachment,
+                      D3D12_RESOURCE_STATE_RESOLVE_SOURCE,
+                      D3D12_RESOURCE_STATE_RENDER_TARGET,
+                      colorAttachment-&gt;subresourceIndex);
+    }
+  } else {
+    for (auto &amp;colorAttachment : colorAttachments) {
+      resourceBarrier(d3dCommandList, colorAttachment,
+                      d3dRenderPass-&gt;finalResourceState,
+                      d3dRenderPass-&gt;initialResourceState,
+                      colorAttachment-&gt;subresourceIndex);
+    }
+  }
+  auto cbvSrvUavHeap = d3dCtx-&gt;d3dCbvSrvUavDescriptorHeap.v.Get();
+  auto samplerDescriptorHeap = d3dCtx-&gt;d3dSamplerDescriptorHeap.v.Get();
+  std::vector&lt;ID3D12DescriptorHeap *&gt; descriptorHeaps = {cbvSrvUavHeap,
+                                                         samplerDescriptorHeap};
+  D3D_TRACE(d3dCommandList-&gt;v-&gt;SetDescriptorHeaps(UINT(descriptorHeaps.size()),
+                                                  descriptorHeaps.data()));
+  std::vector&lt;D3D12_CPU_DESCRIPTOR_HANDLE&gt; colorAttachmentHandles(
+      colorAttachments.size());
+  for (uint32_t j = 0; j &lt; colorAttachments.size(); j++)
+    colorAttachmentHandles[j] = colorAttachments[j]-&gt;cpuDescriptor;
+  D3D_TRACE(d3dCommandList-&gt;v-&gt;OMSetRenderTargets(
+      UINT(colorAttachments.size()), colorAttachmentHandles.data(), FALSE,
+      depthStencilAttachment ? &amp;depthStencilAttachment-&gt;cpuDescriptor
+                             : nullptr));
+  for (auto &amp;colorAttachment : colorAttachments) {
+    D3D_TRACE(d3dCommandList-&gt;v-&gt;ClearRenderTargetView(
+        colorAttachment-&gt;cpuDescriptor, glm::value_ptr(clearColor), 0,
+        nullptr));
+  }
+  if (depthStencilAttachment) {
+    D3D_TRACE(d3dCommandList-&gt;v-&gt;ClearDepthStencilView(
+        depthStencilAttachment-&gt;cpuDescriptor,
+        D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, clearDepth,
+        clearStencil, 0, nullptr));
+  }
+  currentRenderPass = renderPass;
+  currentFramebuffer = framebuffer;
+}
+
+void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {
+  auto d3dCommandList = d3d(commandBuffer);
+  auto d3dFramebuffer = d3d(currentFramebuffer);
+  auto &amp;colorAttachments = d3dFramebuffer-&gt;colorAttachments;
+  auto &amp;resolveAttachments = d3dFramebuffer-&gt;resolveAttachments;
+  auto d3dRenderPass = d3d(currentRenderPass);
+  if (!resolveAttachments.empty()) {
+    for (uint32_t j = 0; j &lt; colorAttachments.size(); j++) {
+      auto &amp;colorAttachment = colorAttachments[j];
+      auto &amp;resolveAttachment = resolveAttachments[j];
+      resourceBarrier(d3dCommandList, colorAttachment,
+                      D3D12_RESOURCE_STATE_RENDER_TARGET,
+                      D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
+      resourceBarrier(d3dCommandList, resolveAttachment,
+                      D3D12_RESOURCE_STATE_PRESENT,
+                      D3D12_RESOURCE_STATE_RESOLVE_DEST);
+      D3D_TRACE(d3dCommandList-&gt;v-&gt;ResolveSubresource(
+          resolveAttachment-&gt;resource, resolveAttachment-&gt;subresourceIndex,
+          colorAttachment-&gt;resource, colorAttachment-&gt;subresourceIndex,
+          colorAttachment-&gt;format));
+      resourceBarrier(d3dCommandList, resolveAttachment,
+                      D3D12_RESOURCE_STATE_RESOLVE_DEST,
+                      d3dRenderPass-&gt;finalResourceState,
+                      resolveAttachment-&gt;subresourceIndex);
+    }
+  } else {
+    for (auto &amp;colorAttachment : colorAttachments) {
+      resourceBarrier(
+          d3dCommandList, colorAttachment, d3dRenderPass-&gt;initialResourceState,
+          d3dRenderPass-&gt;finalResourceState, colorAttachment-&gt;subresourceIndex);
+    }
+  }
+  currentRenderPass = nullptr;
+  currentFramebuffer = nullptr;
+}
+
+void D3DGraphics::dispatch(CommandBuffer *commandBuffer, uint32_t groupCountX,
+                           uint32_t groupCountY, uint32_t groupCountZ,
+                           uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
+                           uint32_t threadsPerGroupZ) {
+  D3D_TRACE(
+      d3d(commandBuffer)-&gt;v-&gt;Dispatch(groupCountX, groupCountY, groupCountZ));
+}
+
+void D3DGraphics::draw(CommandBuffer *cmdBuffer, uint32_t vertexCount,
+                       uint32_t instanceCount, uint32_t firstVertex,
+                       uint32_t firstInstance) {
+  D3D_TRACE(d3d(cmdBuffer)-&gt;v-&gt;DrawInstanced(vertexCount, instanceCount,
+                                             firstVertex, firstInstance));
+}
+void D3DGraphics::drawIndexed(CommandBuffer *cmdBuffer, uint32_t indexCount,
+                              uint32_t instanceCount, uint32_t firstIndex,
+                              int32_t vertexOffset, uint32_t firstInstance) {
+  D3D_TRACE(d3d(cmdBuffer)-&gt;v-&gt;DrawIndexedInstanced(
+      indexCount, instanceCount, firstIndex, vertexOffset, firstInstance));
+}
+void D3DGraphics::setViewport(CommandBuffer *cmdBuffer, Rect2D r) {
+  viewport = r;
+  D3D12_VIEWPORT d3dViewport = {float(r.x), float(r.y), float(r.w),
+                                float(r.h), 0.0f,       1.0f};
+  D3D_TRACE(d3d(cmdBuffer)-&gt;v-&gt;RSSetViewports(1, &amp;d3dViewport));
+}
+void D3DGraphics::setScissor(CommandBuffer *cmdBuffer, Rect2D r) {
+  scissorRect = r;
+#ifdef ORIGIN_BOTTOM_LEFT
+  auto &amp;v = viewport;
+  D3D12_RECT d3dScissorRect = {long(r.x), long(v.h - r.y - r.h),
+                               long(r.x + r.w), long(v.h - r.y)};
+#else
+  D3D12_RECT d3dScissorRect = {long(r.x), long(r.y), long(r.x + r.w),
+                               long(r.y + r.h)};
+#endif
+  D3D_TRACE(d3d(cmdBuffer)-&gt;v-&gt;RSSetScissorRects(1, &amp;d3dScissorRect));
+}
+
+Graphics *Graphics::create(GraphicsContext *ctx) {
+  D3DGraphics *d3dGraphics = new D3DGraphics();
+  d3dGraphics-&gt;ctx = ctx;
+  d3dGraphics-&gt;create();
+  return d3dGraphics;
+}
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 11:32:34 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

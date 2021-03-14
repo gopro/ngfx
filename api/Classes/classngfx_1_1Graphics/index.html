@@ -464,6 +464,7 @@
                 
                 
                 <h1 id="ngfxgraphics">ngfx::Graphics</h1>
+<p>Inherited by <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/">ngfx::D3DGraphics</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/">ngfx::MTLGraphics</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/">ngfx::VKGraphics</a></p>
 <h2 id="public-functions">Public Functions</h2>
 <table>
 <thead>
@@ -611,11 +612,13 @@
     CommandBuffer * commandBuffer
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-begincomputepass">ngfx::VKGraphics::beginComputePass</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-begincomputepass">ngfx::D3DGraphics::beginComputePass</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-begincomputepass">ngfx::MTLGraphics::beginComputePass</a></p>
 <h3 id="function-endcomputepass">function endComputePass</h3>
 <pre><code class="language-cpp">virtual void endComputePass(
     CommandBuffer * commandBuffer
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-endcomputepass">ngfx::VKGraphics::endComputePass</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-endcomputepass">ngfx::D3DGraphics::endComputePass</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-endcomputepass">ngfx::MTLGraphics::endComputePass</a></p>
 <h3 id="function-beginrenderpass">function beginRenderPass</h3>
 <pre><code class="language-cpp">virtual void beginRenderPass(
     CommandBuffer * commandBuffer,
@@ -626,11 +629,13 @@
     uint32_t clearStencil =0
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-beginrenderpass">ngfx::VKGraphics::beginRenderPass</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-beginrenderpass">ngfx::D3DGraphics::beginRenderPass</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-beginrenderpass">ngfx::MTLGraphics::beginRenderPass</a></p>
 <h3 id="function-endrenderpass">function endRenderPass</h3>
 <pre><code class="language-cpp">virtual void endRenderPass(
     CommandBuffer * commandBuffer
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-endrenderpass">ngfx::VKGraphics::endRenderPass</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-endrenderpass">ngfx::D3DGraphics::endRenderPass</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-endrenderpass">ngfx::MTLGraphics::endRenderPass</a></p>
 <h3 id="function-bindvertexbuffer">function bindVertexBuffer</h3>
 <pre><code class="language-cpp">virtual void bindVertexBuffer(
     CommandBuffer * commandBuffer,
@@ -639,6 +644,7 @@
     uint32_t stride
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-bindvertexbuffer">ngfx::VKGraphics::bindVertexBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-bindvertexbuffer">ngfx::D3DGraphics::bindVertexBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-bindvertexbuffer">ngfx::MTLGraphics::bindVertexBuffer</a></p>
 <h3 id="function-bindindexbuffer">function bindIndexBuffer</h3>
 <pre><code class="language-cpp">virtual void bindIndexBuffer(
     CommandBuffer * commandBuffer,
@@ -646,6 +652,7 @@
     IndexFormat indexFormat =INDEXFORMAT_UINT32
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-bindindexbuffer">ngfx::VKGraphics::bindIndexBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-bindindexbuffer">ngfx::D3DGraphics::bindIndexBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-bindindexbuffer">ngfx::MTLGraphics::bindIndexBuffer</a></p>
 <h3 id="function-binduniformbuffer">function bindUniformBuffer</h3>
 <pre><code class="language-cpp">virtual void bindUniformBuffer(
     CommandBuffer * commandBuffer,
@@ -654,6 +661,7 @@
     ShaderStageFlags shaderStageFlags
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-binduniformbuffer">ngfx::VKGraphics::bindUniformBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-binduniformbuffer">ngfx::D3DGraphics::bindUniformBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-binduniformbuffer">ngfx::MTLGraphics::bindUniformBuffer</a></p>
 <h3 id="function-bindstoragebuffer">function bindStorageBuffer</h3>
 <pre><code class="language-cpp">virtual void bindStorageBuffer(
     CommandBuffer * commandBuffer,
@@ -662,18 +670,21 @@
     ShaderStageFlags shaderStageFlags
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-bindstoragebuffer">ngfx::VKGraphics::bindStorageBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-bindstoragebuffer">ngfx::D3DGraphics::bindStorageBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-bindstoragebuffer">ngfx::MTLGraphics::bindStorageBuffer</a></p>
 <h3 id="function-bindcomputepipeline">function bindComputePipeline</h3>
 <pre><code class="language-cpp">virtual void bindComputePipeline(
     CommandBuffer * cmdBuffer,
     ComputePipeline * computePipeline
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-bindcomputepipeline">ngfx::VKGraphics::bindComputePipeline</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-bindcomputepipeline">ngfx::D3DGraphics::bindComputePipeline</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-bindcomputepipeline">ngfx::MTLGraphics::bindComputePipeline</a></p>
 <h3 id="function-bindgraphicspipeline">function bindGraphicsPipeline</h3>
 <pre><code class="language-cpp">virtual void bindGraphicsPipeline(
     CommandBuffer * cmdBuffer,
     GraphicsPipeline * graphicsPipeline
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-bindgraphicspipeline">ngfx::VKGraphics::bindGraphicsPipeline</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-bindgraphicspipeline">ngfx::D3DGraphics::bindGraphicsPipeline</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-bindgraphicspipeline">ngfx::MTLGraphics::bindGraphicsPipeline</a></p>
 <h3 id="function-bindtexture">function bindTexture</h3>
 <pre><code class="language-cpp">virtual void bindTexture(
     CommandBuffer * commandBuffer,
@@ -681,6 +692,7 @@
     uint32_t set
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-bindtexture">ngfx::VKGraphics::bindTexture</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-bindtexture">ngfx::D3DGraphics::bindTexture</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-bindtexture">ngfx::MTLGraphics::bindTexture</a></p>
 <h3 id="function-draw">function draw</h3>
 <pre><code class="language-cpp">virtual void draw(
     CommandBuffer * cmdBuffer,
@@ -690,6 +702,7 @@
     uint32_t firstInstance =0
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-draw">ngfx::VKGraphics::draw</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-draw">ngfx::D3DGraphics::draw</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-draw">ngfx::MTLGraphics::draw</a></p>
 <h3 id="function-drawindexed">function drawIndexed</h3>
 <pre><code class="language-cpp">virtual void drawIndexed(
     CommandBuffer * cmdBuffer,
@@ -700,6 +713,7 @@
     uint32_t firstInstance =0
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-drawindexed">ngfx::VKGraphics::drawIndexed</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-drawindexed">ngfx::D3DGraphics::drawIndexed</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-drawindexed">ngfx::MTLGraphics::drawIndexed</a></p>
 <h3 id="function-dispatch">function dispatch</h3>
 <pre><code class="language-cpp">virtual void dispatch(
     CommandBuffer * cmdBuffer,
@@ -711,23 +725,27 @@
     uint32_t threadsPerGroupZ
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-dispatch">ngfx::VKGraphics::dispatch</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-dispatch">ngfx::MTLGraphics::dispatch</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-dispatch">ngfx::D3DGraphics::dispatch</a></p>
 <h3 id="function-setviewport">function setViewport</h3>
 <pre><code class="language-cpp">virtual void setViewport(
     CommandBuffer * cmdBuffer,
     Rect2D rect
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-setviewport">ngfx::VKGraphics::setViewport</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-setviewport">ngfx::MTLGraphics::setViewport</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-setviewport">ngfx::D3DGraphics::setViewport</a></p>
 <h3 id="function-setscissor">function setScissor</h3>
 <pre><code class="language-cpp">virtual void setScissor(
     CommandBuffer * cmdBuffer,
     Rect2D rect
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-setscissor">ngfx::VKGraphics::setScissor</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-setscissor">ngfx::MTLGraphics::setScissor</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-setscissor">ngfx::D3DGraphics::setScissor</a></p>
 <h3 id="function-waitidle">function waitIdle</h3>
 <pre><code class="language-cpp">virtual void waitIdle(
     CommandBuffer * cmdBuffer
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1VKGraphics/#function-waitidle">ngfx::VKGraphics::waitIdle</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLGraphics/#function-waitidle">ngfx::MTLGraphics::waitIdle</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DGraphics/#function-waitidle">ngfx::D3DGraphics::waitIdle</a></p>
 <h2 id="public-attributes-documentation">Public Attributes Documentation</h2>
 <h3 id="variable-scissorrect">variable scissorRect</h3>
 <pre><code class="language-cpp">Rect2D scissorRect;
@@ -749,7 +767,7 @@
 <pre><code class="language-cpp">GraphicsContext * ctx;
 </code></pre>
 <hr />
-<p>Updated on 14 March 2021 at 11:29:17 Pacific Daylight Time</p>
+<p>Updated on 14 March 2021 at 11:32:31 Pacific Daylight Time</p>
                 
                   
                 

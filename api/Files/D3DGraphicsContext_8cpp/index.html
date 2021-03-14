@@ -1,0 +1,553 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>src/ngfx/porting/d3d/D3DGraphicsContext.cpp - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srcngfxportingd3dd3dgraphicscontextcpp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              src/ngfx/porting/d3d/D3DGraphicsContext.cpp
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#defines" class="md-nav__link">
+    Defines
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#macro-documentation" class="md-nav__link">
+    Macro Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Macro Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-max_descriptors" class="md-nav__link">
+    define MAX_DESCRIPTORS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    Source code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="srcngfxportingd3dd3dgraphicscontextcpp">src/ngfx/porting/d3d/D3DGraphicsContext.cpp</h1>
+<h2 id="defines">Defines</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/D3DGraphicsContext_8cpp/#define-max_descriptors">MAX_DESCRIPTORS</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="macro-documentation">Macro Documentation</h2>
+<h3 id="define-max_descriptors">define MAX_DESCRIPTORS</h3>
+<pre><code class="language-cpp">#define MAX_DESCRIPTORS 1024
+</code></pre>
+<h2 id="source-code">Source code</h2>
+<pre><code class="language-cpp">/*
+ * Copyright 2020 GoPro Inc.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#include &quot;ngfx/porting/d3d/D3DGraphicsContext.h&quot;
+#include &quot;ngfx/porting/d3d/D3DDebugUtil.h&quot;
+#include &lt;dxgi1_4.h&gt;
+#include &lt;wrl.h&gt;
+using namespace ngfx;
+using namespace std;
+using Microsoft::WRL::ComPtr;
+#define MAX_DESCRIPTORS 1024
+
+void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
+                                bool debug) {
+  HRESULT hResult;
+  this-&gt;debug = debug;
+  this-&gt;enableDepthStencil = enableDepthStencil;
+  depthFormat = PIXELFORMAT_D16_UNORM;
+  UINT dxgiFactoryFlags = 0;
+  if (debug) {
+    ComPtr&lt;ID3D12Debug&gt; debugController;
+    V(D3D12GetDebugInterface(IID_PPV_ARGS(&amp;debugController)));
+    debugController-&gt;EnableDebugLayer();
+    // Enable additional debug layers.
+    dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+  }
+  V(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&amp;d3dFactory)));
+  d3dDevice.create(this);
+  V(d3dDevice.v-&gt;CreateCommandAllocator(
+      D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&amp;d3dDrawCommandAllocator)));
+  V(d3dDevice.v-&gt;CreateCommandAllocator(
+      D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&amp;d3dCopyCommandAllocator)));
+  V(d3dDevice.v-&gt;CreateCommandAllocator(
+      D3D12_COMMAND_LIST_TYPE_DIRECT,
+      IID_PPV_ARGS(&amp;d3dComputeCommandAllocator)));
+  d3dCommandQueue.create(this);
+  createDescriptorHeaps();
+}
+
+void D3DGraphicsContext::createDescriptorHeaps() {
+  d3dRtvDescriptorHeap.create(d3dDevice.v.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+                              MAX_DESCRIPTORS, D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
+  d3dCbvSrvUavDescriptorHeap.create(
+      d3dDevice.v.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+      MAX_DESCRIPTORS * 3, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
+  d3dSamplerDescriptorHeap.create(
+      d3dDevice.v.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, MAX_DESCRIPTORS,
+      D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
+  d3dDsvDescriptorHeap.create(d3dDevice.v.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
+                              MAX_DESCRIPTORS, D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
+}
+
+void D3DGraphicsContext::setSurface(Surface *surface) {
+  defaultOffscreenSurfaceFormat = PIXELFORMAT_RGBA8_UNORM;
+  if (surface &amp;&amp; !surface-&gt;offscreen) {
+    offscreen = false;
+    d3dSwapchain.create(this, d3d(surface));
+    surfaceFormat = PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM);
+    numDrawCommandBuffers = d3dSwapchain.numImages;
+  } else {
+    offscreen = true;
+    numDrawCommandBuffers = 1;
+    surfaceFormat = defaultOffscreenSurfaceFormat;
+  }
+  d3dDrawCommandLists.resize(numDrawCommandBuffers);
+  for (auto &amp;cmdList : d3dDrawCommandLists) {
+    cmdList.create(d3dDevice.v.Get(), d3dDrawCommandAllocator.Get());
+  }
+  d3dCopyCommandList.create(d3dDevice.v.Get(), d3dCopyCommandAllocator.Get());
+  d3dComputeCommandList.create(d3dDevice.v.Get(),
+                               d3dComputeCommandAllocator.Get());
+  if (surface &amp;&amp; numSamples != 1) {
+    NGFX_TODO(&quot;&quot;);
+  }
+  if (surface &amp;&amp; enableDepthStencil) {
+    d3dDepthStencilView.reset((D3DTexture *)Texture::create(
+        this, nullptr, nullptr, depthFormat, surface-&gt;w * surface-&gt;h * 4,
+        surface-&gt;w, surface-&gt;h, 1, 1,
+        IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT));
+    if (numSamples != 1) {
+      NGFX_TODO(&quot;&quot;);
+    }
+  }
+  std::optional&lt;AttachmentDescription&gt; depthAttachmentDescription;
+  if (enableDepthStencil)
+    depthAttachmentDescription = {depthFormat};
+  else
+    depthAttachmentDescription = nullopt;
+  if (surface &amp;&amp; !surface-&gt;offscreen) {
+    RenderPassConfig onscreenRenderPassConfig = {
+        {{surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC}},
+        depthAttachmentDescription,
+        false,
+        numSamples};
+    d3dDefaultRenderPass =
+        (D3DRenderPass *)getRenderPass(onscreenRenderPassConfig);
+  }
+  defaultOffscreenSurfaceFormat = PIXELFORMAT_RGBA8_UNORM;
+  RenderPassConfig offscreenRenderPassConfig = {
+      {{defaultOffscreenSurfaceFormat}},
+      depthAttachmentDescription,
+      false,
+      numSamples};
+  d3dDefaultOffscreenRenderPass =
+      (D3DRenderPass *)getRenderPass(offscreenRenderPassConfig);
+  if (surface &amp;&amp; !surface-&gt;offscreen) {
+    createSwapchainFramebuffers(surface-&gt;w, surface-&gt;h);
+  }
+  // initSemaphores(vkDevice.v);
+  createFences(d3dDevice.v.Get());
+  createBindings();
+}
+
+RenderPass *D3DGraphicsContext::getRenderPass(RenderPassConfig config) {
+  for (auto &amp;r : d3dRenderPassCache) {
+    if (r-&gt;config == config)
+      return &amp;r-&gt;d3dRenderPass;
+  }
+  auto renderPassData = make_unique&lt;D3DRenderPassData&gt;();
+  createRenderPass(config, renderPassData-&gt;d3dRenderPass);
+  auto result = &amp;renderPassData-&gt;d3dRenderPass;
+  d3dRenderPassCache.emplace_back(std::move(renderPassData));
+  return result;
+}
+
+void D3DGraphicsContext::createRenderPass(const RenderPassConfig &amp;config,
+                                          D3DRenderPass &amp;renderPass) {
+  D3D12_RESOURCE_STATES
+      initialResourceState = D3D12_RESOURCE_STATE_RENDER_TARGET,
+      finalResourceState =
+          (config.colorAttachmentDescriptions[0].finalLayout ==
+           IMAGE_LAYOUT_PRESENT_SRC)
+              ? D3D12_RESOURCE_STATE_PRESENT
+              : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+                    D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+  renderPass.create(this, initialResourceState, finalResourceState);
+}
+
+void D3DGraphicsContext::createFences(ID3D12Device *device) {
+  d3dWaitFences.resize(numDrawCommandBuffers);
+  for (auto &amp;fence : d3dWaitFences) {
+    fence.create(device, D3DFence::SIGNALED);
+  }
+  d3dComputeFence.create(device);
+}
+
+void D3DGraphicsContext::createSwapchainFramebuffers(int w, int h) {
+  // Create frame buffers for every swap chain image
+  d3dSwapchainFramebuffers.resize(d3dSwapchain.numImages);
+  for (uint32_t i = 0; i &lt; d3dSwapchainFramebuffers.size(); i++) {
+    // TODO: add support for MSAA
+    std::vector&lt;D3DFramebuffer::D3DAttachment&gt; attachments = {
+        {d3dSwapchain.renderTargets[i].Get(),
+         d3dSwapchain.renderTargetDescriptors[i].cpuHandle, 0,
+         IMAGE_USAGE_COLOR_ATTACHMENT_BIT, 1, DXGI_FORMAT(surfaceFormat),
+         nullptr}};
+    if (enableDepthStencil) {
+      attachments.push_back({d3dDepthStencilView-&gt;v.Get(),
+                             d3dDepthStencilView-&gt;dsvDescriptor.cpuHandle, 0,
+                             IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, 1,
+                             DXGI_FORMAT(depthFormat),
+                             d3dDepthStencilView.get()});
+    }
+    d3dSwapchainFramebuffers[i].create(attachments, w, h);
+  }
+}
+
+CommandBuffer *D3DGraphicsContext::drawCommandBuffer(int32_t index) {
+  if (index == -1)
+    index = currentImageIndex;
+  return &amp;d3dDrawCommandLists[index];
+}
+
+CommandBuffer *D3DGraphicsContext::copyCommandBuffer() {
+  return &amp;d3dCopyCommandList;
+}
+
+CommandBuffer *D3DGraphicsContext::computeCommandBuffer() {
+  return &amp;d3dComputeCommandList;
+}
+
+void D3DGraphicsContext::createBindings() {
+  device = &amp;d3dDevice;
+  queue = &amp;d3dCommandQueue;
+  defaultRenderPass =
+      offscreen ? d3dDefaultOffscreenRenderPass : d3dDefaultRenderPass;
+  defaultOffscreenRenderPass = d3dDefaultOffscreenRenderPass;
+  swapchain = &amp;d3dSwapchain;
+  frameFences.resize(d3dWaitFences.size());
+  for (int j = 0; j &lt; d3dWaitFences.size(); j++)
+    frameFences[j] = &amp;d3dWaitFences[j];
+  swapchainFramebuffers.resize(d3dSwapchainFramebuffers.size());
+  for (int j = 0; j &lt; d3dSwapchainFramebuffers.size(); j++)
+    swapchainFramebuffers[j] = &amp;d3dSwapchainFramebuffers[j];
+  pipelineCache = &amp;d3dPipelineCache;
+}
+
+GraphicsContext *GraphicsContext::create(const char *appName,
+                                         bool enableDepthStencil, bool debug) {
+  NGFX_LOG(&quot;debug: %s&quot;, (debug) ? &quot;true&quot; : &quot;false&quot;);
+  auto d3dGraphicsContext = new D3DGraphicsContext();
+  d3dGraphicsContext-&gt;create(appName, enableDepthStencil, debug);
+  return d3dGraphicsContext;
+}
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 11:32:34 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

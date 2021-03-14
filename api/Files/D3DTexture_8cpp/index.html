@@ -1,0 +1,825 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>src/ngfx/porting/d3d/D3DTexture.cpp - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srcngfxportingd3dd3dtexturecpp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              src/ngfx/porting/d3d/D3DTexture.cpp
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions-documentation" class="md-nav__link">
+    Functions Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-getrtvdesc" class="md-nav__link">
+    function getRtvDesc
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    Source code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="srcngfxportingd3dd3dtexturecpp">src/ngfx/porting/d3d/D3DTexture.cpp</h1>
+<h2 id="functions">Functions</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D3D12_RENDER_TARGET_VIEW_DESC</td>
+<td><strong><a href="/ngfx/api/Files/D3DTexture_8cpp/#function-getrtvdesc">getRtvDesc</a></strong>(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples, uint32_t level, uint32_t baseLayer, uint32_t layerCount)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions-documentation">Functions Documentation</h2>
+<h3 id="function-getrtvdesc">function getRtvDesc</h3>
+<pre><code class="language-cpp">D3D12_RENDER_TARGET_VIEW_DESC getRtvDesc(
+    TextureType textureType,
+    DXGI_FORMAT format,
+    uint32_t numSamples,
+    uint32_t level,
+    uint32_t baseLayer,
+    uint32_t layerCount
+)
+</code></pre>
+<h2 id="source-code">Source code</h2>
+<pre><code class="language-cpp">/*
+ * Copyright 2020 GoPro Inc.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#include &quot;ngfx/porting/d3d/D3DTexture.h&quot;
+#include &quot;ngfx/core/DebugUtil.h&quot;
+#include &quot;ngfx/porting/d3d/D3DBlitOp.h&quot;
+#include &quot;ngfx/porting/d3d/D3DBuffer.h&quot;
+#include &quot;ngfx/porting/d3d/D3DDebugUtil.h&quot;
+#include &quot;ngfx/porting/d3d/D3DGraphicsContext.h&quot;
+using namespace ngfx;
+using namespace std;
+
+void D3DTexture::create(D3DGraphicsContext *ctx, D3DGraphics *graphics,
+                        void *data, uint32_t size, uint32_t w, uint32_t h,
+                        uint32_t d, uint32_t arrayLayers, DXGI_FORMAT format,
+                        ImageUsageFlags usageFlags, TextureType textureType,
+                        bool genMipmaps, uint32_t numSamples,
+                        const D3DSamplerDesc &amp;samplerDesc) {
+  this-&gt;ctx = ctx;
+  this-&gt;graphics = graphics;
+  this-&gt;w = w;
+  this-&gt;h = h;
+  this-&gt;d = d;
+  this-&gt;arrayLayers = arrayLayers;
+  this-&gt;size = size;
+  this-&gt;format = PixelFormat(format);
+  this-&gt;textureType = textureType;
+  this-&gt;mipLevels =
+      genMipmaps ? uint32_t(floor(log2(float(glm::min(w, h))))) + 1 : 1;
+  if (genMipmaps)
+    usageFlags |= IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+  this-&gt;imageUsageFlags = usageFlags;
+  this-&gt;numSamples = numSamples;
+  numSubresources = arrayLayers * mipLevels;
+  currentResourceState.resize(numSubresources);
+
+  HRESULT hResult;
+  D3D12_RESOURCE_FLAGS resourceFlags = D3D12_RESOURCE_FLAG_NONE;
+  if (imageUsageFlags &amp; IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+    resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+  if (imageUsageFlags &amp; IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+    resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+  auto d3dDevice = ctx-&gt;d3dDevice.v.Get();
+  if (textureType == TEXTURE_TYPE_3D) {
+    resourceDesc =
+        CD3DX12_RESOURCE_DESC::Tex3D(format, w, h, d, 1, resourceFlags);
+  } else {
+    auto texFormat = format;
+    if (texFormat == DXGI_FORMAT_D16_UNORM &amp;&amp;
+        (usageFlags &amp; IMAGE_USAGE_SAMPLED_BIT))
+      texFormat = DXGI_FORMAT_R16_TYPELESS;
+    else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT &amp;&amp;
+             (usageFlags &amp; IMAGE_USAGE_SAMPLED_BIT))
+      texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+    resourceDesc =
+        CD3DX12_RESOURCE_DESC::Tex2D(texFormat, w, h, d * arrayLayers,
+                                     mipLevels, numSamples, 0, resourceFlags);
+  }
+  bool isRenderTarget =
+      (resourceFlags &amp; D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+  D3D12_CLEAR_VALUE clearValue = {format, {0.0f, 0.0f, 0.0f, 0.0f}};
+  CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
+  V(d3dDevice-&gt;CreateCommittedResource(
+      &amp;heapProperties, D3D12_HEAP_FLAG_NONE, &amp;resourceDesc,
+      D3D12_RESOURCE_STATE_COPY_DEST, isRenderTarget ? &amp;clearValue : nullptr,
+      IID_PPV_ARGS(&amp;v)));
+
+  for (auto &amp;s : currentResourceState)
+    s = D3D12_RESOURCE_STATE_COPY_DEST;
+
+  if (imageUsageFlags &amp; IMAGE_USAGE_SAMPLED_BIT) {
+    defaultSrvDescriptor = getSrvDescriptor(0, mipLevels);
+    defaultSamplerDescriptor = getSamplerDescriptor(samplerDesc.Filter);
+  }
+
+  if (isRenderTarget) {
+    defaultRtvDescriptor = getRtvDescriptor();
+  }
+
+  if (imageUsageFlags &amp; IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+    // Create depth stencil view
+    auto dsvDescriptorHeap = &amp;ctx-&gt;d3dDsvDescriptorHeap;
+    D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+    dsvDesc.Format = format;
+    dsvDesc.ViewDimension = (numSamples &gt; 1) ? D3D12_DSV_DIMENSION_TEXTURE2DMS
+                                             : D3D12_DSV_DIMENSION_TEXTURE2D;
+    D3D_TRACE(d3dDevice-&gt;CreateDepthStencilView(
+        v.Get(), &amp;dsvDesc, dsvDescriptorHeap-&gt;handle.cpuHandle));
+    dsvDescriptor = dsvDescriptorHeap-&gt;handle;
+    ++dsvDescriptorHeap-&gt;handle;
+  }
+
+  upload(data, size);
+}
+
+D3DDescriptorHandle D3DTexture::getSamplerDescriptor(D3D12_FILTER filter) {
+  for (auto &amp;samplerData : samplerDescriptorCache) {
+    if (samplerData.desc.Filter == filter)
+      return samplerData.handle;
+  }
+  // Create sampler
+  D3DSamplerDesc samplerDesc;
+  samplerDesc.Filter = filter;
+  auto &amp;samplerDescriptorHeap = ctx-&gt;d3dSamplerDescriptorHeap;
+  auto d3dDevice = ctx-&gt;d3dDevice.v.Get();
+  D3D_TRACE(d3dDevice-&gt;CreateSampler(&amp;samplerDesc,
+                                     samplerDescriptorHeap.handle.cpuHandle));
+  SamplerData samplerData;
+  samplerData.desc = samplerDesc;
+  samplerData.handle = samplerDescriptorHeap.handle;
+  ++samplerDescriptorHeap.handle;
+  auto result = samplerData.handle;
+  samplerDescriptorCache.emplace_back(std::move(samplerData));
+  return result;
+}
+
+D3DDescriptorHandle D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
+                                                 uint32_t numMipLevels) {
+  for (auto &amp;srvData : srvDescriptorCache) {
+    if (textureType == TEXTURE_TYPE_2D &amp;&amp;
+        srvData.desc.Texture2D.MostDetailedMip == baseMipLevel &amp;&amp;
+        srvData.desc.Texture2D.MipLevels == numMipLevels)
+      return srvData.handle;
+    else if (textureType == TEXTURE_TYPE_2D_ARRAY &amp;&amp;
+             srvData.desc.Texture2DArray.MostDetailedMip == baseMipLevel &amp;&amp;
+             srvData.desc.Texture2DArray.MipLevels == numMipLevels)
+      return srvData.handle;
+    if (textureType == TEXTURE_TYPE_3D &amp;&amp;
+        srvData.desc.Texture3D.MostDetailedMip == baseMipLevel &amp;&amp;
+        srvData.desc.Texture3D.MipLevels == numMipLevels)
+      return srvData.handle;
+    else if (textureType == TEXTURE_TYPE_CUBE &amp;&amp;
+             srvData.desc.TextureCube.MostDetailedMip == baseMipLevel &amp;&amp;
+             srvData.desc.TextureCube.MipLevels == numMipLevels)
+      return srvData.handle;
+  }
+  // Create a shader resource view
+  D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+  srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+  srvDesc.Format = resourceDesc.Format;
+  if (srvDesc.Format == DXGI_FORMAT_R16_TYPELESS)
+    srvDesc.Format = DXGI_FORMAT_R16_UNORM;
+  else if (srvDesc.Format == DXGI_FORMAT_R24G8_TYPELESS)
+    srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+  srvDesc.ViewDimension = D3D12_SRV_DIMENSION(textureType);
+  if (textureType == TEXTURE_TYPE_2D) {
+    srvDesc.Texture2D.MostDetailedMip = baseMipLevel;
+    srvDesc.Texture2D.MipLevels = numMipLevels;
+  } else if (textureType == TEXTURE_TYPE_2D_ARRAY) {
+    srvDesc.Texture2DArray.MostDetailedMip = baseMipLevel;
+    srvDesc.Texture2DArray.MipLevels = numMipLevels;
+  } else if (textureType == TEXTURE_TYPE_3D) {
+    srvDesc.Texture3D.MostDetailedMip = baseMipLevel;
+    srvDesc.Texture3D.MipLevels = numMipLevels;
+  } else if (textureType == TEXTURE_TYPE_CUBE) {
+    srvDesc.TextureCube.MostDetailedMip = baseMipLevel;
+    srvDesc.TextureCube.MipLevels = numMipLevels;
+  }
+  auto &amp;cbvSrvUavDescriptorHeap = ctx-&gt;d3dCbvSrvUavDescriptorHeap;
+  auto d3dDevice = ctx-&gt;d3dDevice.v.Get();
+  D3D_TRACE(d3dDevice-&gt;CreateShaderResourceView(
+      v.Get(), &amp;srvDesc, cbvSrvUavDescriptorHeap.handle.cpuHandle));
+  SrvData srvData;
+  srvData.desc = srvDesc;
+  srvData.handle = cbvSrvUavDescriptorHeap.handle;
+  ++cbvSrvUavDescriptorHeap.handle;
+  auto result = srvData.handle;
+  srvDescriptorCache.emplace_back(std::move(srvData));
+  return result;
+}
+
+D3D12_RENDER_TARGET_VIEW_DESC
+getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples,
+           uint32_t level, uint32_t baseLayer, uint32_t layerCount) {
+  D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+  rtvDesc.Format = DXGI_FORMAT(format);
+  if (textureType == TEXTURE_TYPE_2D) {
+    if (numSamples &gt; 1) {
+      rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DMS;
+    } else {
+      rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+      rtvDesc.Texture2D.MipSlice = level;
+    }
+  } else if (textureType == TEXTURE_TYPE_2D_ARRAY ||
+             textureType == TEXTURE_TYPE_CUBE) {
+    if (numSamples &gt; 1) {
+      rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DMSARRAY;
+      rtvDesc.Texture2DMSArray.FirstArraySlice = baseLayer;
+      rtvDesc.Texture2DMSArray.ArraySize = layerCount;
+    } else {
+      rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
+      rtvDesc.Texture2DArray.MipSlice = level;
+      rtvDesc.Texture2DArray.FirstArraySlice = baseLayer;
+      rtvDesc.Texture2DArray.ArraySize = layerCount;
+    }
+  } else if (textureType == TEXTURE_TYPE_3D) {
+    rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE3D;
+    rtvDesc.Texture3D.MipSlice = level;
+  }
+  return rtvDesc;
+}
+D3DDescriptorHandle D3DTexture::getRtvDescriptor(uint32_t level,
+                                                 uint32_t baseLayer,
+                                                 uint32_t layerCount) {
+  for (auto &amp;rtvData : rtvDescriptorCache) {
+    if (textureType == TEXTURE_TYPE_2D &amp;&amp; numSamples &gt; 1)
+      return rtvData.handle;
+    else if (textureType == TEXTURE_TYPE_2D &amp;&amp;
+             rtvData.desc.Texture2D.MipSlice == level)
+      return rtvData.handle;
+    else if ((textureType == TEXTURE_TYPE_2D_ARRAY ||
+              textureType == TEXTURE_TYPE_CUBE) &amp;&amp;
+             numSamples &gt; 1 &amp;&amp;
+             rtvData.desc.Texture2DMSArray.FirstArraySlice == baseLayer &amp;&amp;
+             rtvData.desc.Texture2DMSArray.ArraySize == layerCount)
+      return rtvData.handle;
+    else if ((textureType == TEXTURE_TYPE_2D_ARRAY ||
+              textureType == TEXTURE_TYPE_CUBE) &amp;&amp;
+             rtvData.desc.Texture2DArray.MipSlice == level &amp;&amp;
+             rtvData.desc.Texture2DArray.FirstArraySlice == baseLayer &amp;&amp;
+             rtvData.desc.Texture2DArray.ArraySize == layerCount)
+      return rtvData.handle;
+    else if (textureType == TEXTURE_TYPE_3D &amp;&amp;
+             rtvData.desc.Texture3D.MipSlice == level)
+      return rtvData.handle;
+  }
+  // Create render target view
+  auto rtvDescriptorHeap = &amp;ctx-&gt;d3dRtvDescriptorHeap;
+  auto d3dDevice = ctx-&gt;d3dDevice.v.Get();
+  D3D12_RENDER_TARGET_VIEW_DESC rtvDesc =
+      getRtvDesc(textureType, DXGI_FORMAT(format), numSamples, level, baseLayer,
+                 layerCount);
+  D3D_TRACE(d3dDevice-&gt;CreateRenderTargetView(
+      v.Get(), &amp;rtvDesc, rtvDescriptorHeap-&gt;handle.cpuHandle));
+  RtvData rtvData;
+  rtvData.desc = rtvDesc;
+  rtvData.handle = rtvDescriptorHeap-&gt;handle;
+  ++rtvDescriptorHeap-&gt;handle;
+  auto result = rtvData.handle;
+  rtvDescriptorCache.emplace_back(std::move(rtvData));
+  return result;
+}
+
+void D3DTexture::generateMipmapsFn(D3DCommandList *cmdList) {
+  genMipmapData.reset(new GenMipmapData());
+  for (uint32_t j = 1; j &lt; mipLevels; j++) {
+    D3DBlitOp op(
+        ctx, this, j - 1, this, j,
+        {{0, 0, 0},
+         {int32_t(glm::max(w &gt;&gt; (j - 1), 1u)),
+          int32_t(glm::max(h &gt;&gt; (j - 1), 1u)), 1}},
+        {{0, 0, 0},
+         {int32_t(glm::max(w &gt;&gt; j, 1u)), int32_t(glm::max(h &gt;&gt; j, 1u)), 1}},
+        0, arrayLayers, 0, arrayLayers);
+    op.apply(ctx, cmdList, graphics);
+    genMipmapData-&gt;ops.emplace_back(std::move(op));
+  }
+}
+
+void D3DTexture::upload(void *data, uint32_t size, uint32_t x, uint32_t y,
+                        uint32_t z, int32_t w, int32_t h, int32_t d,
+                        int32_t arrayLayers) {
+  auto &amp;copyCommandList = ctx-&gt;d3dCopyCommandList;
+  std::unique_ptr&lt;D3DBuffer&gt; stagingBuffer;
+  if (w == -1)
+    w = this-&gt;w;
+  if (h == -1)
+    h = this-&gt;h;
+  if (d == -1)
+    d = this-&gt;d;
+  if (arrayLayers == -1)
+    arrayLayers = this-&gt;arrayLayers;
+  if (data) {
+    uint64_t stagingBufferSize;
+    D3D_TRACE(stagingBufferSize =
+                  GetRequiredIntermediateSize(v.Get(), 0, arrayLayers));
+    stagingBuffer.reset(new D3DBuffer());
+    stagingBuffer-&gt;create(ctx, nullptr, uint32_t(stagingBufferSize),
+                          D3D12_HEAP_TYPE_UPLOAD);
+  }
+  copyCommandList.begin();
+  uploadFn(&amp;copyCommandList, data, size, stagingBuffer.get(), x, y, z, w, h, d,
+           arrayLayers);
+  D3D12_RESOURCE_STATES resourceState =
+      (imageUsageFlags &amp; IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+          ? D3D12_RESOURCE_STATE_DEPTH_WRITE
+          : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
+                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+  resourceBarrier(&amp;copyCommandList, resourceState);
+  copyCommandList.end();
+  ctx-&gt;d3dCommandQueue.submit(copyCommandList.v.Get(), nullptr);
+  ctx-&gt;d3dCommandQueue.waitIdle();
+
+  if (data &amp;&amp; mipLevels != 1) {
+    D3DCommandList cmdList;
+    ComPtr&lt;ID3D12CommandAllocator&gt; cmdAllocator;
+    HRESULT hResult;
+    auto d3dDevice = ctx-&gt;d3dDevice.v.Get();
+    V(d3dDevice-&gt;CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
+                                        IID_PPV_ARGS(&amp;cmdAllocator)));
+    cmdList.create(d3dDevice, cmdAllocator.Get());
+    cmdList.begin();
+    generateMipmapsFn(&amp;cmdList);
+    cmdList.end();
+    ctx-&gt;d3dCommandQueue.submit(cmdList.v.Get(), nullptr);
+    ctx-&gt;d3dCommandQueue.waitIdle();
+  }
+}
+
+void D3DTexture::generateMipmaps(CommandBuffer *commandBuffer) {
+  generateMipmapsFn((D3DCommandList *)commandBuffer);
+}
+
+void D3DTexture::uploadFn(D3DCommandList *cmdList, void *data, uint32_t size,
+                          D3DBuffer *stagingBuffer, uint32_t x, uint32_t y,
+                          uint32_t z, int32_t w, int32_t h, int32_t d,
+                          int32_t arrayLayers) {
+  if (data) {
+    if (x != 0 || y != 0 || z != 0)
+      NGFX_LOG_TRACE(&quot;TODO: support sub-region update&quot;);
+    resourceBarrier(cmdList, D3D12_RESOURCE_STATE_COPY_DEST);
+    uint32_t rowPitch = size / (h * d * arrayLayers);
+    uint32_t slicePitch = size / (d * arrayLayers);
+    vector&lt;D3D12_SUBRESOURCE_DATA&gt; textureData(arrayLayers);
+    uint8_t *srcData = (uint8_t *)data;
+    for (uint32_t j = 0; j &lt; uint32_t(arrayLayers); j++) {
+      textureData[j] = {srcData, long(rowPitch), slicePitch};
+      srcData += slicePitch;
+    }
+    uint64_t bufferSize =
+        UpdateSubresources(cmdList-&gt;v.Get(), v.Get(), stagingBuffer-&gt;v.Get(), 0,
+                           0, arrayLayers, textureData.data());
+    assert(bufferSize);
+  }
+}
+
+void D3DTexture::download(void *data, uint32_t size, uint32_t x, uint32_t y,
+                          uint32_t z, int32_t w, int32_t h, int32_t d,
+                          int32_t arrayLayers) {
+  auto &amp;copyCommandList = ctx-&gt;d3dCopyCommandList;
+
+  if (w == -1)
+    w = this-&gt;w;
+  if (h == -1)
+    h = this-&gt;h;
+  if (d == -1)
+    d = this-&gt;d;
+
+  D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint;
+  uint32_t numRows;
+  uint64_t srcSize, rowSizeBytes;
+  D3D12_RESOURCE_DESC desc = v-&gt;GetDesc();
+  D3D_TRACE(ctx-&gt;d3dDevice.v-&gt;GetCopyableFootprints(
+      &amp;desc, 0, 1, 0, &amp;footprint, &amp;numRows, &amp;rowSizeBytes, &amp;srcSize));
+
+  D3DReadbackBuffer readbackBuffer;
+  readbackBuffer.create(ctx, uint32_t(srcSize));
+
+  D3D12_BOX srcRegion = {0, 0, 0, UINT(w), UINT(h), 1};
+
+  copyCommandList.begin();
+  downloadFn(&amp;copyCommandList, readbackBuffer, srcRegion, footprint);
+  copyCommandList.end();
+  ctx-&gt;d3dCommandQueue.submit(&amp;copyCommandList);
+  ctx-&gt;d3dCommandQueue.waitIdle();
+
+  void *readbackBufferPtr = readbackBuffer.map();
+  uint8_t *srcPtr = (uint8_t *)readbackBufferPtr, *dstPtr = (uint8_t *)data;
+  for (uint32_t j = 0; j &lt; uint32_t(h); j++) {
+    memcpy(dstPtr, srcPtr, rowSizeBytes);
+    srcPtr += footprint.Footprint.RowPitch;
+    dstPtr += rowSizeBytes;
+  }
+  readbackBuffer.unmap();
+}
+
+void D3DTexture::downloadFn(D3DCommandList *cmdList,
+                            D3DReadbackBuffer &amp;readbackBuffer,
+                            D3D12_BOX &amp;srcRegion,
+                            D3D12_PLACED_SUBRESOURCE_FOOTPRINT &amp;dstFootprint) {
+  resourceBarrier(cmdList, D3D12_RESOURCE_STATE_COPY_SOURCE);
+
+  D3D12_TEXTURE_COPY_LOCATION dstLocation = {
+      readbackBuffer.v.Get(),
+      D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT,
+      {dstFootprint}};
+  D3D12_TEXTURE_COPY_LOCATION srcLocation = {
+      v.Get(), D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX, 0};
+
+  D3D_TRACE(cmdList-&gt;v-&gt;CopyTextureRegion(&amp;dstLocation, 0, 0, 0, &amp;srcLocation,
+                                          &amp;srcRegion));
+  D3D12_RESOURCE_STATES resourceState =
+      (imageUsageFlags &amp; IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+          ? D3D12_RESOURCE_STATE_DEPTH_WRITE
+          : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
+                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+  resourceBarrier(cmdList, resourceState);
+  for (auto &amp;s : currentResourceState)
+    s = resourceState;
+}
+
+void D3DTexture::changeLayout(CommandBuffer *commandBuffer,
+                              ImageLayout imageLayout) {
+  D3D12_RESOURCE_STATES resourceState;
+  switch (imageLayout) {
+  case IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+    resourceState = D3D12_RESOURCE_STATE_RENDER_TARGET;
+    break;
+  case IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+    resourceState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+    break;
+  case IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+    resourceState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+                    D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+    break;
+  case IMAGE_LAYOUT_GENERAL:
+    resourceState = D3D12_RESOURCE_STATE_COMMON;
+    break;
+  };
+
+  resourceBarrier(d3d(commandBuffer), resourceState);
+}
+void D3DTexture::resourceBarrier(D3DCommandList *cmdList,
+                                 D3D12_RESOURCE_STATES newState,
+                                 UINT subresource) {
+  uint32_t j0, j1;
+  if (subresource == D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES) {
+    j0 = 0;
+    j1 = numSubresources;
+  } else {
+    j0 = subresource;
+    j1 = j0 + 1;
+  }
+  for (uint32_t j = j0; j &lt; j1; j++) {
+    if (currentResourceState[j] == newState)
+      continue;
+    CD3DX12_RESOURCE_BARRIER resourceBarrier =
+        CD3DX12_RESOURCE_BARRIER::Transition(v.Get(), currentResourceState[j],
+                                             newState, j);
+    D3D_TRACE(cmdList-&gt;v-&gt;ResourceBarrier(1, &amp;resourceBarrier));
+    currentResourceState[j] = newState;
+  }
+}
+
+Texture *Texture::create(GraphicsContext *ctx, Graphics *graphics, void *data,
+                         PixelFormat format, uint32_t size, uint32_t w,
+                         uint32_t h, uint32_t d, uint32_t arrayLayers,
+                         ImageUsageFlags imageUsageFlags,
+                         TextureType textureType, bool genMipmaps,
+                         FilterMode minFilter, FilterMode magFilter,
+                         FilterMode mipFilter, uint32_t numSamples) {
+  D3DTexture *d3dTexture = new D3DTexture();
+  D3DSamplerDesc samplerDesc;
+  uint32_t filter = minFilter &lt;&lt; 2 | magFilter &lt;&lt; 1 | mipFilter;
+  static D3D12_FILTER filterMap[] = {
+      D3D12_FILTER_MIN_MAG_MIP_POINT,
+      D3D12_FILTER_MIN_MAG_POINT_MIP_LINEAR,
+      D3D12_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT,
+      D3D12_FILTER_MIN_POINT_MAG_MIP_LINEAR,
+      D3D12_FILTER_MIN_LINEAR_MAG_MIP_POINT,
+      D3D12_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR,
+      D3D12_FILTER_MIN_MAG_LINEAR_MIP_POINT,
+      D3D12_FILTER_MIN_MAG_MIP_LINEAR};
+  samplerDesc.Filter = filterMap[filter];
+  d3dTexture-&gt;create(d3d(ctx), (D3DGraphics *)graphics, data, size, w, h, d,
+                     arrayLayers, DXGI_FORMAT(format), imageUsageFlags,
+                     textureType, genMipmaps, numSamples, samplerDesc);
+  return d3dTexture;
+}
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 11:32:34 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

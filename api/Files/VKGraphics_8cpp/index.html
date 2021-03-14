@@ -1,0 +1,570 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>src/ngfx/porting/vulkan/VKGraphics.cpp - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srcngfxportingvulkanvkgraphicscpp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              src/ngfx/porting/vulkan/VKGraphics.cpp
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#functions" class="md-nav__link">
+    Functions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functions-documentation" class="md-nav__link">
+    Functions Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Functions Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#function-bindbufferfn0" class="md-nav__link">
+    function bindBufferFN0
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    Source code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="srcngfxportingvulkanvkgraphicscpp">src/ngfx/porting/vulkan/VKGraphics.cpp</h1>
+<h2 id="functions">Functions</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>void</td>
+<td><strong><a href="/ngfx/api/Files/VKGraphics_8cpp/#function-bindbufferfn0">bindBufferFN0</a></strong>(<a href="/ngfx/api/Classes/classngfx_1_1CommandBuffer/">CommandBuffer</a> * commandBuffer, <a href="/ngfx/api/Classes/classngfx_1_1Buffer/">Buffer</a> * buffer, uint32_t set, <a href="/ngfx/api/Classes/classngfx_1_1Pipeline/">Pipeline</a> * currentPipeline, const VkDescriptorSet * descriptorSet)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions-documentation">Functions Documentation</h2>
+<h3 id="function-bindbufferfn0">function bindBufferFN0</h3>
+<pre><code class="language-cpp">static void bindBufferFN0(
+    CommandBuffer * commandBuffer,
+    Buffer * buffer,
+    uint32_t set,
+    Pipeline * currentPipeline,
+    const VkDescriptorSet * descriptorSet
+)
+</code></pre>
+<h2 id="source-code">Source code</h2>
+<pre><code class="language-cpp">/*
+ * Copyright 2020 GoPro Inc.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#include &quot;ngfx/porting/vulkan/VKGraphics.h&quot;
+#include &quot;ngfx/porting/vulkan/VKBuffer.h&quot;
+#include &quot;ngfx/porting/vulkan/VKComputePipeline.h&quot;
+#include &quot;ngfx/porting/vulkan/VKConfig.h&quot;
+#include &quot;ngfx/porting/vulkan/VKDebugUtil.h&quot;
+#include &quot;ngfx/porting/vulkan/VKGraphicsContext.h&quot;
+#include &quot;ngfx/porting/vulkan/VKGraphicsPipeline.h&quot;
+#include &quot;ngfx/porting/vulkan/VKRenderPass.h&quot;
+#include &quot;ngfx/porting/vulkan/VKTexture.h&quot;
+using namespace ngfx;
+
+void VKGraphics::beginRenderPass(CommandBuffer *commandBuffer,
+                                 RenderPass *renderPass,
+                                 Framebuffer *framebuffer, glm::vec4 clearColor,
+                                 float clearDepth, uint32_t clearStencil) {
+  currentRenderPass = renderPass;
+  currentFramebuffer = framebuffer;
+  auto &amp;vkCommandBuffer = vk(commandBuffer)-&gt;v;
+  auto vkFramebuffer = vk(framebuffer);
+  auto &amp;vkAttachmentInfos = vkFramebuffer-&gt;vkAttachmentInfos;
+  std::vector&lt;VkClearValue&gt; clearValues(vkAttachmentInfos.size());
+  for (uint32_t j = 0; j &lt; vkAttachmentInfos.size(); j++) {
+    auto &amp;info = vkAttachmentInfos[j];
+    bool depthStencilAttachment =
+        info.imageUsageFlags &amp; VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if (depthStencilAttachment)
+      clearValues[j].depthStencil = {clearDepth, clearStencil};
+    else
+      clearValues[j].color = {
+          {clearColor[0], clearColor[1], clearColor[2], clearColor[3]}};
+  }
+  VkRenderPassBeginInfo renderPassBeginInfo = {
+      VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+      nullptr,
+      vk(renderPass)-&gt;v,
+      vk(framebuffer)-&gt;v,
+      {{0, 0}, {vk(framebuffer)-&gt;w, vk(framebuffer)-&gt;h}},
+      uint32_t(clearValues.size()),
+      clearValues.data()};
+  VK_TRACE(vkCmdBeginRenderPass(vkCommandBuffer, &amp;renderPassBeginInfo,
+                                VK_SUBPASS_CONTENTS_INLINE));
+
+  auto vkRenderPass = vk(renderPass);
+  for (uint32_t j = 0; j &lt; framebuffer-&gt;attachments.size(); j++) {
+    auto &amp;attachment = framebuffer-&gt;attachments[j];
+    auto vkTexture = (VKTexture *)attachment.texture;
+    uint32_t baseIndex =
+        attachment.layer * vkTexture-&gt;vkImage.createInfo.mipLevels +
+        attachment.level;
+    vkTexture-&gt;vkImage.imageLayout[baseIndex] =
+        vkRenderPass-&gt;createInfo.pAttachments[j].initialLayout;
+  }
+}
+
+void VKGraphics::endRenderPass(CommandBuffer *commandBuffer) {
+  VK_TRACE(vkCmdEndRenderPass(vk(commandBuffer)-&gt;v));
+
+  auto vkRenderPass = vk(currentRenderPass);
+  auto framebuffer = currentFramebuffer;
+  for (uint32_t j = 0; j &lt; framebuffer-&gt;attachments.size(); j++) {
+    auto &amp;attachment = framebuffer-&gt;attachments[j];
+    auto vkTexture = (VKTexture *)attachment.texture;
+    uint32_t baseIndex =
+        attachment.layer * vkTexture-&gt;vkImage.createInfo.mipLevels +
+        attachment.level;
+    vkTexture-&gt;vkImage.imageLayout[baseIndex] =
+        vkRenderPass-&gt;createInfo.pAttachments[j].finalLayout;
+  }
+
+  currentRenderPass = nullptr;
+}
+
+void VKGraphics::bindComputePipeline(CommandBuffer *commandBuffer,
+                                     ComputePipeline *computePipeline) {
+  VK_TRACE(vkCmdBindPipeline(vk(commandBuffer)-&gt;v,
+                             VK_PIPELINE_BIND_POINT_COMPUTE,
+                             vk(computePipeline)-&gt;v));
+  currentPipeline = computePipeline;
+}
+
+void VKGraphics::bindGraphicsPipeline(CommandBuffer *commandBuffer,
+                                      GraphicsPipeline *graphicsPipeline) {
+  VK_TRACE(vkCmdBindPipeline(vk(commandBuffer)-&gt;v,
+                             VK_PIPELINE_BIND_POINT_GRAPHICS,
+                             vk(graphicsPipeline)-&gt;v));
+  currentPipeline = graphicsPipeline;
+}
+
+void VKGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
+                             uint32_t set) {
+  auto vkTexture = vk(texture);
+  VkPipelineLayout pipelineLayout;
+  VkPipelineBindPoint pipelineBindPoint;
+  VkDescriptorSet *descriptorSet = nullptr;
+  if (VKGraphicsPipeline *graphicsPipeline =
+          dynamic_cast&lt;VKGraphicsPipeline *&gt;(currentPipeline)) {
+    if (!(vkTexture-&gt;imageUsageFlags &amp; VK_IMAGE_USAGE_SAMPLED_BIT)) {
+      NGFX_ERR(&quot;incorrect image usage flags: missing IMAGE_USAGE_SAMPLED_BIT&quot;);
+    }
+    pipelineLayout = graphicsPipeline-&gt;pipelineLayout;
+    pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+    descriptorSet = &amp;vkTexture-&gt;samplerDescriptorSet;
+  } else if (VKComputePipeline *computePipeline =
+                 dynamic_cast&lt;VKComputePipeline *&gt;(currentPipeline)) {
+    if (!(vkTexture-&gt;imageUsageFlags &amp; VK_IMAGE_USAGE_STORAGE_BIT)) {
+      NGFX_ERR(&quot;incorrect image usage flags: missing IMAGE_USAGE_STORAGE_BIT&quot;);
+    }
+    pipelineLayout = computePipeline-&gt;pipelineLayout;
+    pipelineBindPoint = VK_PIPELINE_BIND_POINT_COMPUTE;
+    descriptorSet = &amp;vkTexture-&gt;storageImageDescriptorSet;
+  } else
+    NGFX_ERR();
+  VK_TRACE(vkCmdBindDescriptorSets(vk(commandBuffer)-&gt;v, pipelineBindPoint,
+                                   pipelineLayout, set, 1, descriptorSet, 0,
+                                   nullptr));
+}
+
+void VKGraphics::bindVertexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
+                                  uint32_t location, uint32_t stride) {
+  VkDeviceSize offsets[] = {0};
+  VK_TRACE(vkCmdBindVertexBuffers(vk(commandBuffer)-&gt;v, location, 1,
+                                  &amp;vk(buffer)-&gt;v, offsets));
+}
+void VKGraphics::bindIndexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
+                                 IndexFormat indexFormat) {
+  VkDeviceSize offset = 0;
+  VK_TRACE(vkCmdBindIndexBuffer(vk(commandBuffer)-&gt;v, vk(buffer)-&gt;v, offset,
+                                VkIndexType(indexFormat)));
+}
+static void bindBufferFN0(CommandBuffer *commandBuffer, Buffer *buffer,
+                          uint32_t set, Pipeline *currentPipeline,
+                          const VkDescriptorSet *descriptorSet) {
+  VkPipelineLayout pipelineLayout;
+  VkPipelineBindPoint pipelineBindPoint;
+  if (VKGraphicsPipeline *graphicsPipeline =
+          dynamic_cast&lt;VKGraphicsPipeline *&gt;(currentPipeline)) {
+    pipelineLayout = graphicsPipeline-&gt;pipelineLayout;
+    pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
+  } else if (VKComputePipeline *computePipeline =
+                 dynamic_cast&lt;VKComputePipeline *&gt;(currentPipeline)) {
+    pipelineLayout = computePipeline-&gt;pipelineLayout;
+    pipelineBindPoint = VK_PIPELINE_BIND_POINT_COMPUTE;
+  } else
+    NGFX_ERR();
+  VK_TRACE(vkCmdBindDescriptorSets(vk(commandBuffer)-&gt;v, pipelineBindPoint,
+                                   pipelineLayout, set, 1, descriptorSet, 0,
+                                   nullptr));
+}
+
+void VKGraphics::bindUniformBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
+                                   uint32_t set,
+                                   ShaderStageFlags shaderStageFlags) {
+  bindBufferFN0(commandBuffer, buffer, set, currentPipeline,
+                &amp;vk(buffer)-&gt;getUboDescriptorSet(shaderStageFlags));
+}
+
+void VKGraphics::bindStorageBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
+                                   uint32_t set,
+                                   ShaderStageFlags shaderStageFlags) {
+  bindBufferFN0(commandBuffer, buffer, set, currentPipeline,
+                &amp;vk(buffer)-&gt;getSsboDescriptorSet(shaderStageFlags));
+}
+
+void VKGraphics::dispatch(CommandBuffer *commandBuffer, uint32_t groupCountX,
+                          uint32_t groupCountY, uint32_t groupCountZ,
+                          uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
+                          uint32_t threadsPerGroupZ) {
+  VK_TRACE(vkCmdDispatch(vk(commandBuffer)-&gt;v, groupCountX, groupCountY,
+                         groupCountZ));
+}
+
+void VKGraphics::draw(CommandBuffer *commandBuffer, uint32_t vertexCount,
+                      uint32_t instanceCount, uint32_t firstVertex,
+                      uint32_t firstInstance) {
+  VK_TRACE(vkCmdDraw(vk(commandBuffer)-&gt;v, vertexCount, instanceCount,
+                     firstVertex, firstInstance));
+}
+void VKGraphics::drawIndexed(CommandBuffer *cmdBuffer, uint32_t indexCount,
+                             uint32_t instanceCount, uint32_t firstIndex,
+                             int32_t vertexOffset, uint32_t firstInstance) {
+  VK_TRACE(vkCmdDrawIndexed(vk(cmdBuffer)-&gt;v, indexCount, instanceCount,
+                            firstIndex, vertexOffset, firstInstance));
+}
+
+void VKGraphics::setViewport(CommandBuffer *commandBuffer, Rect2D r) {
+  viewport = r;
+  VkViewport vkViewport = {float(r.x), float(r.y), float(r.w),
+                           float(r.h), 0.0f,       1.0f};
+  VK_TRACE(vkCmdSetViewport(vk(commandBuffer)-&gt;v, 0, 1, &amp;vkViewport));
+}
+void VKGraphics::setScissor(CommandBuffer *commandBuffer, Rect2D r) {
+  scissorRect = r;
+#ifdef ORIGIN_BOTTOM_LEFT
+  auto &amp;v = viewport;
+  VkRect2D vkScissorRect = {{r.x, int32_t(v.h) - r.y - int32_t(r.h)},
+                            {r.w, r.h}};
+#else
+  VkRect2D vkScissorRect = {{r.x, r.y}, {r.w, r.h}};
+#endif
+  VK_TRACE(vkCmdSetScissor(vk(commandBuffer)-&gt;v, 0, 1, &amp;vkScissorRect));
+}
+
+void VKGraphics::waitIdle(CommandBuffer *cmdBuffer) {
+  vk(ctx)-&gt;vkDevice.waitIdle();
+}
+
+Graphics *Graphics::create(GraphicsContext *ctx) {
+  VKGraphics *vkGraphics = new VKGraphics();
+  vkGraphics-&gt;ctx = ctx;
+  vkGraphics-&gt;create();
+  return vkGraphics;
+}
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 11:32:35 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>

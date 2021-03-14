@@ -307,6 +307,7 @@
                 <h1 id="ngfxbuffer">ngfx::Buffer</h1>
 <p><a href="#detailed-description">More...</a></p>
 <p><code>#include &lt;Buffer.h&gt;</code></p>
+<p>Inherited by <a href="/ngfx/api/Classes/classngfx_1_1D3DBuffer/">ngfx::D3DBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLBuffer/">ngfx::MTLBuffer</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKBuffer/">ngfx::VKBuffer</a></p>
 <h2 id="public-functions">Public Functions</h2>
 <table>
 <thead>
@@ -382,10 +383,12 @@ static inline Buffer * create(
 <h3 id="function-map">function map</h3>
 <pre><code class="language-cpp">virtual void * map() =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLBuffer/#function-map">ngfx::MTLBuffer::map</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKBuffer/#function-map">ngfx::VKBuffer::map</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DBuffer/#function-map">ngfx::D3DBuffer::map</a></p>
 <p>Map the buffer contents for CPU read/write access </p>
 <h3 id="function-unmap">function unmap</h3>
 <pre><code class="language-cpp">virtual void unmap() =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLBuffer/#function-unmap">ngfx::MTLBuffer::unmap</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKBuffer/#function-unmap">ngfx::VKBuffer::unmap</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DBuffer/#function-unmap">ngfx::D3DBuffer::unmap</a></p>
 <p>Unmap the buffer </p>
 <h3 id="function-upload">function upload</h3>
 <pre><code class="language-cpp">virtual void upload(
@@ -400,6 +403,7 @@ static inline Buffer * create(
 <li><strong>size</strong> The size of the data (in bytes) </li>
 <li><strong>offset</strong> The destination offset (in bytes) </li>
 </ul>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLBuffer/#function-upload">ngfx::MTLBuffer::upload</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKBuffer/#function-upload">ngfx::VKBuffer::upload</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DBuffer/#function-upload">ngfx::D3DBuffer::upload</a></p>
 <p>Upload the CPU data to the GPU buffer </p>
 <h3 id="function-download">function download</h3>
 <pre><code class="language-cpp">virtual void download(
@@ -414,9 +418,10 @@ static inline Buffer * create(
 <li><strong>size</strong> The size of the data to download (in bytes) </li>
 <li><strong>offset</strong> The destination offset (in bytes) </li>
 </ul>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLBuffer/#function-download">ngfx::MTLBuffer::download</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKBuffer/#function-download">ngfx::VKBuffer::download</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DBuffer/#function-download">ngfx::D3DBuffer::download</a></p>
 <p>Download the GPU data to CPU-accessible memory </p>
 <hr />
-<p>Updated on 14 March 2021 at 11:29:17 Pacific Daylight Time</p>
+<p>Updated on 14 March 2021 at 11:32:29 Pacific Daylight Time</p>
                 
                   
                 

@@ -381,6 +381,7 @@
                 
                 
                 <h1 id="ngfxtexture">ngfx::Texture</h1>
+<p>Inherited by <a href="/ngfx/api/Classes/classngfx_1_1D3DTexture/">ngfx::D3DTexture</a>, <a href="/ngfx/api/Classes/classngfx_1_1MTLTexture/">ngfx::MTLTexture</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKTexture/">ngfx::VKTexture</a></p>
 <h2 id="public-functions">Public Functions</h2>
 <table>
 <thead>
@@ -518,6 +519,7 @@
     int32_t arrayLayers =-1
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLTexture/#function-upload">ngfx::MTLTexture::upload</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKTexture/#function-upload">ngfx::VKTexture::upload</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DTexture/#function-upload">ngfx::D3DTexture::upload</a></p>
 <h3 id="function-download">function download</h3>
 <pre><code class="language-cpp">virtual void download(
     void * data,
@@ -531,17 +533,20 @@
     int32_t arrayLayers =-1
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLTexture/#function-download">ngfx::MTLTexture::download</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKTexture/#function-download">ngfx::VKTexture::download</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DTexture/#function-download">ngfx::D3DTexture::download</a></p>
 <h3 id="function-changelayout">function changeLayout</h3>
 <pre><code class="language-cpp">virtual void changeLayout(
     CommandBuffer * commandBuffer,
     ImageLayout imageLayout
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLTexture/#function-changelayout">ngfx::MTLTexture::changeLayout</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKTexture/#function-changelayout">ngfx::VKTexture::changeLayout</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DTexture/#function-changelayout">ngfx::D3DTexture::changeLayout</a></p>
 <h3 id="function-generatemipmaps">function generateMipmaps</h3>
 <pre><code class="language-cpp">virtual void generateMipmaps(
     CommandBuffer * commandBuffer
 ) =0
 </code></pre>
+<p><strong>Reimplemented by</strong>: <a href="/ngfx/api/Classes/classngfx_1_1MTLTexture/#function-generatemipmaps">ngfx::MTLTexture::generateMipmaps</a>, <a href="/ngfx/api/Classes/classngfx_1_1VKTexture/#function-generatemipmaps">ngfx::VKTexture::generateMipmaps</a>, <a href="/ngfx/api/Classes/classngfx_1_1D3DTexture/#function-generatemipmaps">ngfx::D3DTexture::generateMipmaps</a></p>
 <h2 id="public-attributes-documentation">Public Attributes Documentation</h2>
 <h3 id="variable-format">variable format</h3>
 <pre><code class="language-cpp">PixelFormat format;
@@ -571,7 +576,7 @@
 <pre><code class="language-cpp">TextureType textureType;
 </code></pre>
 <hr />
-<p>Updated on 14 March 2021 at 11:29:17 Pacific Daylight Time</p>
+<p>Updated on 14 March 2021 at 11:32:32 Pacific Daylight Time</p>
                 
                   
                 

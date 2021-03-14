@@ -1,0 +1,556 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-7.0.6">
+    
+    
+      
+        <title>src/ngfx/porting/d3d/D3DGraphicsCore.h - NGFX API Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2c0c5eaf.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.7fa14f5b.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
+      
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srcngfxportingd3dd3dgraphicscoreh" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="NGFX API Documentation" class="md-header__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            NGFX API Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              src/ngfx/porting/d3d/D3DGraphicsCore.h
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="NGFX API Documentation" class="md-nav__button md-logo" aria-label="NGFX API Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    NGFX API Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/ngfx/api/Classes" class="md-nav__link">
+        Classes
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#namespaces" class="md-nav__link">
+    Namespaces
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#defines" class="md-nav__link">
+    Defines
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#macro-documentation" class="md-nav__link">
+    Macro Documentation
+  </a>
+  
+    <nav class="md-nav" aria-label="Macro Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#define-nominmax" class="md-nav__link">
+    define NOMINMAX
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-define_pixelformats" class="md-nav__link">
+    define DEFINE_PIXELFORMATS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#define-define_vertexformats" class="md-nav__link">
+    define DEFINE_VERTEXFORMATS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    Source code
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="srcngfxportingd3dd3dgraphicscoreh">src/ngfx/porting/d3d/D3DGraphicsCore.h</h1>
+<h2 id="namespaces">Namespaces</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="/ngfx/api/Namespaces/namespacengfx/">ngfx</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="defines">Defines</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/D3DGraphicsCore_8h/#define-nominmax">NOMINMAX</a></strong></td>
+</tr>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/D3DGraphicsCore_8h/#define-define_pixelformats">DEFINE_PIXELFORMATS</a></strong>(s, t0, t1)</td>
+</tr>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/D3DGraphicsCore_8h/#define-define_vertexformats">DEFINE_VERTEXFORMATS</a></strong>(s, t0, t1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="macro-documentation">Macro Documentation</h2>
+<h3 id="define-nominmax">define NOMINMAX</h3>
+<pre><code class="language-cpp">#define NOMINMAX 
+</code></pre>
+<h3 id="define-define_pixelformats">define DEFINE_PIXELFORMATS</h3>
+<pre><code class="language-cpp">#define DEFINE_PIXELFORMATS(
+    s,
+    t0,
+    t1
+)
+  PIXELFORMAT_R##s##_##t0 = DXGI_FORMAT_R##s##_##t1,                           \
+  PIXELFORMAT_RG##s##_##t0 = DXGI_FORMAT_R##s##G##s##_##t1,                    \
+  PIXELFORMAT_RGBA##s##_##t0 = DXGI_FORMAT_R##s##G##s##B##s##A##s##_##t1
+</code></pre>
+<h3 id="define-define_vertexformats">define DEFINE_VERTEXFORMATS</h3>
+<pre><code class="language-cpp">#define DEFINE_VERTEXFORMATS(
+    s,
+    t0,
+    t1
+)
+  VERTEXFORMAT_##t0 = DXGI_FORMAT_R##s##_##t1,                                 \
+  VERTEXFORMAT_##t0##2 = DXGI_FORMAT_R##s##G##s##_##t1,                        \
+  VERTEXFORMAT_##t0##3 = DXGI_FORMAT_R##s##G##s##B##s##_##t1,                  \
+  VERTEXFORMAT_##t0##4 = DXGI_FORMAT_R##s##G##s##B##s##A##s##_##t1
+</code></pre>
+<h2 id="source-code">Source code</h2>
+<pre><code class="language-cpp">/*
+ * Copyright 2020 GoPro Inc.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#pragma once
+#define NOMINMAX
+#include &lt;d3d12.h&gt;
+
+namespace ngfx {
+enum PrimitiveTopology {
+  PRIMITIVE_TOPOLOGY_POINT_LIST = D3D_PRIMITIVE_TOPOLOGY_POINTLIST,
+  PRIMITIVE_TOPOLOGY_LINE_LIST = D3D_PRIMITIVE_TOPOLOGY_LINELIST,
+  PRIMITIVE_TOPOLOGY_LINE_STRIP = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP,
+  PRIMITIVE_TOPOLOGY_TRIANGLE_LIST = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+  PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP
+};
+enum PolygonMode {
+  POLYGON_MODE_FILL = D3D12_FILL_MODE_SOLID,
+  POLYGON_MODE_LINE = D3D12_FILL_MODE_WIREFRAME
+};
+enum BlendFactor {
+  BLEND_FACTOR_ZERO = D3D12_BLEND_ZERO,
+  BLEND_FACTOR_ONE = D3D12_BLEND_ONE,
+  BLEND_FACTOR_SRC_COLOR = D3D12_BLEND_SRC_COLOR,
+  BLEND_FACTOR_ONE_MINUS_SRC_COLOR = D3D12_BLEND_INV_SRC_COLOR,
+  BLEND_FACTOR_DST_COLOR = D3D12_BLEND_DEST_COLOR,
+  BLEND_FACTOR_ONE_MINUS_DST_COLOR = D3D12_BLEND_INV_DEST_COLOR,
+  BLEND_FACTOR_SRC_ALPHA = D3D12_BLEND_SRC_ALPHA,
+  BLEND_FACTOR_ONE_MINUS_SRC_ALPHA = D3D12_BLEND_INV_SRC_ALPHA,
+  BLEND_FACTOR_DST_ALPHA = D3D12_BLEND_DEST_ALPHA,
+  BLEND_FACTOR_ONE_MINUS_DST_ALPHA = D3D12_BLEND_INV_DEST_ALPHA,
+  BLEND_FACTOR_CONSTANT_COLOR = D3D12_BLEND_BLEND_FACTOR,
+  BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR = D3D12_BLEND_INV_BLEND_FACTOR
+};
+enum BufferUsageFlagBits {
+  BUFFER_USAGE_TRANSFER_SRC_BIT = 1,
+  BUFFER_USAGE_TRANSFER_DST_BIT = 2,
+  BUFFER_USAGE_UNIFORM_BUFFER_BIT = 4,
+  BUFFER_USAGE_STORAGE_BUFFER_BIT = 8,
+  BUFFER_USAGE_VERTEX_BUFFER_BIT = 16,
+  BUFFER_USAGE_INDEX_BUFFER_BIT = 32
+};
+enum BlendOp {
+  BLEND_OP_ADD = D3D12_BLEND_OP_ADD,
+  BLEND_OP_SUBTRACT = D3D12_BLEND_OP_SUBTRACT,
+  BLEND_OP_REVERSE_SUBTRACT = D3D12_BLEND_OP_REV_SUBTRACT,
+  BLEND_OP_MIN = D3D12_BLEND_OP_MIN,
+  BLEND_OP_MAX = D3D12_BLEND_OP_MAX
+};
+enum ColorComponentFlagBits {
+  COLOR_COMPONENT_R_BIT = D3D12_COLOR_WRITE_ENABLE_RED,
+  COLOR_COMPONENT_G_BIT = D3D12_COLOR_WRITE_ENABLE_GREEN,
+  COLOR_COMPONENT_B_BIT = D3D12_COLOR_WRITE_ENABLE_BLUE,
+  COLOR_COMPONENT_A_BIT = D3D12_COLOR_WRITE_ENABLE_ALPHA
+};
+enum CommandBufferLevel {
+  COMMAND_BUFFER_LEVEL_PRIMARY = D3D12_COMMAND_LIST_TYPE_DIRECT,
+  COMMAND_BUFFER_LEVEL_SECONDARY = D3D12_COMMAND_LIST_TYPE_BUNDLE
+};
+enum CullModeFlags {
+  CULL_MODE_NONE = D3D12_CULL_MODE_NONE,
+  CULL_MODE_FRONT_BIT = D3D12_CULL_MODE_FRONT,
+  CULL_MODE_BACK_BIT = D3D12_CULL_MODE_BACK
+};
+enum FrontFace { FRONT_FACE_COUNTER_CLOCKWISE, FRONT_FACE_CLOCKWISE };
+enum TextureType {
+  TEXTURE_TYPE_2D = D3D12_SRV_DIMENSION_TEXTURE2D,
+  TEXTURE_TYPE_3D = D3D12_SRV_DIMENSION_TEXTURE3D,
+  TEXTURE_TYPE_CUBE = D3D12_SRV_DIMENSION_TEXTURECUBE,
+  TEXTURE_TYPE_2D_ARRAY = D3D12_SRV_DIMENSION_TEXTURE2DARRAY
+};
+enum ImageUsageFlagBits {
+  IMAGE_USAGE_TRANSFER_SRC_BIT = 1,
+  IMAGE_USAGE_TRANSFER_DST_BIT = 2,
+  IMAGE_USAGE_SAMPLED_BIT = 4,
+  IMAGE_USAGE_STORAGE_BIT = 8,
+  IMAGE_USAGE_COLOR_ATTACHMENT_BIT = 16,
+  IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = 32,
+  IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = 64,
+  IMAGE_USAGE_INPUT_ATTACHMENT_BIT = 128,
+};
+enum PipelineStageFlagBits { PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+enum ShaderStageFlagBits {
+  SHADER_STAGE_VERTEX_BIT = 1,
+  SHADER_STAGE_TESSELLATION_CONTROL_BIT = 2,
+  SHADER_STAGE_TESSELLATION_EVALUATION_BIT = 4,
+  SHADER_STAGE_GEOMETRY_BIT = 8,
+  SHADER_STAGE_FRAGMENT_BIT = 16,
+  SHADER_STAGE_COMPUTE_BIT = 32,
+  SHADER_STAGE_ALL_GRAPHICS = 64,
+  SHADER_STAGE_ALL = 0xFF
+};
+#define DEFINE_PIXELFORMATS(s, t0, t1)                                         \
+  PIXELFORMAT_R##s##_##t0 = DXGI_FORMAT_R##s##_##t1,                           \
+  PIXELFORMAT_RG##s##_##t0 = DXGI_FORMAT_R##s##G##s##_##t1,                    \
+  PIXELFORMAT_RGBA##s##_##t0 = DXGI_FORMAT_R##s##G##s##B##s##A##s##_##t1
+
+enum PixelFormat {
+  PIXELFORMAT_UNDEFINED = DXGI_FORMAT_UNKNOWN,
+  DEFINE_PIXELFORMATS(8, UNORM, UNORM),
+  DEFINE_PIXELFORMATS(16, UINT, UINT),
+  DEFINE_PIXELFORMATS(16, SFLOAT, FLOAT),
+  DEFINE_PIXELFORMATS(32, UINT, UINT),
+  DEFINE_PIXELFORMATS(32, SFLOAT, FLOAT),
+  PIXELFORMAT_BGRA8_UNORM = DXGI_FORMAT_B8G8R8A8_UNORM,
+  PIXELFORMAT_D16_UNORM = DXGI_FORMAT_D16_UNORM,
+  PIXELFORMAT_D24_UNORM = DXGI_FORMAT_D24_UNORM_S8_UINT,
+  PIXELFORMAT_D24_UNORM_S8 = DXGI_FORMAT_D24_UNORM_S8_UINT
+};
+
+enum IndexFormat {
+  INDEXFORMAT_UINT16 = DXGI_FORMAT_R16_UINT,
+  INDEXFORMAT_UINT32 = DXGI_FORMAT_R32_UINT
+};
+
+#define DEFINE_VERTEXFORMATS(s, t0, t1)                                        \
+  VERTEXFORMAT_##t0 = DXGI_FORMAT_R##s##_##t1,                                 \
+  VERTEXFORMAT_##t0##2 = DXGI_FORMAT_R##s##G##s##_##t1,                        \
+  VERTEXFORMAT_##t0##3 = DXGI_FORMAT_R##s##G##s##B##s##_##t1,                  \
+  VERTEXFORMAT_##t0##4 = DXGI_FORMAT_R##s##G##s##B##s##A##s##_##t1
+
+enum VertexFormat { DEFINE_VERTEXFORMATS(32, FLOAT, FLOAT) };
+
+enum DescriptorType {
+  DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+  DESCRIPTOR_TYPE_STORAGE_IMAGE,
+  DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+  DESCRIPTOR_TYPE_STORAGE_BUFFER
+};
+enum VertexInputRate {
+  VERTEX_INPUT_RATE_VERTEX = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+  VERTEX_INPUT_RATE_INSTANCE = D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA
+};
+
+enum FilterMode { FILTER_NEAREST, FILTER_LINEAR };
+
+enum ImageLayout {
+  IMAGE_LAYOUT_UNDEFINED,
+  IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+  IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
+  IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+  IMAGE_LAYOUT_GENERAL,
+  IMAGE_LAYOUT_PRESENT_SRC
+};
+} // namespace ngfx
+</code></pre>
+<hr />
+<p>Updated on 14 March 2021 at 11:32:34 Pacific Daylight Time</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing"}, "search": "../../../assets/javascripts/workers/search.fb4a9340.min.js", "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.a1c7c35e.min.js"></script>
+      
+    
+  </body>
+</html>
