@@ -19,15 +19,7 @@ set(JSON_INCLUDE_DIRS ${JSON_DIR}/include)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(SHADERC_DIR ${VCPKG_DIR}/installed/x64-windows)
-  set(SHADERC_INCLUDE_DIRS ${SHADERC_DIR}/include)
-  set(SHADERC_LIBRARY_DIRS ${SHADERC_DIR}/lib)
-  set(SHADERC_LIBRARIES shaderc_shared)
-  
   set(SPIRV_CROSS_DIR ${VCPKG_DIR}/installed/x64-windows)
-  set(SPIRV_CROSS_INCLUDE_DIRS ${SPIRV_CROSS_DIR}/include)
-  set(SPIRV_CROSS_LIBRARY_DIRS ${SPIRV_CROSS_DIR}/lib)
-  set(SPIRV_CROSS_LIBRARIES spirv-cross-cpp spirv-cross-core spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl spirv-cross-reflect spirv-cross-util spirv-cross-c)
-  
   set(GLM_INCLUDE_DIRS ${EXTERNAL_DIR}/windows/glm-0.9.9.8/glm)
 
   if(NGFX_GRAPHICS_BACKEND_DIRECT3D12)
@@ -45,12 +37,23 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
   set(GLFW_LIBRARIES glfw3)
 else()
   find_package(PkgConfig REQUIRED)
+  set(SHADERC_DIR /usr/local)
   if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+      set(SPIRV_CROSS_DIR /usr/local)
       pkg_check_modules(GLM REQUIRED glm)
-  else()
+  elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+      set(SPIRV_CROSS_DIR /usr/local/opt/spirv-cross)
       set(GLM_INCLUDE_DIRS /usr/local/include)
   endif()
 endif()
+
+set(SHADERC_INCLUDE_DIRS ${SHADERC_DIR}/include)
+set(SHADERC_LIBRARY_DIRS ${SHADERC_DIR}/lib)
+set(SHADERC_LIBRARIES shaderc_shared)
+
+set(SPIRV_CROSS_INCLUDE_DIRS ${SPIRV_CROSS_DIR}/include)
+set(SPIRV_CROSS_LIBRARY_DIRS ${SPIRV_CROSS_DIR}/lib)
+set(SPIRV_CROSS_LIBRARIES spirv-cross-cpp spirv-cross-core spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl spirv-cross-reflect spirv-cross-util spirv-cross-c)
 
 file(GLOB_RECURSE NGFX_SOURCE_FILES
   src/ngfx/core/* src/ngfx/compute/*
