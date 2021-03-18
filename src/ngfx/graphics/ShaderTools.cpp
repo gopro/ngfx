@@ -123,14 +123,14 @@ int ShaderTools::removeUnusedVariablesGLSL(const std::string &src, shaderc_shade
     int ret = 0;
     string spv;
     V(compileShaderGLSL(src, shaderKind, defines, spv, false));
-    spirv_cross::CompilerGLSL compilerGLSL((const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
-    auto activeVariables = compilerGLSL.get_active_interface_variables();
-    compilerGLSL.get_shader_resources(activeVariables);
-    compilerGLSL.set_enabled_interface_variables(move(activeVariables));
+    auto compilerGLSL = make_unique<spirv_cross::CompilerGLSL>((const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
+    auto activeVariables = compilerGLSL->get_active_interface_variables();
+    compilerGLSL->get_shader_resources(activeVariables);
+    compilerGLSL->set_enabled_interface_variables(move(activeVariables));
     spirv_cross::CompilerGLSL::Options opts;
     opts.vulkan_semantics = true;
-    compilerGLSL.set_common_options(opts);
-    dst = compilerGLSL.compile();
+    compilerGLSL->set_common_options(opts);
+    dst = compilerGLSL->compile();
     return 0;
 }
 
@@ -236,17 +236,17 @@ int ShaderTools::compileShaderHLSL(const string &file, const MacroDefinitions &d
 }
 
 int ShaderTools::convertSPVToMSL(const string &spv, shaderc_shader_kind shaderKind, string &msl) {
-    spirv_cross::CompilerMSL compilerMSL((const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
-    msl = compilerMSL.compile();
+    auto compilerMSL = make_unique<spirv_cross::CompilerMSL>((const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
+    msl = compilerMSL->compile();
     return 0;
 }
 
 int ShaderTools::convertSPVToHLSL(const string &spv, shaderc_shader_kind shaderKind, string &hlsl, uint32_t shaderModel) {
-    spirv_cross::CompilerHLSL compilerHLSL((const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
-    auto options = compilerHLSL.get_hlsl_options();
+    auto compilerHLSL = make_unique<spirv_cross::CompilerHLSL>((const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
+    auto options = compilerHLSL->get_hlsl_options();
     options.shader_model = shaderModel;
-    compilerHLSL.set_hlsl_options(options);
-    hlsl = compilerHLSL.compile();
+    compilerHLSL->set_hlsl_options(options);
+    hlsl = compilerHLSL->compile();
     return 0;
 }
 
