@@ -30,7 +30,7 @@ namespace ngfx {
         void create(uint32_t w, uint32_t h, const ColorAttachments &colorAttachments,
             MTLRenderPassDepthAttachmentDescriptor* depthAttachment = nullptr,
             MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = nullptr);
-        virtual ~MTLFramebuffer() {}
+        virtual ~MTLFramebuffer();
         ColorAttachments colorAttachments;
         MTLRenderPassDepthAttachmentDescriptor* depthAttachment = nullptr;
         MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = nullptr;

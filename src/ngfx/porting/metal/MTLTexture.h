@@ -32,6 +32,7 @@ namespace ngfx {
             uint32_t w, uint32_t h, uint32_t d, uint32_t arrayLayers,
             MTLTextureUsage textureUsage, ::MTLTextureType textureType,
             bool genMipmaps, MTLSamplerDescriptor* samplerDescriptor, uint32_t numSamples);
+        virtual ~MTLTexture();
         void upload(void* data, uint32_t size, uint32_t x = 0, uint32_t y = 0, uint32_t z = 0,
                     int32_t w = -1, int32_t h = -1, int32_t d = -1, int32_t arrayLayers = -1) override;
         void download(void* data, uint32_t size, uint32_t x = 0, uint32_t y = 0, uint32_t z = 0,

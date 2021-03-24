@@ -58,6 +58,8 @@ namespace ngfx {
         ::MTLPrimitiveType currentPrimitiveType;
         MTLBuffer* currentIndexBuffer = nullptr;
         IndexFormat currentIndexFormat;
+    private:
+        NSAutoreleasePool* autoReleasePool = nullptr;
     };
     MTL_CAST(Graphics);
 }

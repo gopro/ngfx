@@ -33,6 +33,14 @@ void MTLFramebuffer::create(uint32_t w, uint32_t h, const ColorAttachments &colo
     this->stencilAttachment = stencilAttachment;
 }
 
+MTLFramebuffer::~MTLFramebuffer() {
+    for (auto& colorAttachment : colorAttachments) {
+        [colorAttachment release];
+    }
+    if (depthAttachment) [depthAttachment release];
+    if (stencilAttachment) [stencilAttachment release];
+}
+
 Framebuffer* Framebuffer::create(Device* device, RenderPass* renderPass,
         const std::vector<Attachment> &attachments, uint32_t w, uint32_t h, uint32_t layers) {
     MTLFramebuffer* mtlFramebuffer = new MTLFramebuffer();

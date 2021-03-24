@@ -62,6 +62,7 @@ void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MT
     
     MTLPipelineOption options = MTLPipelineOptionArgumentInfo | MTLPipelineOptionBufferTypeInfo;
     mtlPipelineState = [device newRenderPipelineStateWithDescriptor:pipelineStateDescriptor options:options reflection:&reflection error:&error];
+    [pipelineStateDescriptor release];
     NSCAssert(mtlPipelineState, @"Failed to create pipeline state: %@", error);
     
     mtlPrimitiveType = ::MTLPrimitiveType(state.primitiveTopology);
@@ -110,5 +111,6 @@ GraphicsPipeline* GraphicsPipeline::create(GraphicsContext* ctx, const GraphicsP
     
     mtlGraphicsPipeline->create(mtl(ctx), state, vertexDescriptor, shaders, ::MTLPixelFormat(colorFormat),
         ::MTLPixelFormat(depthFormat));
+    [vertexDescriptor release];
     return mtlGraphicsPipeline;
 }

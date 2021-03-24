@@ -69,9 +69,14 @@ void MTLTexture::create(MTLGraphicsContext *ctx, void* data, ::MTLPixelFormat fo
     bool multisampleTexture = (numSamples > 1);
     if (multisampleTexture) textureDescriptor.storageMode = ::MTLStorageModePrivate;
     v = [device newTextureWithDescriptor:textureDescriptor];
+    [textureDescriptor release];
     
     upload(data, size);
     mtlSamplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
+}
+
+MTLTexture::~MTLTexture() {
+    [v release];
 }
 
 void MTLTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y, uint32_t z,
@@ -148,5 +153,6 @@ Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data, P
     mtlSamplerDescriptor.mipFilter = (mipFilter == FILTER_NEAREST) ? MTLSamplerMipFilterNearest : MTLSamplerMipFilterLinear;
     mtlTexture->create(mtl(ctx), data, ::MTLPixelFormat(format), size, w, h, d, arrayLayers,
        textureUsage, ::MTLTextureType(textureType), genMipmaps, mtlSamplerDescriptor, numSamples);
+    [mtlSamplerDescriptor release];
     return mtlTexture;
 }

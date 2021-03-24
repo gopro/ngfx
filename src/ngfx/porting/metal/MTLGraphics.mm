@@ -63,6 +63,7 @@ struct MTLGraphicsUtil {
 
 void MTLGraphics::beginRenderPass(CommandBuffer* commandBuffer, RenderPass* renderPass, Framebuffer* framebuffer,
           glm::vec4 clearColor, float clearDepth, uint32_t clearStencil) {
+    autoReleasePool = [[NSAutoreleasePool alloc] init];
     MTLRenderPassDescriptor* mtlRenderPassDescriptor = mtl(renderPass)->getDescriptor(mtl(ctx), mtl(framebuffer), clearColor, clearDepth, clearStencil);
     currentRenderCommandEncoder.v = [mtl(commandBuffer)->v renderCommandEncoderWithDescriptor:mtlRenderPassDescriptor];
     currentCommandEncoder = &currentRenderCommandEncoder;
@@ -71,6 +72,7 @@ void MTLGraphics::beginRenderPass(CommandBuffer* commandBuffer, RenderPass* rend
 void MTLGraphics::endRenderPass(CommandBuffer* commandBuffer) {
     [currentRenderCommandEncoder.v endEncoding];
     currentRenderCommandEncoder.v = nullptr;
+    [autoReleasePool release];
 }
 
 void MTLGraphics::bindVertexBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, uint32_t location, uint32_t stride) {
