@@ -22,15 +22,36 @@
 #include "ngfx/graphics/DrawOp.h"
 #include "ngfx/graphics/GraphicsContext.h"
 
+/** \class FilterOp
+ * 
+ *  This is the base class for filter operations.
+ *  A filter can output to a texture or to a framebuffer.
+ *  TODO: support chained filters.
+ */
+ 
 namespace ngfx {
 class FilterOp : public DrawOp {
 public:
+  /** Create a filter operation
+   *  @param ctx The graphics context
+   *  @param graphics The graphics interface
+   *  @param dstWidth The destination width
+   *  @param dstHeight The destination height
+   */
   FilterOp(GraphicsContext *ctx, Graphics *graphics, uint32_t dstWidth,
            uint32_t dstHeight);
+  /** Destroy the filter operation */
   virtual ~FilterOp() {}
+  /** Apply the filter
+   *  @param ctx The graphics context
+   *  @param commandBuffer The command buffer
+   *  @param graphics The graphics interface
+   */
   void apply(GraphicsContext *ctx, CommandBuffer *commandBuffer,
              Graphics *graphics);
+  /** The output texture */
   std::unique_ptr<Texture> outputTexture;
+  /** The output framebuffer */
   std::unique_ptr<Framebuffer> outputFramebuffer;
 };
 }; // namespace ngfx

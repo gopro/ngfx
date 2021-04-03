@@ -24,18 +24,39 @@
 #include "ngfx/graphics/Texture.h"
 #include <vector>
 
+/** \class Framebuffer
+ * 
+ *  This class defines the interface for a framebuffer object.
+ *  It supports rendering to a destination surface, such as a texture
+ *  or a window surface.
+ */
+
 namespace ngfx {
 class Framebuffer {
 public:
   struct Attachment {
+    /** The destination texture */
     Texture *texture = nullptr;
-    uint32_t level = 0, layer = 0;
+    uint32_t level = 0, /**< The destination texture mipmap level */
+             layer = 0; /**< The destination texture array layer index */
   };
+  /** Create a framebuffer object
+   *  @param device The graphics device
+   *  @param renderPass The renderPass object
+   *  @param attachments The output attachments
+   *  @param w The destination width
+   *  @param h The destination height
+   *  @param layers The number of output layers
+   */
   static Framebuffer *create(Device *device, RenderPass *renderPass,
                              const std::vector<Attachment> &attachments,
                              uint32_t w, uint32_t h, uint32_t layers = 1);
+  /** Destroy the framebuffer */
   virtual ~Framebuffer() {}
-  uint32_t w, h, layers, numAttachments;
-  std::vector<Attachment> attachments;
+  uint32_t w, /**< The output width */
+           h, /**< The output height */
+           layers, /**< The number of output layers */
+           numAttachments; /**< The number of attachments */
+  std::vector<Attachment> attachments; /**< The vector of output attachments */
 };
 } // namespace ngfx

@@ -20,6 +20,11 @@
  */
 #pragma once
 
+/** \class Device
+ * 
+ *  This is the base class for a GPU device abstraction
+ */
+ 
 namespace ngfx {
 class Device {};
 }; // namespace ngfx
