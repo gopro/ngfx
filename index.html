@@ -1935,32 +1935,42 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="ngfx-graphics-framework">NGFX Graphics Framework</h1>
-<p>NGFX is a low level graphics framework, providing an abstraction API on top of Vulkan, DirectX12, and Metal.</p>
-<p>It exposes the benefits of next-generation graphics technology via a common platform abstraction API.  </p>
-<p>It also supports optional access to the backend data structures, enabling platform specific optimizations.</p>
+<p>NGFX is a low level graphics framework, providing an abstraction API on 
+top of Vulkan, DirectX12, and Metal.  It exposes the benefits of 
+next-generation graphics technology via a common platform abstraction 
+API.  It also supports optional access to the backend data structures, 
+enabling platform specific optimizations.</p>
+<hr />
 <h2 id="source-code">Source Code</h2>
 <p><a href="https://github.com/gopro/ngfx">https://github.com/gopro/ngfx</a></p>
+<hr />
 <h2 id="high-level-architecture">High Level Architecture</h2>
 <p><img alt="High Level Architecture" src="doc/high_level_arch.png" /></p>
+<hr />
 <h2 id="low-level-architecture">Low Level Architecture</h2>
 <p><img alt="Low Level Architecture" src="doc/low_level_arch.png" /></p>
-<p>The ngfx graphics classes provide high-level abstractions on top of various graphics objects, 
-including Buffer, Texture, Renderpass, Swapchain, Surface, CommandBuffer, etc.
-Each backend (Vulkan, Metal, DirectX12) is responsible for implementing the high-level 
-abstraction interface via a subclass.</p>
-<p>The user can construct 3D graphics commands using these high-level abstractions.
-Optionally, the user can access the backend-specific data by casting the high-level object 
-to a backend-specific subclass.</p>
-<p>For example: 
-<code>Buffer *buffer = Buffer::create(...);
-VKBuffer *vkBuffer = (VKBuffer*)buffer;</code></p>
-<p>From there, the user can access platform specific data, including the underlying Vulkan buffer object, etc.
-This provides a high degree of flexibility, where the user can primarily use platform-agnostic code, 
-while still being able to use platform-specific code for high-performance optimizations, and for 
-achieving optimal interaction with the platform.</p>
+<p>The ngfx graphics classes provide high-level abstractions on top of 
+various graphics objects, including Buffer, Texture, Renderpass, 
+Swapchain, Surface, CommandBuffer, etc.  Each backend (Vulkan, Metal, 
+DirectX12) is responsible for implementing the high-level abstraction 
+interface via a subclass.</p>
+<p>The user can construct 3D graphics commands using these high-level 
+abstractions.  Optionally, the user can access the backend-specific 
+data by casting the high-level object to a backend-specific subclass.</p>
+<p>For example: </p>
+<pre><code>Buffer *buffer = Buffer::create(...);
+VKBuffer *vkBuffer = (VKBuffer*)buffer;
+</code></pre>
+<p>From there, the user can access platform specific data, including the 
+underlying Vulkan buffer object, etc.  This provides a high degree of 
+flexibility, where the user can primarily use platform-agnostic code, 
+while still being able to use platform-specific code for 
+high-performance optimizations, and for achieving optimal interaction 
+with the platform.</p>
+<hr />
 <h2 id="build-instructions">Build Instructions</h2>
-<h3 id="1-install-dependencies">1) Install Dependencies</h3>
-<h4 id="11-install-platform-specific-dependencies">1.1) Install Platform-Specific Dependencies</h4>
+<p><strong>1) Install Dependencies</strong></p>
+<p>1.1) Install Platform-Specific Dependencies</p>
 <p><em>On Windows 10 (or newer):</em></p>
 <p>Install Microsoft Visual Studio 2019 (or newer)</p>
 <p>Install Windows Subsystem for Linux (Ubuntu 20.04.1 LTS or newer)
@@ -1969,9 +1979,9 @@ achieving optimal interaction with the platform.</p>
 <p>Install GNU Toolchain (apt install build-essential)</p>
 <p><em>On Mac:</em></p>
 <p>Install XCode</p>
-<h4 id="12-install-common-system-dependencies">1.2) Install Common System Dependencies</h4>
+<p>1.2) Install Common System Dependencies</p>
 <p>Install CMake 3.19.1 (or newer)</p>
-<h4 id="13-install-third-party-dependencies">1.3) Install Third-Party Dependencies</h4>
+<p>1.3) Install Third-Party Dependencies</p>
 <p><em>ngfx has the following dependencies:</em></p>
 <ul>
 <li>nlohmann/json 3.9.1 (or newer)</li>
@@ -1985,32 +1995,45 @@ achieving optimal interaction with the platform.</p>
 <li>vulkan sdk 1.2.162.1 (or newer, if using Vulkan backend)</li>
 </ul>
 <p>We provide a helper script to help install 3rd-party dependencies</p>
-<p>bash build_scripts/sync_deps.sh <em>platform</em>
-- <em>platform</em>: Windows, Linux, or Darwin (Mac OS)</p>
-<h3 id="2-configure">2) Configure</h3>
-<p>cmake.exe -H. -B<em>build_folder</em> -DCMAKE_BUILD_TYPE=<em>build_type</em> -D<em>ngfx_graphics_backend</em>=ON -G <em>cmake_generator</em>
-- <em>build_folder</em>: the build output folder (e.g. cmake-build-debug, or cmake-build-release)
-- <em>build type</em>: Debug or Release
-- <em>ngfx_graphics_backend</em>: the graphics backend (NGFX_GRAPHICS_BACKEND_VULKAN, NGFX_GRAPHICS_BACKEND_METAL, or NGFX_GRAPHICS_BACKEND_DIRECT3D12)
-- <em>cmake_generator</em>: CMake generator (e.g. Visual Studio 16 2019)</p>
+<p><code>bash build_scripts/sync_deps.sh *platform*</code></p>
+<ul>
+<li><em>platform</em>: Windows, Linux, or Darwin (Mac OS)</li>
+</ul>
+<p><strong>2) Configure</strong></p>
+<p><code>cmake.exe -H. -B*build_folder* -DCMAKE_BUILD_TYPE=*build_type* -D*ngfx_graphics_backend*=ON -G *cmake_generator*</code></p>
+<ul>
+<li><em>build_folder</em>: the build output folder 
+(e.g. cmake-build-debug, or cmake-build-release)</li>
+<li><em>build type</em>: Debug or Release</li>
+<li><em>ngfx_graphics_backend</em>: the graphics backend 
+(NGFX_GRAPHICS_BACKEND_VULKAN, NGFX_GRAPHICS_BACKEND_METAL, or 
+NGFX_GRAPHICS_BACKEND_DIRECT3D12)</li>
+<li><em>cmake_generator</em>: CMake generator (e.g. Visual Studio 16 2019)</li>
+</ul>
 <p>Example:</p>
-<p>cmake.exe -H. -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DNGFX_GRAPHICS_BACKEND_DIRECT3D12=ON</p>
-<h3 id="3-build">3) Build</h3>
+<p><code>cmake.exe -H. -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DNGFX_GRAPHICS_BACKEND_DIRECT3D12=ON</code></p>
+<p><strong>3) Build</strong></p>
 <p>From command line: </p>
-<p>cmake.exe --build <em>build_folder</em></p>
+<p><code>cmake.exe --build *build_folder*</code></p>
 <p>Alternatively, can build from IDE</p>
-<h3 id="4-install">4) Install</h3>
-<p>cmake.exe --install <em>build_folder</em> --config <em>build_type</em> --prefix <em>install_prefix</em>
-- <em>install_prefix</em>: The install prefix</p>
+<p><strong>4) Install</strong></p>
+<p><code>cmake.exe --install *build_folder* --config *build_type* --prefix *install_prefix*</code></p>
+<ul>
+<li><em>install_prefix</em>: The install prefix</li>
+</ul>
+<hr />
 <h2 id="api-documentation">API Documentation</h2>
-<p><a href="https://gopro.github.io/ngfx/api/Classes/">API Documentation</a></p>
+<p><a href="https://gopro.github.io/ngfx/api/Classes/">https://gopro.github.io/ngfx/api/Classes/</a></p>
+<hr />
 <h2 id="contributing">Contributing</h2>
-<h3 id="coding-style-guidelines">Coding Style Guidelines</h3>
+<p><strong>Coding Style Guidelines</strong></p>
 <p>We use clang-format to automatically enforce coding style.
 We use llvm coding style (the default option in clang-format).
 To automatically apply formatting: run build_scripts/clang_format.sh</p>
-<p>The LLVM coding style can be referenced here: See https://llvm.org/docs/CodingStandards.html  </p>
-<p>We use doxygen, with JavaDoc-style annotations to generate API documentation.</p></div>
+<p>The LLVM coding style can be referenced here: 
+See <a href="https://llvm.org/docs/CodingStandards.html">https://llvm.org/docs/CodingStandards.html</a></p>
+<p>We use doxygen, with JavaDoc-style annotations to generate API 
+documentation.</p></div>
             </div>
         </div>
 
@@ -2094,5 +2117,5 @@ To automatically apply formatting: run build_scripts/clang_format.sh</p>
 
 <!--
 MkDocs version : 1.1.2
-Build Date UTC : 2021-04-04 07:32:43.714032+00:00
+Build Date UTC : 2021-04-04 07:57:36.702196+00:00
 -->
