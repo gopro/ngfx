@@ -1,0 +1,2248 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../../img/favicon.ico">
+        <title>src/ngfx/porting/vulkan/VKGraphicsCore.h - My Docs</title>
+        <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
+        <script src="../../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="../../..">My Docs</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href="../../.." class="nav-link">Welcome to MkDocs</a>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Api <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Classes</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../Classes/" class="dropdown-item">Classes</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classBufferUtil/" class="dropdown-item">BufferUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classCamera/" class="dropdown-item">Camera</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classCommandBuffer/" class="dropdown-item">CommandBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classDevice/" class="dropdown-item">Device</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classDrawOp/" class="dropdown-item">DrawOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classFence/" class="dropdown-item">Fence</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classFilterOp/" class="dropdown-item">FilterOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classFramebuffer/" class="dropdown-item">Framebuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1BaseApplication/" class="dropdown-item">ngfx::BaseApplication</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Buffer/" class="dropdown-item">ngfx::Buffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Camera/" class="dropdown-item">ngfx::Camera</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1CommandBuffer/" class="dropdown-item">ngfx::CommandBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ComputeApplication/" class="dropdown-item">ngfx::ComputeApplication</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ComputeOp/" class="dropdown-item">ngfx::ComputeOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ComputePass/" class="dropdown-item">ngfx::ComputePass</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ComputePipeline/" class="dropdown-item">ngfx::ComputePipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ComputeShaderModule/" class="dropdown-item">ngfx::ComputeShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DBlitOp/" class="dropdown-item">ngfx::D3DBlitOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DBuffer/" class="dropdown-item">ngfx::D3DBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DCommandList/" class="dropdown-item">ngfx::D3DCommandList</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DCommandQueue/" class="dropdown-item">ngfx::D3DCommandQueue</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DComputePass/" class="dropdown-item">ngfx::D3DComputePass</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DComputePipeline/" class="dropdown-item">ngfx::D3DComputePipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DComputeShaderModule/" class="dropdown-item">ngfx::D3DComputeShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DDescriptorHandle/" class="dropdown-item">ngfx::D3DDescriptorHandle</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DDescriptorHeap/" class="dropdown-item">ngfx::D3DDescriptorHeap</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DDevice/" class="dropdown-item">ngfx::D3DDevice</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DFence/" class="dropdown-item">ngfx::D3DFence</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DFragmentShaderModule/" class="dropdown-item">ngfx::D3DFragmentShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DFramebuffer/" class="dropdown-item">ngfx::D3DFramebuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DGraphics/" class="dropdown-item">ngfx::D3DGraphics</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DGraphicsContext/" class="dropdown-item">ngfx::D3DGraphicsContext</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DGraphicsPipeline/" class="dropdown-item">ngfx::D3DGraphicsPipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DPipeline/" class="dropdown-item">ngfx::D3DPipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DPipelineCache/" class="dropdown-item">ngfx::D3DPipelineCache</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DReadbackBuffer/" class="dropdown-item">ngfx::D3DReadbackBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DRenderPass/" class="dropdown-item">ngfx::D3DRenderPass</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DShaderModule/" class="dropdown-item">ngfx::D3DShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DSurface/" class="dropdown-item">ngfx::D3DSurface</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DSwapchain/" class="dropdown-item">ngfx::D3DSwapchain</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DTexture/" class="dropdown-item">ngfx::D3DTexture</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DVertexShaderModule/" class="dropdown-item">ngfx::D3DVertexShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1D3DWindow/" class="dropdown-item">ngfx::D3DWindow</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Device/" class="dropdown-item">ngfx::Device</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1DrawColorOp/" class="dropdown-item">ngfx::DrawColorOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1DrawMeshOp/" class="dropdown-item">ngfx::DrawMeshOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1DrawOp/" class="dropdown-item">ngfx::DrawOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1DrawTextureOp/" class="dropdown-item">ngfx::DrawTextureOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1FPSCounter/" class="dropdown-item">ngfx::FPSCounter</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Fence/" class="dropdown-item">ngfx::Fence</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1File/" class="dropdown-item">ngfx::File</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1FileUtil/" class="dropdown-item">ngfx::FileUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1FilterOp/" class="dropdown-item">ngfx::FilterOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1FragmentShaderModule/" class="dropdown-item">ngfx::FragmentShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Framebuffer/" class="dropdown-item">ngfx::Framebuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1GLFWWindow/" class="dropdown-item">ngfx::GLFWWindow</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Graphics/" class="dropdown-item">ngfx::Graphics</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1GraphicsContext/" class="dropdown-item">ngfx::GraphicsContext</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1GraphicsPipeline/" class="dropdown-item">ngfx::GraphicsPipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1InputListener/" class="dropdown-item">ngfx::InputListener</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLApplication/" class="dropdown-item">ngfx::MTLApplication</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLBuffer/" class="dropdown-item">ngfx::MTLBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLCommandBuffer/" class="dropdown-item">ngfx::MTLCommandBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLCommandEncoder/" class="dropdown-item">ngfx::MTLCommandEncoder</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLComputeCommandEncoder/" class="dropdown-item">ngfx::MTLComputeCommandEncoder</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLComputePipeline/" class="dropdown-item">ngfx::MTLComputePipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLComputeShaderModule/" class="dropdown-item">ngfx::MTLComputeShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLDepthStencilTexture/" class="dropdown-item">ngfx::MTLDepthStencilTexture</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLDevice/" class="dropdown-item">ngfx::MTLDevice</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLFragmentShaderModule/" class="dropdown-item">ngfx::MTLFragmentShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLFramebuffer/" class="dropdown-item">ngfx::MTLFramebuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLGraphics/" class="dropdown-item">ngfx::MTLGraphics</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLGraphicsContext/" class="dropdown-item">ngfx::MTLGraphicsContext</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLGraphicsPipeline/" class="dropdown-item">ngfx::MTLGraphicsPipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLPipelineCache/" class="dropdown-item">ngfx::MTLPipelineCache</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLRenderCommandEncoder/" class="dropdown-item">ngfx::MTLRenderCommandEncoder</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLRenderPass/" class="dropdown-item">ngfx::MTLRenderPass</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLShaderModule/" class="dropdown-item">ngfx::MTLShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLSurface/" class="dropdown-item">ngfx::MTLSurface</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLTexture/" class="dropdown-item">ngfx::MTLTexture</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLVertexShaderModule/" class="dropdown-item">ngfx::MTLVertexShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MTLWindow/" class="dropdown-item">ngfx::MTLWindow</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MatrixMultiplyCPUOp/" class="dropdown-item">ngfx::MatrixMultiplyCPUOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MatrixMultiplyGPUOp/" class="dropdown-item">ngfx::MatrixMultiplyGPUOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1MatrixMultiplyOp/" class="dropdown-item">ngfx::MatrixMultiplyOp</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Pipeline/" class="dropdown-item">ngfx::Pipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1PipelineCache/" class="dropdown-item">ngfx::PipelineCache</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ProcessUtil/" class="dropdown-item">ngfx::ProcessUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Queue/" class="dropdown-item">ngfx::Queue</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1RegexUtil/" class="dropdown-item">ngfx::RegexUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1RenderPass/" class="dropdown-item">ngfx::RenderPass</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Semaphore/" class="dropdown-item">ngfx::Semaphore</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ShaderModule/" class="dropdown-item">ngfx::ShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1ShaderTools/" class="dropdown-item">ngfx::ShaderTools</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1StringUtil/" class="dropdown-item">ngfx::StringUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Surface/" class="dropdown-item">ngfx::Surface</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Swapchain/" class="dropdown-item">ngfx::Swapchain</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Texture/" class="dropdown-item">ngfx::Texture</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Timer/" class="dropdown-item">ngfx::Timer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Util/" class="dropdown-item">ngfx::Util</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKBuffer/" class="dropdown-item">ngfx::VKBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKCommandBuffer/" class="dropdown-item">ngfx::VKCommandBuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKCommandPool/" class="dropdown-item">ngfx::VKCommandPool</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKComputePipeline/" class="dropdown-item">ngfx::VKComputePipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKComputeShaderModule/" class="dropdown-item">ngfx::VKComputeShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKDebugMessenger/" class="dropdown-item">ngfx::VKDebugMessenger</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKDescriptorSetLayoutCache/" class="dropdown-item">ngfx::VKDescriptorSetLayoutCache</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKDevice/" class="dropdown-item">ngfx::VKDevice</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKFence/" class="dropdown-item">ngfx::VKFence</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKFragmentShaderModule/" class="dropdown-item">ngfx::VKFragmentShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKFramebuffer/" class="dropdown-item">ngfx::VKFramebuffer</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKGraphics/" class="dropdown-item">ngfx::VKGraphics</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKGraphicsContext/" class="dropdown-item">ngfx::VKGraphicsContext</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKGraphicsPipeline/" class="dropdown-item">ngfx::VKGraphicsPipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKImage/" class="dropdown-item">ngfx::VKImage</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKImageView/" class="dropdown-item">ngfx::VKImageView</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKInstance/" class="dropdown-item">ngfx::VKInstance</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKPhysicalDevice/" class="dropdown-item">ngfx::VKPhysicalDevice</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKPipeline/" class="dropdown-item">ngfx::VKPipeline</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKPipelineCache/" class="dropdown-item">ngfx::VKPipelineCache</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKQueue/" class="dropdown-item">ngfx::VKQueue</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKRenderPass/" class="dropdown-item">ngfx::VKRenderPass</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKSemaphore/" class="dropdown-item">ngfx::VKSemaphore</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKShaderModule/" class="dropdown-item">ngfx::VKShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKSurface/" class="dropdown-item">ngfx::VKSurface</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKSwapchain/" class="dropdown-item">ngfx::VKSwapchain</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKTexture/" class="dropdown-item">ngfx::VKTexture</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKVertexShaderModule/" class="dropdown-item">ngfx::VKVertexShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VKWindow/" class="dropdown-item">ngfx::VKWindow</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1VertexShaderModule/" class="dropdown-item">ngfx::VertexShaderModule</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1WWindow/" class="dropdown-item">ngfx::WWindow</a>
+</li>
+            
+<li>
+    <a href="../../Classes/classngfx_1_1Window/" class="dropdown-item">ngfx::Window</a>
+</li>
+            
+<li>
+    <a href="../../Classes/interfaceAppDelegate/" class="dropdown-item">AppDelegate</a>
+</li>
+            
+<li>
+    <a href="../../Classes/interfaceMTLViewDelegate/" class="dropdown-item">MTLViewDelegate</a>
+</li>
+            
+<li>
+    <a href="../../Classes/interfaceViewController/" class="dropdown-item">ViewController</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structDebugUtil/" class="dropdown-item">DebugUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structMTLGraphicsUtil/" class="dropdown-item">MTLGraphicsUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structVertexFormatInfo/" class="dropdown-item">VertexFormatInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DBlitOp_1_1UBOData/" class="dropdown-item">ngfx::D3DBlitOp::UBOData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DFramebuffer_1_1D3DAttachment/" class="dropdown-item">ngfx::D3DFramebuffer::D3DAttachment</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DGraphicsContext_1_1D3DRenderPassData/" class="dropdown-item">ngfx::D3DGraphicsContext::D3DRenderPassData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DGraphicsPipeline_1_1Shaders/" class="dropdown-item">ngfx::D3DGraphicsPipeline::Shaders</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DGraphicsPipeline_1_1State/" class="dropdown-item">ngfx::D3DGraphicsPipeline::State</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DPipelineUtil/" class="dropdown-item">ngfx::D3DPipelineUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DSamplerDesc/" class="dropdown-item">ngfx::D3DSamplerDesc</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DTexture_1_1GenMipmapData/" class="dropdown-item">ngfx::D3DTexture::GenMipmapData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DTexture_1_1RtvData/" class="dropdown-item">ngfx::D3DTexture::RtvData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DTexture_1_1SamplerData/" class="dropdown-item">ngfx::D3DTexture::SamplerData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1D3DTexture_1_1SrvData/" class="dropdown-item">ngfx::D3DTexture::SrvData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1DrawMeshOp_1_1LightData/" class="dropdown-item">ngfx::DrawMeshOp::LightData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1DrawMeshOp_1_1UBO__FS__Data/" class="dropdown-item">ngfx::DrawMeshOp::UBO_FS_Data</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1DrawMeshOp_1_1UBO__VS__Data/" class="dropdown-item">ngfx::DrawMeshOp::UBO_VS_Data</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1FileUtil_1_1Lock/" class="dropdown-item">ngfx::FileUtil::Lock</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1Framebuffer_1_1Attachment/" class="dropdown-item">ngfx::Framebuffer::Attachment</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1GraphicsContext_1_1AttachmentDescription/" class="dropdown-item">ngfx::GraphicsContext::AttachmentDescription</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1GraphicsContext_1_1RenderPassConfig/" class="dropdown-item">ngfx::GraphicsContext::RenderPassConfig</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1GraphicsPipeline_1_1Descriptor/" class="dropdown-item">ngfx::GraphicsPipeline::Descriptor</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1GraphicsPipeline_1_1State/" class="dropdown-item">ngfx::GraphicsPipeline::State</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1MTLGraphicsContext_1_1MTLRenderPassData/" class="dropdown-item">ngfx::MTLGraphicsContext::MTLRenderPassData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1MTLGraphicsPipeline_1_1Shaders/" class="dropdown-item">ngfx::MTLGraphicsPipeline::Shaders</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1MTLPipelineUtil/" class="dropdown-item">ngfx::MTLPipelineUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1MatrixMultiplyGPUOp_1_1UboData/" class="dropdown-item">ngfx::MatrixMultiplyGPUOp::UboData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1MatrixMultiplyOp_1_1MatrixParam/" class="dropdown-item">ngfx::MatrixMultiplyOp::MatrixParam</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1MeshData/" class="dropdown-item">ngfx::MeshData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1MeshUtil/" class="dropdown-item">ngfx::MeshUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1Rect2D/" class="dropdown-item">ngfx::Rect2D</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1RegexUtil_1_1Match/" class="dropdown-item">ngfx::RegexUtil::Match</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1Region/" class="dropdown-item">ngfx::Region</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1ShaderModule_1_1BufferInfo/" class="dropdown-item">ngfx::ShaderModule::BufferInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1ShaderModule_1_1BufferMemberInfo/" class="dropdown-item">ngfx::ShaderModule::BufferMemberInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1ShaderModule_1_1DescriptorInfo/" class="dropdown-item">ngfx::ShaderModule::DescriptorInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1ShaderTools_1_1HLSLReflectData/" class="dropdown-item">ngfx::ShaderTools::HLSLReflectData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1ShaderTools_1_1MacroDefinition/" class="dropdown-item">ngfx::ShaderTools::MacroDefinition</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1ShaderTools_1_1MetalReflectData/" class="dropdown-item">ngfx::ShaderTools::MetalReflectData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKBlit/" class="dropdown-item">ngfx::VKBlit</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKBlit_1_1Region/" class="dropdown-item">ngfx::VKBlit::Region</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKDescriptorSetLayoutCache_1_1VKDescriptorSetLayoutData/" class="dropdown-item">ngfx::VKDescriptorSetLayoutCache::VKDescriptorSetLayoutData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKFramebuffer_1_1VKAttachmentDescriptor/" class="dropdown-item">ngfx::VKFramebuffer::VKAttachmentDescriptor</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKFramebuffer_1_1VKAttachmentInfo/" class="dropdown-item">ngfx::VKFramebuffer::VKAttachmentInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKGraphicsContext_1_1VKRenderPassData/" class="dropdown-item">ngfx::VKGraphicsContext::VKRenderPassData</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKGraphicsPipeline_1_1State/" class="dropdown-item">ngfx::VKGraphicsPipeline::State</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKImageCreateInfo/" class="dropdown-item">ngfx::VKImageCreateInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKImageViewCreateInfo/" class="dropdown-item">ngfx::VKImageViewCreateInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKPipelineUtil/" class="dropdown-item">ngfx::VKPipelineUtil</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKPipeline_1_1Descriptor/" class="dropdown-item">ngfx::VKPipeline::Descriptor</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKPipeline_1_1ShaderStage/" class="dropdown-item">ngfx::VKPipeline::ShaderStage</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKSamplerCreateInfo/" class="dropdown-item">ngfx::VKSamplerCreateInfo</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VKSwapchain_1_1queueFamilyProperties/" class="dropdown-item">ngfx::VKSwapchain::queueFamilyProperties</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1VertexShaderModule_1_1AttributeDescription/" class="dropdown-item">ngfx::VertexShaderModule::AttributeDescription</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1WWindow_1_1Monitor/" class="dropdown-item">ngfx::WWindow::Monitor</a>
+</li>
+            
+<li>
+    <a href="../../Classes/structngfx_1_1WWindow_1_1VideoMode/" class="dropdown-item">ngfx::WWindow::VideoMode</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Examples</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../Examples/" class="dropdown-item">Examples</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Files</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../" class="dropdown-item">Files</a>
+</li>
+            
+<li>
+    <a href="../AppDelegate_8h/" class="dropdown-item">src/ngfx/porting/appkit/AppDelegate.h</a>
+</li>
+            
+<li>
+    <a href="../AppDelegate_8mm/" class="dropdown-item">src/ngfx/porting/appkit/AppDelegate.mm</a>
+</li>
+            
+<li>
+    <a href="../AppKitInputMap_8h/" class="dropdown-item">src/ngfx/porting/appkit/AppKitInputMap.h</a>
+</li>
+            
+<li>
+    <a href="../Application_8h/" class="dropdown-item">src/ngfx/core/Application.h</a>
+</li>
+            
+<li>
+    <a href="../BaseApplication_8cpp/" class="dropdown-item">src/ngfx/core/BaseApplication.cpp</a>
+</li>
+            
+<li>
+    <a href="../BaseApplication_8h/" class="dropdown-item">src/ngfx/core/BaseApplication.h</a>
+</li>
+            
+<li>
+    <a href="../BufferUtil_8h/" class="dropdown-item">src/ngfx/graphics/BufferUtil.h</a>
+</li>
+            
+<li>
+    <a href="../Buffer_8h/" class="dropdown-item">src/ngfx/graphics/Buffer.h</a>
+</li>
+            
+<li>
+    <a href="../Camera_8cpp/" class="dropdown-item">src/ngfx/graphics/Camera.cpp</a>
+</li>
+            
+<li>
+    <a href="../Camera_8h/" class="dropdown-item">src/ngfx/graphics/Camera.h</a>
+</li>
+            
+<li>
+    <a href="../CommandBuffer_8h/" class="dropdown-item">src/ngfx/graphics/CommandBuffer.h</a>
+</li>
+            
+<li>
+    <a href="../ComputeApplication_8cpp/" class="dropdown-item">src/ngfx/compute/ComputeApplication.cpp</a>
+</li>
+            
+<li>
+    <a href="../ComputeApplication_8h/" class="dropdown-item">src/ngfx/compute/ComputeApplication.h</a>
+</li>
+            
+<li>
+    <a href="../ComputeOp_8h/" class="dropdown-item">src/ngfx/compute/ComputeOp.h</a>
+</li>
+            
+<li>
+    <a href="../ComputePass_8h/" class="dropdown-item">src/ngfx/compute/ComputePass.h</a>
+</li>
+            
+<li>
+    <a href="../ComputePipeline_8h/" class="dropdown-item">src/ngfx/compute/ComputePipeline.h</a>
+</li>
+            
+<li>
+    <a href="../Config_8h/" class="dropdown-item">src/ngfx/graphics/Config.h</a>
+</li>
+            
+<li>
+    <a href="../D3DBlitOp_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DBlitOp.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DBlitOp_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DBlitOp.h</a>
+</li>
+            
+<li>
+    <a href="../D3DBuffer_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DBuffer.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DBuffer_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DBuffer.h</a>
+</li>
+            
+<li>
+    <a href="../D3DCommandList_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DCommandList.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DCommandList_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DCommandList.h</a>
+</li>
+            
+<li>
+    <a href="../D3DCommandQueue_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DCommandQueue.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DCommandQueue_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DCommandQueue.h</a>
+</li>
+            
+<li>
+    <a href="../D3DComputePass_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DComputePass.h</a>
+</li>
+            
+<li>
+    <a href="../D3DComputePipeline_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DComputePipeline.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DComputePipeline_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DComputePipeline.h</a>
+</li>
+            
+<li>
+    <a href="../D3DDebugUtil_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DDebugUtil.h</a>
+</li>
+            
+<li>
+    <a href="../D3DDescriptorHandle_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DDescriptorHandle.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DDescriptorHandle_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DDescriptorHandle.h</a>
+</li>
+            
+<li>
+    <a href="../D3DDescriptorHeap_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DDescriptorHeap.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DDescriptorHeap_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DDescriptorHeap.h</a>
+</li>
+            
+<li>
+    <a href="../D3DDevice_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DDevice.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DDevice_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DDevice.h</a>
+</li>
+            
+<li>
+    <a href="../D3DFence_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DFence.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DFence_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DFence.h</a>
+</li>
+            
+<li>
+    <a href="../D3DFramebuffer_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DFramebuffer.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DFramebuffer_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DFramebuffer.h</a>
+</li>
+            
+<li>
+    <a href="../D3DGraphicsContext_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DGraphicsContext.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DGraphicsContext_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DGraphicsContext.h</a>
+</li>
+            
+<li>
+    <a href="../D3DGraphicsCore_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DGraphicsCore.h</a>
+</li>
+            
+<li>
+    <a href="../D3DGraphicsPipeline_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DGraphicsPipeline.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DGraphicsPipeline_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DGraphicsPipeline.h</a>
+</li>
+            
+<li>
+    <a href="../D3DGraphics_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DGraphics.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DGraphics_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DGraphics.h</a>
+</li>
+            
+<li>
+    <a href="../D3DPipelineCache_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DPipelineCache.h</a>
+</li>
+            
+<li>
+    <a href="../D3DPipeline_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DPipeline.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DPipeline_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DPipeline.h</a>
+</li>
+            
+<li>
+    <a href="../D3DReadbackBuffer_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DReadbackBuffer.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DReadbackBuffer_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DReadbackBuffer.h</a>
+</li>
+            
+<li>
+    <a href="../D3DRenderPass_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DRenderPass.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DRenderPass_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DRenderPass.h</a>
+</li>
+            
+<li>
+    <a href="../D3DSamplerDesc_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DSamplerDesc.h</a>
+</li>
+            
+<li>
+    <a href="../D3DShaderModule_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DShaderModule.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DShaderModule_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DShaderModule.h</a>
+</li>
+            
+<li>
+    <a href="../D3DSurface_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DSurface.h</a>
+</li>
+            
+<li>
+    <a href="../D3DSwapchain_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DSwapchain.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DSwapchain_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DSwapchain.h</a>
+</li>
+            
+<li>
+    <a href="../D3DTexture_8cpp/" class="dropdown-item">src/ngfx/porting/d3d/D3DTexture.cpp</a>
+</li>
+            
+<li>
+    <a href="../D3DTexture_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DTexture.h</a>
+</li>
+            
+<li>
+    <a href="../D3DUtil_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DUtil.h</a>
+</li>
+            
+<li>
+    <a href="../D3DWindow_8h/" class="dropdown-item">src/ngfx/porting/d3d/D3DWindow.h</a>
+</li>
+            
+<li>
+    <a href="../DebugUtil_8h/" class="dropdown-item">src/ngfx/core/DebugUtil.h</a>
+</li>
+            
+<li>
+    <a href="../Device_8h/" class="dropdown-item">src/ngfx/graphics/Device.h</a>
+</li>
+            
+<li>
+    <a href="../DrawColorOp_8cpp/" class="dropdown-item">src/ngfx/drawOps/DrawColorOp.cpp</a>
+</li>
+            
+<li>
+    <a href="../DrawColorOp_8h/" class="dropdown-item">src/ngfx/drawOps/DrawColorOp.h</a>
+</li>
+            
+<li>
+    <a href="../DrawMeshOp_8cpp/" class="dropdown-item">src/ngfx/drawOps/DrawMeshOp.cpp</a>
+</li>
+            
+<li>
+    <a href="../DrawMeshOp_8h/" class="dropdown-item">src/ngfx/drawOps/DrawMeshOp.h</a>
+</li>
+            
+<li>
+    <a href="../DrawOp_8h/" class="dropdown-item">src/ngfx/graphics/DrawOp.h</a>
+</li>
+            
+<li>
+    <a href="../DrawTextureOp_8cpp/" class="dropdown-item">src/ngfx/drawOps/DrawTextureOp.cpp</a>
+</li>
+            
+<li>
+    <a href="../DrawTextureOp_8h/" class="dropdown-item">src/ngfx/drawOps/DrawTextureOp.h</a>
+</li>
+            
+<li>
+    <a href="../FPSCounter_8cpp/" class="dropdown-item">src/ngfx/core/FPSCounter.cpp</a>
+</li>
+            
+<li>
+    <a href="../FPSCounter_8h/" class="dropdown-item">src/ngfx/core/FPSCounter.h</a>
+</li>
+            
+<li>
+    <a href="../Fence_8h/" class="dropdown-item">src/ngfx/graphics/Fence.h</a>
+</li>
+            
+<li>
+    <a href="../FileUtil_8cpp/" class="dropdown-item">src/ngfx/core/FileUtil.cpp</a>
+</li>
+            
+<li>
+    <a href="../FileUtil_8h/" class="dropdown-item">src/ngfx/core/FileUtil.h</a>
+</li>
+            
+<li>
+    <a href="../File_8cpp/" class="dropdown-item">src/ngfx/core/File.cpp</a>
+</li>
+            
+<li>
+    <a href="../File_8h/" class="dropdown-item">src/ngfx/core/File.h</a>
+</li>
+            
+<li>
+    <a href="../FilterOp_8cpp/" class="dropdown-item">src/ngfx/graphics/FilterOp.cpp</a>
+</li>
+            
+<li>
+    <a href="../FilterOp_8h/" class="dropdown-item">src/ngfx/graphics/FilterOp.h</a>
+</li>
+            
+<li>
+    <a href="../Framebuffer_8h/" class="dropdown-item">src/ngfx/graphics/Framebuffer.h</a>
+</li>
+            
+<li>
+    <a href="../GLFWInputMap_8h/" class="dropdown-item">src/ngfx/porting/glfw/GLFWInputMap.h</a>
+</li>
+            
+<li>
+    <a href="../GLFWWindow_8cpp/" class="dropdown-item">src/ngfx/porting/glfw/GLFWWindow.cpp</a>
+</li>
+            
+<li>
+    <a href="../GLFWWindow_8h/" class="dropdown-item">src/ngfx/porting/glfw/GLFWWindow.h</a>
+</li>
+            
+<li>
+    <a href="../GraphicsContext_8h/" class="dropdown-item">src/ngfx/graphics/GraphicsContext.h</a>
+</li>
+            
+<li>
+    <a href="../GraphicsCore_8h/" class="dropdown-item">src/ngfx/graphics/GraphicsCore.h</a>
+</li>
+            
+<li>
+    <a href="../GraphicsPipeline_8cpp/" class="dropdown-item">src/ngfx/graphics/GraphicsPipeline.cpp</a>
+</li>
+            
+<li>
+    <a href="../GraphicsPipeline_8h/" class="dropdown-item">src/ngfx/graphics/GraphicsPipeline.h</a>
+</li>
+            
+<li>
+    <a href="../Graphics_8h/" class="dropdown-item">src/ngfx/graphics/Graphics.h</a>
+</li>
+            
+<li>
+    <a href="../InputListener_8h/" class="dropdown-item">src/ngfx/input/InputListener.h</a>
+</li>
+            
+<li>
+    <a href="../InputMap_8h/" class="dropdown-item">src/ngfx/input/InputMap.h</a>
+</li>
+            
+<li>
+    <a href="../MTLApplication_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLApplication.h</a>
+</li>
+            
+<li>
+    <a href="../MTLApplication_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLApplication.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLBuffer_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLBuffer.h</a>
+</li>
+            
+<li>
+    <a href="../MTLBuffer_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLBuffer.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLCommandBuffer_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLCommandBuffer.h</a>
+</li>
+            
+<li>
+    <a href="../MTLCommandBuffer_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLCommandBuffer.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLCommandEncoder_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLCommandEncoder.h</a>
+</li>
+            
+<li>
+    <a href="../MTLComputeCommandEncoder_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLComputeCommandEncoder.h</a>
+</li>
+            
+<li>
+    <a href="../MTLComputePipeline_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLComputePipeline.h</a>
+</li>
+            
+<li>
+    <a href="../MTLComputePipeline_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLComputePipeline.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLDepthStencilTexture_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLDepthStencilTexture.h</a>
+</li>
+            
+<li>
+    <a href="../MTLDepthStencilTexture_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLDepthStencilTexture.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLDevice_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLDevice.h</a>
+</li>
+            
+<li>
+    <a href="../MTLDevice_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLDevice.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLFramebuffer_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLFramebuffer.h</a>
+</li>
+            
+<li>
+    <a href="../MTLFramebuffer_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLFramebuffer.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphicsContext_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphicsContext.h</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphicsContext_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphicsContext.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphicsCoreDefines_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphicsCoreDefines.h</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphicsCore_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphicsCore.h</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphicsPipeline_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphicsPipeline.h</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphicsPipeline_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphicsPipeline.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphics_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphics.h</a>
+</li>
+            
+<li>
+    <a href="../MTLGraphics_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLGraphics.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLPipelineCache_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLPipelineCache.h</a>
+</li>
+            
+<li>
+    <a href="../MTLPipelineUtil_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLPipelineUtil.h</a>
+</li>
+            
+<li>
+    <a href="../MTLPipelineUtil_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLPipelineUtil.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLRenderCommandEncoder_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLRenderCommandEncoder.h</a>
+</li>
+            
+<li>
+    <a href="../MTLRenderPass_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLRenderPass.h</a>
+</li>
+            
+<li>
+    <a href="../MTLRenderPass_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLRenderPass.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLShaderModule_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLShaderModule.h</a>
+</li>
+            
+<li>
+    <a href="../MTLShaderModule_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLShaderModule.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLSurface_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLSurface.h</a>
+</li>
+            
+<li>
+    <a href="../MTLTexture_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLTexture.h</a>
+</li>
+            
+<li>
+    <a href="../MTLTexture_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLTexture.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLUtil_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLUtil.h</a>
+</li>
+            
+<li>
+    <a href="../MTLViewDelegate_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLViewDelegate.h</a>
+</li>
+            
+<li>
+    <a href="../MTLViewDelegate_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLViewDelegate.mm</a>
+</li>
+            
+<li>
+    <a href="../MTLWindow_8h/" class="dropdown-item">src/ngfx/porting/metal/MTLWindow.h</a>
+</li>
+            
+<li>
+    <a href="../MTLWindow_8mm/" class="dropdown-item">src/ngfx/porting/metal/MTLWindow.mm</a>
+</li>
+            
+<li>
+    <a href="../MatrixMultiplyCPUOp_8cpp/" class="dropdown-item">src/ngfx/computeOps/MatrixMultiplyCPUOp.cpp</a>
+</li>
+            
+<li>
+    <a href="../MatrixMultiplyCPUOp_8h/" class="dropdown-item">src/ngfx/computeOps/MatrixMultiplyCPUOp.h</a>
+</li>
+            
+<li>
+    <a href="../MatrixMultiplyGPUOp_8cpp/" class="dropdown-item">src/ngfx/computeOps/MatrixMultiplyGPUOp.cpp</a>
+</li>
+            
+<li>
+    <a href="../MatrixMultiplyGPUOp_8h/" class="dropdown-item">src/ngfx/computeOps/MatrixMultiplyGPUOp.h</a>
+</li>
+            
+<li>
+    <a href="../MatrixMultiplyOp_8h/" class="dropdown-item">src/ngfx/computeOps/MatrixMultiplyOp.h</a>
+</li>
+            
+<li>
+    <a href="../MeshData_8h/" class="dropdown-item">src/ngfx/graphics/MeshData.h</a>
+</li>
+            
+<li>
+    <a href="../MeshUtil_8cpp/" class="dropdown-item">src/ngfx/graphics/MeshUtil.cpp</a>
+</li>
+            
+<li>
+    <a href="../MeshUtil_8h/" class="dropdown-item">src/ngfx/graphics/MeshUtil.h</a>
+</li>
+            
+<li>
+    <a href="../PipelineCache_8cpp/" class="dropdown-item">src/ngfx/graphics/PipelineCache.cpp</a>
+</li>
+            
+<li>
+    <a href="../PipelineCache_8h/" class="dropdown-item">src/ngfx/graphics/PipelineCache.h</a>
+</li>
+            
+<li>
+    <a href="../Pipeline_8h/" class="dropdown-item">src/ngfx/graphics/Pipeline.h</a>
+</li>
+            
+<li>
+    <a href="../ProcessUtil_8cpp/" class="dropdown-item">src/ngfx/core/ProcessUtil.cpp</a>
+</li>
+            
+<li>
+    <a href="../ProcessUtil_8h/" class="dropdown-item">src/ngfx/core/ProcessUtil.h</a>
+</li>
+            
+<li>
+    <a href="../Queue_8h/" class="dropdown-item">src/ngfx/graphics/Queue.h</a>
+</li>
+            
+<li>
+    <a href="../RegexUtil_8cpp/" class="dropdown-item">src/ngfx/regex/RegexUtil.cpp</a>
+</li>
+            
+<li>
+    <a href="../RegexUtil_8h/" class="dropdown-item">src/ngfx/regex/RegexUtil.h</a>
+</li>
+            
+<li>
+    <a href="../RenderPass_8h/" class="dropdown-item">src/ngfx/graphics/RenderPass.h</a>
+</li>
+            
+<li>
+    <a href="../Semaphore_8h/" class="dropdown-item">src/ngfx/graphics/Semaphore.h</a>
+</li>
+            
+<li>
+    <a href="../ShaderModule_8cpp/" class="dropdown-item">src/ngfx/graphics/ShaderModule.cpp</a>
+</li>
+            
+<li>
+    <a href="../ShaderModule_8h/" class="dropdown-item">src/ngfx/graphics/ShaderModule.h</a>
+</li>
+            
+<li>
+    <a href="../ShaderTools_8cpp/" class="dropdown-item">src/ngfx/graphics/ShaderTools.cpp</a>
+</li>
+            
+<li>
+    <a href="../ShaderTools_8h/" class="dropdown-item">src/ngfx/graphics/ShaderTools.h</a>
+</li>
+            
+<li>
+    <a href="../StringUtil_8cpp/" class="dropdown-item">src/ngfx/core/StringUtil.cpp</a>
+</li>
+            
+<li>
+    <a href="../StringUtil_8h/" class="dropdown-item">src/ngfx/core/StringUtil.h</a>
+</li>
+            
+<li>
+    <a href="../Surface_8h/" class="dropdown-item">src/ngfx/graphics/Surface.h</a>
+</li>
+            
+<li>
+    <a href="../Swapchain_8h/" class="dropdown-item">src/ngfx/graphics/Swapchain.h</a>
+</li>
+            
+<li>
+    <a href="../Texture_8cpp/" class="dropdown-item">src/ngfx/graphics/Texture.cpp</a>
+</li>
+            
+<li>
+    <a href="../Texture_8h/" class="dropdown-item">src/ngfx/graphics/Texture.h</a>
+</li>
+            
+<li>
+    <a href="../Timer_8cpp/" class="dropdown-item">src/ngfx/core/Timer.cpp</a>
+</li>
+            
+<li>
+    <a href="../Timer_8h/" class="dropdown-item">src/ngfx/core/Timer.h</a>
+</li>
+            
+<li>
+    <a href="../Util_8cpp/" class="dropdown-item">src/ngfx/core/Util.cpp</a>
+</li>
+            
+<li>
+    <a href="../Util_8h/" class="dropdown-item">src/ngfx/core/Util.h</a>
+</li>
+            
+<li>
+    <a href="../VKBlit_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKBlit.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKBlit_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKBlit.h</a>
+</li>
+            
+<li>
+    <a href="../VKBuffer_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKBuffer.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKBuffer_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKBuffer.h</a>
+</li>
+            
+<li>
+    <a href="../VKCommandBuffer_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKCommandBuffer.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKCommandBuffer_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKCommandBuffer.h</a>
+</li>
+            
+<li>
+    <a href="../VKCommandPool_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKCommandPool.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKCommandPool_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKCommandPool.h</a>
+</li>
+            
+<li>
+    <a href="../VKComputePipeline_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKComputePipeline.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKComputePipeline_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKComputePipeline.h</a>
+</li>
+            
+<li>
+    <a href="../VKConfig_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKConfig.h</a>
+</li>
+            
+<li>
+    <a href="../VKDebugUtil_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKDebugUtil.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKDebugUtil_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKDebugUtil.h</a>
+</li>
+            
+<li>
+    <a href="../VKDescriptorSetLayoutCache_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKDescriptorSetLayoutCache.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKDescriptorSetLayoutCache_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKDescriptorSetLayoutCache.h</a>
+</li>
+            
+<li>
+    <a href="../VKDevice_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKDevice.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKDevice_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKDevice.h</a>
+</li>
+            
+<li>
+    <a href="../VKFence_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKFence.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKFence_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKFence.h</a>
+</li>
+            
+<li>
+    <a href="../VKFramebuffer_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKFramebuffer.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKFramebuffer_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKFramebuffer.h</a>
+</li>
+            
+<li>
+    <a href="../VKGraphicsContext_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKGraphicsContext.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKGraphicsContext_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKGraphicsContext.h</a>
+</li>
+            
+<li>
+    <a href="./" class="dropdown-item active">src/ngfx/porting/vulkan/VKGraphicsCore.h</a>
+</li>
+            
+<li>
+    <a href="../VKGraphicsPipeline_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKGraphicsPipeline.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKGraphicsPipeline_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKGraphicsPipeline.h</a>
+</li>
+            
+<li>
+    <a href="../VKGraphics_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKGraphics.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKGraphics_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKGraphics.h</a>
+</li>
+            
+<li>
+    <a href="../VKImageCreateInfo_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKImageCreateInfo.h</a>
+</li>
+            
+<li>
+    <a href="../VKImageViewCreateInfo_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKImageViewCreateInfo.h</a>
+</li>
+            
+<li>
+    <a href="../VKImageView_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKImageView.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKImageView_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKImageView.h</a>
+</li>
+            
+<li>
+    <a href="../VKImage_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKImage.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKImage_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKImage.h</a>
+</li>
+            
+<li>
+    <a href="../VKInstance_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKInstance.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKInstance_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKInstance.h</a>
+</li>
+            
+<li>
+    <a href="../VKPhysicalDevice_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKPhysicalDevice.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKPhysicalDevice_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKPhysicalDevice.h</a>
+</li>
+            
+<li>
+    <a href="../VKPipelineCache_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKPipelineCache.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKPipelineCache_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKPipelineCache.h</a>
+</li>
+            
+<li>
+    <a href="../VKPipeline_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKPipeline.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKPipeline_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKPipeline.h</a>
+</li>
+            
+<li>
+    <a href="../VKQueue_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKQueue.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKQueue_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKQueue.h</a>
+</li>
+            
+<li>
+    <a href="../VKRenderPass_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKRenderPass.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKRenderPass_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKRenderPass.h</a>
+</li>
+            
+<li>
+    <a href="../VKSamplerCreateInfo_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKSamplerCreateInfo.h</a>
+</li>
+            
+<li>
+    <a href="../VKSemaphore_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKSemaphore.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKSemaphore_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKSemaphore.h</a>
+</li>
+            
+<li>
+    <a href="../VKShaderModule_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKShaderModule.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKShaderModule_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKShaderModule.h</a>
+</li>
+            
+<li>
+    <a href="../VKSurface_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKSurface.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKSurface_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKSurface.h</a>
+</li>
+            
+<li>
+    <a href="../VKSwapchain_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKSwapchain.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKSwapchain_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKSwapchain.h</a>
+</li>
+            
+<li>
+    <a href="../VKTexture_8cpp/" class="dropdown-item">src/ngfx/porting/vulkan/VKTexture.cpp</a>
+</li>
+            
+<li>
+    <a href="../VKTexture_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKTexture.h</a>
+</li>
+            
+<li>
+    <a href="../VKUtil_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKUtil.h</a>
+</li>
+            
+<li>
+    <a href="../VKWindow_8h/" class="dropdown-item">src/ngfx/porting/vulkan/VKWindow.h</a>
+</li>
+            
+<li>
+    <a href="../ViewController_8h/" class="dropdown-item">src/ngfx/porting/appkit/ViewController.h</a>
+</li>
+            
+<li>
+    <a href="../ViewController_8mm/" class="dropdown-item">src/ngfx/porting/appkit/ViewController.mm</a>
+</li>
+            
+<li>
+    <a href="../WInputMap_8h/" class="dropdown-item">src/ngfx/porting/windows/WInputMap.h</a>
+</li>
+            
+<li>
+    <a href="../WWindow_8cpp/" class="dropdown-item">src/ngfx/porting/windows/WWindow.cpp</a>
+</li>
+            
+<li>
+    <a href="../WWindow_8h/" class="dropdown-item">src/ngfx/porting/windows/WWindow.h</a>
+</li>
+            
+<li>
+    <a href="../Window_8h/" class="dropdown-item">src/ngfx/graphics/Window.h</a>
+</li>
+            
+<li>
+    <a href="../dir_0c54d2fb62f31c7d2d5bff67601a6b9d/" class="dropdown-item">src/ngfx/porting/vulkan</a>
+</li>
+            
+<li>
+    <a href="../dir_30faf12615bf536facf6068fc9db1a7e/" class="dropdown-item">src/ngfx/computeOps</a>
+</li>
+            
+<li>
+    <a href="../dir_40c68d60cc133af9f739e75dd73e0e82/" class="dropdown-item">src/ngfx/porting/d3d</a>
+</li>
+            
+<li>
+    <a href="../dir_4e1573efe795f44b9b1a6fe4d85753ca/" class="dropdown-item">src/ngfx/porting/glfw</a>
+</li>
+            
+<li>
+    <a href="../dir_59d6d67be47e2ccbf97815c0cb34958e/" class="dropdown-item">src/ngfx/porting/windows</a>
+</li>
+            
+<li>
+    <a href="../dir_61819f5050c989815f217f007bce688d/" class="dropdown-item">src/ngfx/graphics</a>
+</li>
+            
+<li>
+    <a href="../dir_63a95ed4093c85063905e55b50c4c57a/" class="dropdown-item">src/ngfx/compute</a>
+</li>
+            
+<li>
+    <a href="../dir_68267d1309a1af8e8297ef4c3efbcdba/" class="dropdown-item">src</a>
+</li>
+            
+<li>
+    <a href="../dir_6a2981783036dd447c2e297205838fbc/" class="dropdown-item">src/ngfx/input</a>
+</li>
+            
+<li>
+    <a href="../dir_7b3ee6f3d70af721796ac60009550648/" class="dropdown-item">src/ngfx/porting/metal</a>
+</li>
+            
+<li>
+    <a href="../dir_836d6044c9b9d906d07510ab7de02523/" class="dropdown-item">src/ngfx/drawOps</a>
+</li>
+            
+<li>
+    <a href="../dir_ba89cfdb2985c20790f90acbff1b244e/" class="dropdown-item">src/ngfx/regex</a>
+</li>
+            
+<li>
+    <a href="../dir_bf4520687725fcb8943bc560a06cbd17/" class="dropdown-item">src/ngfx</a>
+</li>
+            
+<li>
+    <a href="../dir_d6ebad042f9e66e97e57125cd12423b2/" class="dropdown-item">src/ngfx/porting</a>
+</li>
+            
+<li>
+    <a href="../dir_f0cfb9d6257f0cbc5e7e8cb8f2cdcbe0/" class="dropdown-item">src/ngfx/core</a>
+</li>
+            
+<li>
+    <a href="../dir_f1d8ce7061f0d76f7632440a95bdaa58/" class="dropdown-item">src/ngfx/porting/appkit</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Modules</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../Modules/" class="dropdown-item">Modules</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Namespaces</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../Namespaces/" class="dropdown-item">Namespaces</a>
+</li>
+            
+<li>
+    <a href="../../Namespaces/namespaceglm/" class="dropdown-item">glm</a>
+</li>
+            
+<li>
+    <a href="../../Namespaces/namespacengfx/" class="dropdown-item">ngfx</a>
+</li>
+            
+<li>
+    <a href="../../Namespaces/namespacestd/" class="dropdown-item">std</a>
+</li>
+            
+<li>
+    <a href="../../Namespaces/namespacestd_1_1chrono/" class="dropdown-item">std::chrono</a>
+</li>
+            
+<li>
+    <a href="../../Namespaces/namespacestd_1_1placeholders/" class="dropdown-item">std::placeholders</a>
+</li>
+    </ul>
+  </li>
+                                    
+  <li class="dropdown-submenu">
+    <a href="#" class="dropdown-item">Pages</a>
+    <ul class="dropdown-menu">
+            
+<li>
+    <a href="../../Pages/" class="dropdown-item">Pages</a>
+</li>
+    </ul>
+  </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="../VKGraphicsContext_8h/" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../VKGraphicsPipeline_8cpp/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#srcngfxportingvulkanvkgraphicscoreh" class="nav-link">src/ngfx/porting/vulkan/VKGraphicsCore.h</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#namespaces" class="nav-link">Namespaces</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#defines" class="nav-link">Defines</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#macro-documentation" class="nav-link">Macro Documentation</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#source-code" class="nav-link">Source code</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="srcngfxportingvulkanvkgraphicscoreh">src/ngfx/porting/vulkan/VKGraphicsCore.h</h1>
+<h2 id="namespaces">Namespaces</h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="/ngfx/api/Namespaces/namespacengfx/">ngfx</a></strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="defines">Defines</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/VKGraphicsCore_8h/#define-vk">VK</a></strong>(s)</td>
+</tr>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/VKGraphicsCore_8h/#define-define_pixelformats">DEFINE_PIXELFORMATS</a></strong>(s, t0, t1)</td>
+</tr>
+<tr>
+<td></td>
+<td><strong><a href="/ngfx/api/Files/VKGraphicsCore_8h/#define-define_vertexformats">DEFINE_VERTEXFORMATS</a></strong>(s, t0, t1)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="macro-documentation">Macro Documentation</h2>
+<h3 id="define-vk">define VK</h3>
+<pre><code class="language-cpp">#define VK(
+    s
+)
+s = VK_##s
+</code></pre>
+<h3 id="define-define_pixelformats">define DEFINE_PIXELFORMATS</h3>
+<pre><code class="language-cpp">#define DEFINE_PIXELFORMATS(
+    s,
+    t0,
+    t1
+)
+  PIXELFORMAT_R##s##_##t0 = VK_FORMAT_R##s##_##t1,                             \
+  PIXELFORMAT_RG##s##_##t0 = VK_FORMAT_R##s##G##s##_##t1,                      \
+  PIXELFORMAT_RGBA##s##_##t0 = VK_FORMAT_R##s##G##s##B##s##A##s##_##t1
+</code></pre>
+<h3 id="define-define_vertexformats">define DEFINE_VERTEXFORMATS</h3>
+<pre><code class="language-cpp">#define DEFINE_VERTEXFORMATS(
+    s,
+    t0,
+    t1
+)
+  VERTEXFORMAT_##t0 = VK_FORMAT_R##s##_##t1,                                   \
+  VERTEXFORMAT_##t0##2 = VK_FORMAT_R##s##G##s##_##t1,                          \
+  VERTEXFORMAT_##t0##3 = VK_FORMAT_R##s##G##s##B##s##_##t1,                    \
+  VERTEXFORMAT_##t0##4 = VK_FORMAT_R##s##G##s##B##s##A##s##_##t1
+</code></pre>
+<h2 id="source-code">Source code</h2>
+<pre><code class="language-cpp">/*
+ * Copyright 2020 GoPro Inc.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * &quot;License&quot;); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+#pragma once
+#include &lt;vulkan/vulkan.h&gt;
+
+namespace ngfx {
+
+#define VK(s) s = VK_##s
+enum PrimitiveTopology {
+  VK(PRIMITIVE_TOPOLOGY_POINT_LIST),
+  VK(PRIMITIVE_TOPOLOGY_LINE_LIST),
+  VK(PRIMITIVE_TOPOLOGY_LINE_STRIP),
+  VK(PRIMITIVE_TOPOLOGY_TRIANGLE_LIST),
+  VK(PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP)
+};
+enum PolygonMode {
+  VK(POLYGON_MODE_FILL),
+  VK(POLYGON_MODE_LINE),
+  VK(POLYGON_MODE_POINT)
+};
+enum BlendFactor {
+  VK(BLEND_FACTOR_ZERO),
+  VK(BLEND_FACTOR_ONE),
+  VK(BLEND_FACTOR_SRC_COLOR),
+  VK(BLEND_FACTOR_ONE_MINUS_SRC_COLOR),
+  VK(BLEND_FACTOR_DST_COLOR),
+  VK(BLEND_FACTOR_ONE_MINUS_DST_COLOR),
+  VK(BLEND_FACTOR_SRC_ALPHA),
+  VK(BLEND_FACTOR_ONE_MINUS_SRC_ALPHA),
+  VK(BLEND_FACTOR_DST_ALPHA),
+  VK(BLEND_FACTOR_ONE_MINUS_DST_ALPHA),
+  VK(BLEND_FACTOR_CONSTANT_COLOR),
+  VK(BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR),
+  VK(BLEND_FACTOR_CONSTANT_ALPHA),
+  VK(BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA),
+  VK(BLEND_FACTOR_SRC_ALPHA_SATURATE),
+};
+enum BlendOp {
+  VK(BLEND_OP_ADD),
+  VK(BLEND_OP_SUBTRACT),
+  VK(BLEND_OP_REVERSE_SUBTRACT),
+  VK(BLEND_OP_MIN),
+  VK(BLEND_OP_MAX)
+};
+enum BufferUsageFlagBits {
+  VK(BUFFER_USAGE_TRANSFER_SRC_BIT),
+  VK(BUFFER_USAGE_TRANSFER_DST_BIT),
+  VK(BUFFER_USAGE_UNIFORM_BUFFER_BIT),
+  VK(BUFFER_USAGE_STORAGE_BUFFER_BIT),
+  VK(BUFFER_USAGE_VERTEX_BUFFER_BIT),
+  VK(BUFFER_USAGE_INDEX_BUFFER_BIT)
+};
+enum ColorComponentFlagBits {
+  VK(COLOR_COMPONENT_R_BIT),
+  VK(COLOR_COMPONENT_G_BIT),
+  VK(COLOR_COMPONENT_B_BIT),
+  VK(COLOR_COMPONENT_A_BIT)
+};
+enum CommandBufferLevel {
+  VK(COMMAND_BUFFER_LEVEL_PRIMARY),
+  VK(COMMAND_BUFFER_LEVEL_SECONDARY)
+};
+enum CullModeFlags {
+  VK(CULL_MODE_NONE),
+  VK(CULL_MODE_FRONT_BIT),
+  VK(CULL_MODE_BACK_BIT),
+  VK(CULL_MODE_FRONT_AND_BACK)
+};
+enum FenceCreateFlagBits {
+  VK(FENCE_CREATE_SIGNALED_BIT),
+};
+enum FrontFace { VK(FRONT_FACE_COUNTER_CLOCKWISE), VK(FRONT_FACE_CLOCKWISE) };
+enum TextureType {
+  TEXTURE_TYPE_2D = VK_IMAGE_VIEW_TYPE_2D,
+  TEXTURE_TYPE_3D = VK_IMAGE_TYPE_3D,
+  TEXTURE_TYPE_CUBE = VK_IMAGE_VIEW_TYPE_CUBE,
+  TEXTURE_TYPE_2D_ARRAY = VK_IMAGE_VIEW_TYPE_2D_ARRAY
+};
+enum ImageUsageFlagBits {
+  VK(IMAGE_USAGE_TRANSFER_SRC_BIT),
+  VK(IMAGE_USAGE_TRANSFER_DST_BIT),
+  VK(IMAGE_USAGE_SAMPLED_BIT),
+  VK(IMAGE_USAGE_STORAGE_BIT),
+  VK(IMAGE_USAGE_COLOR_ATTACHMENT_BIT),
+  VK(IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT),
+  VK(IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT),
+  VK(IMAGE_USAGE_INPUT_ATTACHMENT_BIT),
+};
+enum PipelineStageFlagBits { VK(PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT) };
+enum ShaderStageFlagBits {
+  VK(SHADER_STAGE_VERTEX_BIT),
+  VK(SHADER_STAGE_TESSELLATION_CONTROL_BIT),
+  VK(SHADER_STAGE_TESSELLATION_EVALUATION_BIT),
+  VK(SHADER_STAGE_GEOMETRY_BIT),
+  VK(SHADER_STAGE_FRAGMENT_BIT),
+  VK(SHADER_STAGE_COMPUTE_BIT),
+  VK(SHADER_STAGE_ALL_GRAPHICS),
+  VK(SHADER_STAGE_ALL)
+};
+
+#define DEFINE_PIXELFORMATS(s, t0, t1)                                         \
+  PIXELFORMAT_R##s##_##t0 = VK_FORMAT_R##s##_##t1,                             \
+  PIXELFORMAT_RG##s##_##t0 = VK_FORMAT_R##s##G##s##_##t1,                      \
+  PIXELFORMAT_RGBA##s##_##t0 = VK_FORMAT_R##s##G##s##B##s##A##s##_##t1
+
+enum PixelFormat {
+  PIXELFORMAT_UNDEFINED = VK_FORMAT_UNDEFINED,
+  DEFINE_PIXELFORMATS(8, UNORM, UNORM),
+  DEFINE_PIXELFORMATS(16, UINT, UINT),
+  DEFINE_PIXELFORMATS(16, SFLOAT, SFLOAT),
+  DEFINE_PIXELFORMATS(32, UINT, UINT),
+  DEFINE_PIXELFORMATS(32, SFLOAT, SFLOAT),
+  PIXELFORMAT_BGRA8_UNORM = VK_FORMAT_B8G8R8A8_UNORM,
+  PIXELFORMAT_D16_UNORM = VK_FORMAT_D16_UNORM,
+  PIXELFORMAT_D24_UNORM = VK_FORMAT_X8_D24_UNORM_PACK32,
+  PIXELFORMAT_D24_UNORM_S8 = VK_FORMAT_D24_UNORM_S8_UINT
+};
+
+enum IndexFormat {
+  INDEXFORMAT_UINT16 = VK_INDEX_TYPE_UINT16,
+  INDEXFORMAT_UINT32 = VK_INDEX_TYPE_UINT32
+};
+
+#define DEFINE_VERTEXFORMATS(s, t0, t1)                                        \
+  VERTEXFORMAT_##t0 = VK_FORMAT_R##s##_##t1,                                   \
+  VERTEXFORMAT_##t0##2 = VK_FORMAT_R##s##G##s##_##t1,                          \
+  VERTEXFORMAT_##t0##3 = VK_FORMAT_R##s##G##s##B##s##_##t1,                    \
+  VERTEXFORMAT_##t0##4 = VK_FORMAT_R##s##G##s##B##s##A##s##_##t1
+
+enum VertexFormat { DEFINE_VERTEXFORMATS(32, FLOAT, SFLOAT) };
+
+enum DescriptorType {
+  VK(DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER),
+  VK(DESCRIPTOR_TYPE_STORAGE_IMAGE),
+  VK(DESCRIPTOR_TYPE_UNIFORM_BUFFER),
+  VK(DESCRIPTOR_TYPE_STORAGE_BUFFER)
+};
+enum VertexInputRate {
+  VK(VERTEX_INPUT_RATE_VERTEX),
+  VK(VERTEX_INPUT_RATE_INSTANCE)
+};
+
+enum FilterMode { VK(FILTER_NEAREST), VK(FILTER_LINEAR) };
+
+enum ImageLayout {
+  VK(IMAGE_LAYOUT_UNDEFINED),
+  VK(IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL),
+  VK(IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL),
+  VK(IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL),
+  VK(IMAGE_LAYOUT_GENERAL),
+  IMAGE_LAYOUT_PRESENT_SRC = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+};
+} // namespace ngfx
+</code></pre>
+<hr />
+<p>Updated on  3 April 2021 at 20:21:52 PDT</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../../js/base.js" defer></script>
+        <script src="../../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
