@@ -33,3 +33,7 @@
 
 cmake-build-*
 external
+
+# MkDocs
+docs
+site
