@@ -24,7 +24,8 @@ else ifeq ($(OS),Darwin)
 endif
 
 PKGS ?= 
-ifeq ($($(PKGS)),)
+
+ifeq ($(PKGS),)
 	PKGS = nlohmann-json stb
 	ifeq ($(OS),Windows)
 		PKGS += glm d3dx12 glfw unzip VulkanSDK-$(VULKAN_SDK_VERSION) spirv-cross shaderc-$(SHADERC_VERSION) meson pkgconf
@@ -53,13 +54,8 @@ nlohmann-json: .nlohmann-json-installed
 	touch $@
 stb: .stb-installed
 
-.apt-updated:
-	sudo apt -y update
-	touch $@
-
 ifeq ($(OS),Windows)
-
-    .unzip-installed: .apt-updated
+    .unzip-installed:
 		sudo apt -y install unzip
 		touch $@
     unzip: .unzip-installed
@@ -121,32 +117,32 @@ ifeq ($(OS),Windows)
 
 else ifeq ($(OS),Linux)
 
-    .ninja-build-installed: .apt-updated
+    .ninja-build-installed:
 		sudo apt -y install ninja-build
 		touch $@
     ninja-build: .ninja-build-installed
 
-    .cmake-installed: .apt-updated
+    .cmake-installed:
 		sudo apt -y install cmake
 		touch $@
     cmake: .cmake-installed
 
-    .libglm-dev-installed: .apt-updated
+    .libglm-dev-installed:
 		sudo apt -y install libglm-dev
 		touch $@
     libglm-dev: .libglm-dev-installed
 
-   .libglfw3-dev-installed: .apt-updated
+   .libglfw3-dev-installed:
 		sudo apt -y install libglfw3-dev
 		touch $@
     libglfw3-dev: .libglfw3-dev-installed
 
-    .libglew-dev-installed: .apt-updated
+    .libglew-dev-installed:
 		sudo apt -y install libglew-dev
 		touch $@
     libglew-dev: .libglew-dev-installed
 
-    .renderdoc-installed: .apt-updated
+    .renderdoc-installed:
 		sudo apt -y install renderdoc
 		touch $@
     renderdoc: .renderdoc-installed

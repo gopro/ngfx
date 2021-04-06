@@ -4,8 +4,10 @@ set -x
 if [[ ! -v EXTERNAL_DIR ]]; then
   export EXTERNAL_DIR=external
 fi
+SCRIPT_DIR=$(dirname $(realpath $0))
+echo $SCRIPT_DIR
 
-mkdir $EXTERNAL_DIR
+mkdir -p $EXTERNAL_DIR
 cd $EXTERNAL_DIR
 
-make -f ../build_scripts/install_deps.in
+make -f $SCRIPT_DIR/install_deps.in
