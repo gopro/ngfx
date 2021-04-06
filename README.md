@@ -90,9 +90,9 @@ Install CMake 3.19.1 (or newer)
 
 We provide a helper script to help install 3rd-party dependencies
 
-`bash build_scripts/sync_deps.sh *platform*`
+`OS=*os* bash build_scripts/install_deps.sh`
 
-- *platform*: Windows, Linux, or Darwin (Mac OS)
+- *os*: Windows, Linux, or Darwin (Mac OS)
 
 **2) Configure**
 
@@ -110,6 +110,12 @@ Example:
 
 `cmake.exe -H. -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DNGFX_GRAPHICS_BACKEND_DIRECT3D12=ON`
 
+We provide a helper script to configure
+
+`OS=*os* bash build_scripts/configure.sh`
+
+- *os*: Windows, Linux, or Darwin (Mac OS)
+
 **3) Build**
 
 From command line: 
@@ -118,11 +124,21 @@ From command line:
 
 Alternatively, can build from IDE
 
+We provide a helper script to build
+
+`OS=*os* bash build_scripts/build.sh`
+
+- *os*: Windows, Linux, or Darwin (Mac OS)
+
 **4) Install**
 
-`cmake.exe --install *build_folder* --config *build_type* --prefix *install_prefix*`
+`cmake.exe --install *build_folder* --config *build_type*`
 
-- *install_prefix*: The install prefix
+We provide a helper script to build
+
+`OS=*os* bash build_scripts/install.sh`
+
+- *os*: Windows, Linux, or Darwin (Mac OS)
 
 ---
 
