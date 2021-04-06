@@ -1,0 +1,54 @@
+name: 'tests Windows'
+
+on:
+  push:
+    branches:
+      - 'master'
+      - 'develop'
+  pull_request:
+
+jobs:
+  msvc:
+
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: wsl-bash {0}
+
+    steps:
+      - uses: Vampire/setup-wsl@v1
+        with:
+          distribution: Ubuntu-20.04
+
+      - uses: actions/checkout@v2
+
+      - name: Get vcpkg cache key
+        id: get-vcpkg-cache-key
+        run: |
+          VCPKG_COMMIT_ID=$(cd /mnt/c/vcpkg && git rev-parse HEAD)
+          echo "::set-output name=key::$(echo $VCPKG_COMMIT_ID ${{env.VCPKG_TRIPLET}} ${{env.VCPKG_INSTALL_PACKAGES}} | md5sum | cut -f1 -d" ")"
+
+      - name: Restore vcpkg binary cache archives
+        id: restore_vcpkg_binary_cache
+        uses: actions/cache@v2
+        with:
+          path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
+          key: ${{ steps.get-vcpkg-cache-key.outputs.key }}
+
+      - name: Build
+        run: |
+          # Save the following commands to a variable
+          read -r -d '' COMMANDS << EOM || true
+          source build_scripts/windows/set_env.sh
+          sudo apt -y update
+          sudo apt -y install build-essential
+          bash build_scripts/install_deps.sh
+          bash build_scripts/configure.sh
+          bash build_scripts/build.sh
+          EOM
+          tmpfile=$(mktemp)
+          echo "$COMMANDS" > $tmpfile
+          # Execute the commands in an msvc dev environment
+          bash build_scripts/windows/start_msvc_env.sh $tmpfile
+

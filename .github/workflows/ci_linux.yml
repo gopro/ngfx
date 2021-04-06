@@ -11,23 +11,13 @@ jobs:
   linux:
 
     runs-on: ubuntu-20.04
-    env:
-        VULKAN_SDK_VERSION: 1.2.170
 
     steps:
     - uses: actions/checkout@v1
 
-    - name: Install dependencies
-      run: |
-        sudo apt -y update
-        sudo apt -y install ninja-build renderdoc cmake
-        # Install Vulkan SDK
-        wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-        sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-${{env.VULKAN_SDK_VERSION}}-focal.list https://packages.lunarg.com/vulkan/${{env.VULKAN_SDK_VERSION}}/lunarg-vulkan-${{env.VULKAN_SDK_VERSION}}-focal.list
-        sudo apt -y update
-        sudo apt install vulkan-sdk
     - name: Build
       run: |
-        bash build_scripts/sync_deps.sh Linux external
-        cmake -S . -B cmake-build-debug -DCMAKE_BUILD_TYPE=Debug -GNinja -DNGFX_GRAPHICS_BACKEND_VULKAN=ON && \
-        cmake --build cmake-build-debug --config Debug -j8
+        export OS=Linux
+        bash build_scripts/install_deps.sh
+        bash build_scripts/configure.sh
+        bash build_scripts/build.sh
