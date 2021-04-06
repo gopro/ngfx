@@ -18,6 +18,7 @@ jobs:
     - name: Build
       run: |
         export OS=Linux
+        sudo apt -y update
         bash build_scripts/install_deps.sh
         bash build_scripts/configure.sh
         bash build_scripts/build.sh

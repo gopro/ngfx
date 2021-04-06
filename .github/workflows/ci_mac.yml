@@ -18,7 +18,7 @@ jobs:
     - name: Build
       run: |
         export OS=Darwin
-        brew install bash
+        brew install bash coreutils
         /usr/local/bin/bash build_scripts/install_deps.sh
         /usr/local/bin/bash build_scripts/configure.sh
         /usr/local/bin/bash build_scripts/build.sh
