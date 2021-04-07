@@ -42,8 +42,8 @@ jobs:
           read -r -d '' COMMANDS << EOM || true
           source build_scripts/windows/set_env.sh
           sudo apt -y update
-          sudo apt -y install build-essential
-          bash build_scripts/install_deps.sh
+          sudo apt -y install build-essential ninja-build
+          python3 build_scripts/install_deps.py
           bash build_scripts/configure.sh
           bash build_scripts/build.sh
           EOM

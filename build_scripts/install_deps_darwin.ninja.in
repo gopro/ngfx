@@ -1,0 +1,39 @@
+SHADERC_VERSION = {SHADERC_VERSION}
+UNZIP = {UNZIP}
+WGET = {WGET}
+
+rule SHELL_COMMAND
+  command = bash -c 'if [[ -f $out ]]; then exit 0; fi; $COMMAND; touch $out'
+  description = $DESC
+
+build .nlohmann-json-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} -q https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp -P json/include
+build nlohmann-json: phony .nlohmann-json-installed
+
+build .stb-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} -q https://raw.githubusercontent.com/nothings/stb/master/stb_image.h -P stb
+build stb: phony .stb-installed
+
+build .pkg-config-installed: SHELL_COMMAND
+    COMMAND = brew install pkg-config
+build pkg-config: phony .pkg-config-installed
+
+build .glm-installed: SHELL_COMMAND
+    COMMAND = brew install glm
+build glm: phony .glm-installed
+
+build .spirv-cross-installed: SHELL_COMMAND
+    COMMAND = brew install spirv-cross
+build spirv-cross: phony .spirv-cross-installed
+
+build .cmake-installed: SHELL_COMMAND
+    COMMAND = brew install cmake
+build cmake: phony .cmake-installed
+
+build .shaderc-${{SHADERC_VERSION}}-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} https://github.com/google/shaderc/archive/v${{SHADERC_VERSION}}.tar.gz && tar xzf v${{SHADERC_VERSION}}.tar.gz && cd shaderc-${{SHADERC_VERSION}} && ./utils/git-sync-deps && cmake -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${{PREFIX}}" -GNinja -DSHADERC_SKIP_TESTS=ON && cmake --build cmake-build-release --config Release -j8 && sudo cmake --install cmake-build-release
+build shaderc-${{SHADERC_VERSION}}: phony .shaderc-${{SHADERC_VERSION}}-installed
+
+build all: phony nlohmann-json stb pkg-config glm spirv-cross cmake shaderc-${{SHADERC_VERSION}}
+
+default all
