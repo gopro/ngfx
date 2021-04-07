@@ -3,6 +3,8 @@ ifeq ($(OS),)
 	$(error OS is undefined)
 endif
 
+SHELL = bash
+
 ifeq ($(OS),Windows)
 	CMAKE_GENERATOR ?= "Visual Studio 16 2019"
 	CMAKE_SYSTEM_VERSION ?= 10.0.18362.0
@@ -56,7 +58,7 @@ stb: .stb-installed
 
 ifeq ($(OS),Windows)
     .unzip-installed:
-		sudo apt -y install unzip
+		if ! dpkg-query -l unzip &> /dev/null; then sudo apt -y install unzip; fi
 		touch $@
     unzip: .unzip-installed
 
@@ -118,40 +120,42 @@ ifeq ($(OS),Windows)
 else ifeq ($(OS),Linux)
 
     .ninja-build-installed:
-		sudo apt -y install ninja-build
+		if ! dpkg-query -l ninja &> /dev/null; then sudo apt -y install ninja-build; fi
 		touch $@
     ninja-build: .ninja-build-installed
 
     .cmake-installed:
-		sudo apt -y install cmake
+		if ! dpkg-query -l cmake &> /dev/null; then sudo apt -y install cmake; fi
 		touch $@
     cmake: .cmake-installed
 
     .libglm-dev-installed:
-		sudo apt -y install libglm-dev
+		if ! dpkg-query -l libglm-dev &> /dev/null; then sudo apt -y install libglm-dev; fi
 		touch $@
     libglm-dev: .libglm-dev-installed
 
    .libglfw3-dev-installed:
-		sudo apt -y install libglfw3-dev
+		if ! dpkg-query -l libglfw3-dev &> /dev/null; then sudo apt -y install libglfw3-dev; fi
 		touch $@
     libglfw3-dev: .libglfw3-dev-installed
 
     .libglew-dev-installed:
-		sudo apt -y install libglew-dev
+		if ! dpkg-query -l libglew-dev &> /dev/null; then sudo apt -y install libglew-dev; fi
 		touch $@
     libglew-dev: .libglew-dev-installed
 
     .renderdoc-installed:
-		sudo apt -y install renderdoc
+		if ! dpkg-query -l renderdoc &> /dev/null; then sudo apt -y install renderdoc; fi
 		touch $@
     renderdoc: .renderdoc-installed
 
     .VulkanSDK-$(VULKAN_SDK_VERSION)-installed:
-		wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-		sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-$(VULKAN_SDK_VERSION)-focal.list https://packages.lunarg.com/vulkan/$(VULKAN_SDK_VERSION)/lunarg-vulkan-$(VULKAN_SDK_VERSION)-focal.list
-		sudo apt -y update
-		sudo apt install vulkan-sdk
+		if ! dpkg-query -l vulkan-sdk &> /dev/null; then \
+			wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -; \
+			sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-$(VULKAN_SDK_VERSION)-focal.list https://packages.lunarg.com/vulkan/$(VULKAN_SDK_VERSION)/lunarg-vulkan-$(VULKAN_SDK_VERSION)-focal.list; \
+			sudo apt -y update; \
+			sudo apt install vulkan-sdk; \
+		fi
 		touch $@
     VulkanSDK-$(VULKAN_SDK_VERSION): .VulkanSDK-$(VULKAN_SDK_VERSION)-installed
 
