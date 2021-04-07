@@ -1,0 +1,43 @@
+VULKAN_SDK_VERSION = {VULKAN_SDK_VERSION}
+UNZIP = {UNZIP}
+WGET = {WGET}
+
+rule SHELL_COMMAND
+  command = bash -c 'if [[ -f $out ]]; then exit 0; fi; $COMMAND; touch $out'
+  description = $DESC
+
+build .nlohmann-json-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} -q https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp -P json/include
+build nlohmann-json: phony .nlohmann-json-installed
+
+build .stb-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} -q https://raw.githubusercontent.com/nothings/stb/master/stb_image.h -P stb
+build stb: phony .stb-installed
+
+build .cmake-installed: SHELL_COMMAND
+    COMMAND = if ! dpkg-query -l cmake &> /dev/null; then sudo apt -y install cmake; fi
+build cmake: phony .cmake-installed
+
+build .libglm-dev-installed: SHELL_COMMAND
+    COMMAND = if ! dpkg-query -l libglm-dev &> /dev/null; then sudo apt -y install libglm-dev; fi
+build libglm-dev: phony .libglm-dev-installed
+
+build .libglfw3-dev-installed: SHELL_COMMAND
+    COMMAND = if ! dpkg-query -l libglfw3-dev &> /dev/null; then sudo apt -y install libglfw3-dev; fi
+build libglfw3-dev: phony .libglfw3-dev-installed
+
+build .libglew-dev-installed: SHELL_COMMAND
+    COMMAND = if ! dpkg-query -l libglew-dev &> /dev/null; then sudo apt -y install libglew-dev; fi
+build libglew-dev: phony .libglew-dev-installed
+
+build .renderdoc-installed: SHELL_COMMAND
+    COMMAND = if ! dpkg-query -l renderdoc &> /dev/null; then sudo apt -y install renderdoc; fi
+build renderdoc: phony .renderdoc-installed
+
+build .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed: SHELL_COMMAND
+    COMMAND = if ! dpkg-query -l vulkan-sdk &> /dev/null; then wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -; sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-${{VULKAN_SDK_VERSION}}-focal.list https://packages.lunarg.com/vulkan/${{VULKAN_SDK_VERSION}}/lunarg-vulkan-${{VULKAN_SDK_VERSION}}-focal.list; sudo apt -y update; sudo apt install vulkan-sdk; fi
+build VulkanSDK-${{VULKAN_SDK_VERSION}}: phony .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed
+
+build all: phony nlohmann-json stb cmake libglm-dev libglfw3-dev libglew-dev renderdoc VulkanSDK-${{VULKAN_SDK_VERSION}}
+
+default all

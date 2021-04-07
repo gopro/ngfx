@@ -1,0 +1,64 @@
+CMAKE_GENERATOR = {CMAKE_GENERATOR}
+CMAKE_SYSTEM_VERSION = {CMAKE_SYSTEM_VERSION}
+SHADERC_VERSION = {SHADERC_VERSION}
+VCPKG_DIR = {VCPKG_DIR}
+VCPKG_DIR_WSL = {VCPKG_DIR_WSL}
+VCPKG_TRIPLET = {VCPKG_TRIPLET}
+VULKAN_SDK_VERSION = {VULKAN_SDK_VERSION}
+PKGCONF_VERSION = {PKGCONF_VERSION}
+PREFIX = {PREFIX}
+UNZIP = unzip -q -n
+WGET = wget -nc -q
+
+rule SHELL_COMMAND
+  command = bash -c 'if [[ -f $out ]]; then exit 0; fi; $COMMAND; touch $out'
+  description = $DESC
+
+build .nlohmann-json-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} -q https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp -P json/include
+build nlohmann-json: phony .nlohmann-json-installed
+
+build .stb-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} -q https://raw.githubusercontent.com/nothings/stb/master/stb_image.h -P stb
+build stb: phony .stb-installed
+
+build .unzip-installed: SHELL_COMMAND
+    COMMAND = if ! dpkg-query -l unzip &> /dev/null; then sudo apt -y install unzip; fi
+
+build unzip: phony .unzip-installed
+
+build .glm-installed: SHELL_COMMAND | unzip
+    COMMAND = ${{WGET}} https://github.com/g-truc/glm/releases/download/0.9.9.8/glm-0.9.9.8.zip && unzip -q -n -d glm-0.9.9.8 glm-0.9.9.8.zip
+build glm: phony .glm-installed
+
+build .d3dx12-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} https://raw.githubusercontent.com/microsoft/DirectX-Graphics-Samples/v10.0.17763.0/Libraries/D3DX12/d3dx12.h -P d3dx12
+build d3dx12: phony .d3dx12-installed
+
+build .glfw-installed: SHELL_COMMAND | unzip
+    COMMAND = ${{WGET}} https://github.com/glfw/glfw/releases/download/3.3.2/glfw-3.3.2.bin.WIN64.zip && ${{UNZIP}} glfw-3.3.2.bin.WIN64.zip
+build glfw: phony .glfw-installed
+
+build .meson-installed: SHELL_COMMAND
+    COMMAND = pip.exe install meson
+build meson: phony .meson-installed
+
+build .pkgconf-installed: SHELL_COMMAND | meson
+    COMMAND = ${{WGET}} https://distfiles.dereferenced.org/pkgconf/pkgconf-${{PKGCONF_VERSION}}.tar.xz && tar -xf pkgconf-${{PKGCONF_VERSION}}.tar.xz && cd pkgconf-${{PKGCONF_VERSION}} && meson.exe setup --backend vs --buildtype=release --prefix="${{PREFIX}}" . meson-build-release -Dtests=false && meson.exe compile -C meson-build-release -j8 && meson.exe install -C meson-build-release
+build pkgconf: phony .pkgconf-installed
+
+build .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} https://sdk.lunarg.com/sdk/download/${{VULKAN_SDK_VERSION}}/windows/VulkanSDK-${{VULKAN_SDK_VERSION}}-Installer.exe && chmod a+x VulkanSDK-${{VULKAN_SDK_VERSION}}-Installer.exe && -./VulkanSDK-${{VULKAN_SDK_VERSION}}-Installer.exe /S
+build VulkanSDK-${{VULKAN_SDK_VERSION}}: phony .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed
+
+build .spirv-cross-installed: SHELL_COMMAND
+    COMMAND = cd ${{VCPKG_DIR_WSL}} && ./vcpkg.exe install --triplet ${{VCPKG_TRIPLET}} spirv-cross
+build spirv-cross: phony .spirv-cross-installed
+
+build .shaderc-${{SHADERC_VERSION}}-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} https://github.com/google/shaderc/archive/v${{SHADERC_VERSION}}.tar.gz && tar xzf v${{SHADERC_VERSION}}.tar.gz && cd shaderc-${{SHADERC_VERSION}} && ./utils/git-sync-deps && cmake.exe -S . -B cmake-build-release -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${{PREFIX}}" -DCMAKE_MSVC_RUNTIME_LIBRARY:STRING=MultiThreadedDLL -DCMAKE_SYSTEM_VERSION=${{CMAKE_SYSTEM_VERSION}} -G${{CMAKE_GENERATOR}} -DSHADERC_SKIP_TESTS=ON && cmake.exe --build cmake-build-release --config Release -j8 && cmake.exe --install cmake-build-release
+build shaderc-${{SHADERC_VERSION}}: phony .shaderc-${{SHADERC_VERSION}}-installed
+
+build all: phony nlohmann-json stb glm d3dx12 glfw unzip VulkanSDK-1.2.162.1 spirv-cross shaderc-${{SHADERC_VERSION}} meson pkgconf
+
+default all

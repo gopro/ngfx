@@ -5,7 +5,7 @@ if [[ ! -v VCPKG_DIR ]]; then
 fi
 CURRENT_DIR=`wslpath -wa .`
 export OS=Windows
-export PKG_CONFIG=$CURRENT_DIR'\external\pkgconf-1.7.4\meson-build-release\pkgconf.exe'
+export PKG_CONFIG=$CURRENT_DIR'\external\windows\bin\pkgconf.exe'
 
 export PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1
 export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
