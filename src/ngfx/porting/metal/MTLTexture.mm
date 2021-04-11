@@ -122,6 +122,7 @@ void MTLTexture::generateMipmapsFn(id<MTLCommandBuffer> mtlCommandBuffer) {
 
 void MTLTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y, uint32_t z,
           int32_t w, int32_t h, int32_t d, int32_t arrayLayers) {
+    const bool flipY = false; //TODO:move to param
     if (w == -1) w = this->w;
     if (h == -1) h = this->h;
     if (d == -1) d = this->d;
@@ -134,8 +135,24 @@ void MTLTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y, uin
     [mtlCommandBuffer waitUntilCompleted];
     
     NSUInteger bytesPerRow = 4 * w;
-    MTLRegion region = { { x, y, z }, { NSUInteger(w), NSUInteger(h), 1 } };
-    [v getBytes:data bytesPerRow: bytesPerRow fromRegion: region mipmapLevel: 0];
+    if (flipY) {
+        MTLRegion region = { { x, this->h - y - h, z }, { NSUInteger(w), NSUInteger(h), 1 } };
+        [v getBytes:data bytesPerRow: bytesPerRow fromRegion: region mipmapLevel: 0];
+        uint8_t *srcData = (uint8_t *)data, *dstData = &((uint8_t *)data)[(this->h-1) * bytesPerRow];
+        std::vector<uint8_t> tmpData(bytesPerRow);
+        for (uint32_t y = 0; y < (h / 2); y++) {
+            if (srcData == dstData) break;
+            memcpy(tmpData.data(), dstData, bytesPerRow);
+            memcpy(dstData, srcData, bytesPerRow);
+            memcpy(srcData, tmpData.data(), bytesPerRow);
+            srcData += bytesPerRow;
+            dstData -= bytesPerRow;
+        }
+    }
+    else {
+        MTLRegion region = { { x, y, z }, { NSUInteger(w), NSUInteger(h), 1 } };
+        [v getBytes:data bytesPerRow: bytesPerRow fromRegion: region mipmapLevel: 0];
+    }
 }
 
 Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data, PixelFormat format, uint32_t size,
