@@ -30,7 +30,7 @@ void VKGraphicsContext::create(const char *appName, bool enableDepthStencil,
   vkInstance.create(appName, "Graphics Abstraction Engine", 0, debug);
   auto instance = vkInstance.v;
   if (debug)
-    VKDebugMessenger::inst.create(instance);
+    vkDebugMessenger.create(instance);
   vkPhysicalDevice.create(instance);
   vkDevice.create(&vkPhysicalDevice);
   vkCommandPool.create(vkDevice.v, vkDevice.queueFamilyIndices.graphics);
@@ -44,7 +44,7 @@ void VKGraphicsContext::create(const char *appName, bool enableDepthStencil,
 VKGraphicsContext::~VKGraphicsContext() {
   VK_TRACE(vkDestroyDescriptorPool(vkDevice.v, vkDescriptorPool, nullptr));
   if (debug)
-    VKDebugMessenger::inst.destroy();
+    vkDebugMessenger.destroy();
 }
 
 void VKGraphicsContext::initDescriptorPool() {

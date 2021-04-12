@@ -27,20 +27,13 @@
 const int VK_ENABLE_TRACE = 0;
 
 namespace ngfx {
-class VKDebugMessenger {
-public:
-  void create(VkInstance instance,
-              VkDebugReportFlagsEXT flags = VK_DEBUG_REPORT_ERROR_BIT_EXT |
-                                            VK_DEBUG_REPORT_WARNING_BIT_EXT);
-  void destroy();
-  const char *VkResultToString(VkResult errorCode);
-  static VKDebugMessenger inst;
 
-private:
-  VkInstance instance;
-  VkDebugUtilsMessengerEXT v;
+struct VKDebugUtil {
+    static const char *VkResultToString(VkResult errorCode);
 };
+
 }; // namespace ngfx
+
 #define VK_TRACE(func)                                                         \
   {                                                                            \
     if (VK_ENABLE_TRACE)                                                       \
@@ -55,6 +48,6 @@ private:
     vkResult = func;                                                           \
     if (vkResult != VK_SUCCESS) {                                              \
       NGFX_ERR("%s failed: %s", #func,                                         \
-               VKDebugMessenger::inst.VkResultToString(vkResult));             \
+               VKDebugUtil::VkResultToString(vkResult));                       \
     }                                                                          \
   }

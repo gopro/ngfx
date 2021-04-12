@@ -24,9 +24,7 @@
 #include <string>
 using namespace ngfx;
 
-VKDebugMessenger VKDebugMessenger::inst;
-
-const char *VKDebugMessenger::VkResultToString(VkResult errorCode) {
+const char *VKDebugUtil::VkResultToString(VkResult errorCode) {
   switch (errorCode) {
 #define STR(r)                                                                 \
   case VK_##r:                                                                 \
@@ -58,48 +56,4 @@ const char *VKDebugMessenger::VkResultToString(VkResult errorCode) {
   default:
     return "UNKNOWN_ERROR";
   }
-}
-
-static VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(
-    VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-    VkDebugUtilsMessageTypeFlagsEXT messageType,
-    const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
-    void *pUserData) {
-
-  std::stringstream debugMessage;
-  debugMessage << "[" << pCallbackData->messageIdNumber << "]["
-               << pCallbackData->pMessageIdName
-               << "] : " << pCallbackData->pMessage;
-  if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT) {
-    NGFX_ERR("%s", debugMessage.str().c_str());
-  } else
-    NGFX_LOG("%s", debugMessage.str().c_str());
-  return VK_FALSE;
-}
-
-void VKDebugMessenger::create(VkInstance instance,
-                              VkDebugReportFlagsEXT flags) {
-  this->instance = instance;
-  VkResult vkResult;
-  PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT =
-      reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(
-          vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT"));
-  VkDebugUtilsMessengerCreateInfoEXT debugUtilsMessengerCI{};
-  debugUtilsMessengerCI.sType =
-      VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-  debugUtilsMessengerCI.messageSeverity =
-      VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-      VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
-  debugUtilsMessengerCI.messageType =
-      VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-      VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT;
-  debugUtilsMessengerCI.pfnUserCallback = debugUtilsMessengerCallback;
-  V(vkCreateDebugUtilsMessengerEXT(instance, &debugUtilsMessengerCI, nullptr,
-                                   &v));
-}
-void VKDebugMessenger::destroy() {
-  PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT =
-      reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(
-          vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT"));
-  VK_TRACE(vkDestroyDebugUtilsMessengerEXT(instance, v, nullptr));
 }

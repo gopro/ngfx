@@ -23,6 +23,7 @@
 #include "ngfx/graphics/Window.h"
 #include "ngfx/porting/vulkan/VKCommandBuffer.h"
 #include "ngfx/porting/vulkan/VKCommandPool.h"
+#include "ngfx/porting/vulkan/VKDebugMessenger.h"
 #include "ngfx/porting/vulkan/VKDebugUtil.h"
 #include "ngfx/porting/vulkan/VKDescriptorSetLayoutCache.h"
 #include "ngfx/porting/vulkan/VKDevice.h"
@@ -80,6 +81,7 @@ public:
   VkDescriptorPoolCreateInfo descriptorPoolCreateInfo;
   VKImageCreateInfo msColorImageCreateInfo;
   VKImageCreateInfo msDepthImageCreateInfo;
+  VKDebugMessenger vkDebugMessenger;
 
 private:
   void initDescriptorPool();
