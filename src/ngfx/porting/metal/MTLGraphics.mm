@@ -51,8 +51,10 @@ struct MTLGraphicsUtil {
     }
 
     static void setScissor(MTLGraphics* g, Rect2D &r) {
+        //In Metal, framebuffer coordinate system, origin is top left
         #ifdef ORIGIN_BOTTOM_LEFT
             Rect2D &vp = g->viewport;
+            //transform y coordinates
             MTLScissorRect mtlScissorRect = { NSUInteger(r.x), vp.h - r.y - r.h ,  r.w, r.h };
         #else
             MTLScissorRect mtlScissorRect = { NSUInteger(r.x), NSUInteger(r.y), r.w, r.h };
