@@ -34,7 +34,7 @@ namespace ngfx {
 class ShaderTools {
 public:
   ShaderTools(bool verbose = false);
-  enum { PATCH_SHADER_LAYOUTS_GLSL = 1, REMOVE_UNUSED_VARIABLES = 2 };
+  enum { PATCH_SHADER_LAYOUTS_GLSL = 1, REMOVE_UNUSED_VARIABLES = 2, FLIP_VERT_Y = 4 };
   enum Format { FORMAT_GLSL, FORMAT_HLSL, FORMAT_MSL };
   struct MacroDefinition {
     std::string name, value;
@@ -68,6 +68,8 @@ private:
                         std::vector<std::string> &outFiles);
   int compileShaderMSL(const std::string &file, const MacroDefinitions &defines,
                        std::string outDir, std::vector<std::string> &outFiles);
+  int convertSPVToGLSL(const std::string &spv, shaderc_shader_kind shaderKind,
+                       std::string &glsl, int flags = 0);
   int convertSPVToHLSL(const std::string &spv, shaderc_shader_kind shaderKind,
                        std::string &hlsl, uint32_t shaderModel = 60);
   int convertSPVToMSL(const std::string &spv, shaderc_shader_kind shaderKind,

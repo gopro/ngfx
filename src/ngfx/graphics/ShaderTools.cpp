@@ -132,25 +132,6 @@ int ShaderTools::compileShaderGLSL(
   return 0;
 }
 
-int ShaderTools::removeUnusedVariablesGLSL(const std::string &src,
-                                           shaderc_shader_kind shaderKind,
-                                           const MacroDefinitions &defines,
-                                           std::string &dst) {
-  int ret = 0;
-  string spv;
-  V(compileShaderGLSL(src, shaderKind, defines, spv, false));
-  auto compilerGLSL = make_unique<spirv_cross::CompilerGLSL>(
-      (const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
-  auto activeVariables = compilerGLSL->get_active_interface_variables();
-  compilerGLSL->get_shader_resources(activeVariables);
-  compilerGLSL->set_enabled_interface_variables(move(activeVariables));
-  spirv_cross::CompilerGLSL::Options opts;
-  opts.vulkan_semantics = true;
-  compilerGLSL->set_common_options(opts);
-  dst = compilerGLSL->compile();
-  return 0;
-}
-
 int ShaderTools::patchShaderLayoutsGLSL(const string &src, string &dst) {
   dst = "";
   istringstream sstream(src);
@@ -205,8 +186,10 @@ int ShaderTools::compileShaderGLSL(string filename,
   src = FileUtil::readFile(inFileName);
   string ext = FileUtil::splitExt(inFileName)[1];
   shaderc_shader_kind shaderKind = toShaderKind(ext);
-  if (flags & REMOVE_UNUSED_VARIABLES) {
-    V(removeUnusedVariablesGLSL(src, shaderKind, defines, dst));
+  if ((flags & REMOVE_UNUSED_VARIABLES) || (flags & FLIP_VERT_Y) ) {
+    string spv;
+    V(compileShaderGLSL(src, shaderKind, defines, spv, false));
+    V(convertSPVToGLSL(spv, shaderKind, dst, flags));
     src = move(dst);
   }
   if (flags & PATCH_SHADER_LAYOUTS_GLSL) {
@@ -280,6 +263,25 @@ int ShaderTools::compileShaderHLSL(const string &file,
     NGFX_ERR("cannot compile file: %s", file.c_str());
   outFiles.push_back(outFileName);
   return result;
+}
+
+int ShaderTools::convertSPVToGLSL(const std::string &spv,
+                                 shaderc_shader_kind shaderKind,
+                                 std::string &glsl, int flags) {
+  auto compilerGLSL = make_unique<spirv_cross::CompilerGLSL>(
+      (const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
+  if (flags & REMOVE_UNUSED_VARIABLES) {
+    auto activeVariables = compilerGLSL->get_active_interface_variables();
+    compilerGLSL->get_shader_resources(activeVariables);
+    compilerGLSL->set_enabled_interface_variables(move(activeVariables));
+  }
+  auto opts = compilerGLSL->get_common_options();
+  opts.vulkan_semantics = true;
+  if (flags & FLIP_VERT_Y)
+    opts.vertex.flip_vert_y = true;
+  compilerGLSL->set_common_options(opts);
+  glsl = compilerGLSL->compile();
+  return 0;
 }
 
 int ShaderTools::convertSPVToMSL(const string &spv,
@@ -771,9 +773,6 @@ vector<string> ShaderTools::compileShaders(const vector<string> &files,
                                            string outDir, Format fmt,
                                            const MacroDefinitions &defines,
                                            int flags) {
-#ifdef GRAPHICS_BACKEND_VULKAN
-  defines += " -DGRAPHICS_BACKEND_VULKAN=1";
-#endif
   vector<string> outFiles;
   for (const string &file : files) {
     if (fmt == FORMAT_GLSL)
