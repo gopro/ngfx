@@ -39,6 +39,7 @@ void VKGraphicsContext::create(const char *appName, bool enableDepthStencil,
   vkDescriptorSetLayoutCache.create(vkDevice.v);
   this->enableDepthStencil = enableDepthStencil;
   depthFormat = PixelFormat(vkPhysicalDevice.depthFormat);
+  vkQueryPool.create(vkDevice.v, VK_QUERY_TYPE_TIMESTAMP, 2);
 }
 
 VKGraphicsContext::~VKGraphicsContext() {

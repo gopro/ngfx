@@ -25,11 +25,10 @@ namespace ngfx {
 class VKGraphicsContext;
 class VKQueryPool {
 public:
-    void create(VKGraphicsContext *ctx, VkQueryType queryType, uint32_t queryCount);
+    void create(VkDevice device, VkQueryType queryType, uint32_t queryCount);
   virtual ~VKQueryPool();
   VkQueryPool v = VK_NULL_HANDLE;
-
 private:
-  VKGraphicsContext *ctx;
+  VkDevice device;
 };
 } // namespace ngfx
