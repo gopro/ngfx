@@ -37,6 +37,7 @@
 #include "ngfx/porting/vulkan/VKRenderPass.h"
 #include "ngfx/porting/vulkan/VKSemaphore.h"
 #include "ngfx/porting/vulkan/VKSwapchain.h"
+#include "ngfx/porting/vulkan/VKQueryPool.h"
 //#define ENABLE_DEPTH_STENCIL
 
 namespace ngfx {
@@ -82,6 +83,7 @@ public:
   VKImageCreateInfo msColorImageCreateInfo;
   VKImageCreateInfo msDepthImageCreateInfo;
   VKDebugMessenger vkDebugMessenger;
+  VKQueryPool vkQueryPool;
 
 private:
   void initDescriptorPool();

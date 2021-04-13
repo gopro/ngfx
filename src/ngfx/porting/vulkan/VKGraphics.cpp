@@ -90,6 +90,23 @@ void VKGraphics::endRenderPass(CommandBuffer *commandBuffer) {
   currentRenderPass = nullptr;
 }
 
+void VKGraphics::beginProfile(CommandBuffer *commandBuffer) {
+    auto *vkCtx = vk(ctx);
+    auto *vkCommandBuffer = vk(commandBuffer)->v;
+    vkCmdResetQueryPool(vkCommandBuffer, vkCtx->vkQueryPool.v, 0, 2);
+    vkCmdWriteTimestamp(vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, vkCtx->vkQueryPool.v, 0);
+}
+
+uint64_t VKGraphics::endProfile(CommandBuffer *commandBuffer) {
+    auto *vkCtx = vk(ctx);
+    auto *vkCommandBuffer = vk(commandBuffer)->v;
+    vkCmdWriteTimestamp(vkCommandBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, vkCtx->vkQueryPool.v, 1);
+    uint64_t t[2];
+    vkGetQueryPoolResults(vkCtx->vkDevice.v, vkCtx->vkQueryPool.v, 0, 2, sizeof(t), t,
+                          sizeof(t[0]), VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_WAIT_BIT);
+    return t[1] - t[0];
+}
+
 void VKGraphics::bindComputePipeline(CommandBuffer *commandBuffer,
                                      ComputePipeline *computePipeline) {
   VK_TRACE(vkCmdBindPipeline(vk(commandBuffer)->v,

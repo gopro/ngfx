@@ -35,6 +35,8 @@ public:
                        float clearDepth = 1.0f,
                        uint32_t clearStencil = 0) override;
   void endRenderPass(CommandBuffer *commandBuffer) override;
+  void beginProfile(CommandBuffer *commandBuffer) override;
+  uint64_t endProfile(CommandBuffer *commandBuffer) override;
   void bindVertexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
                         uint32_t location, uint32_t stride) override;
   void bindIndexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,

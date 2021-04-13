@@ -22,16 +22,17 @@
 #include "ngfx/porting/vulkan/VKGraphicsContext.h"
 using namespace ngfx;
 
-void VKQueryPool::create(VKGraphicsContext *ctx, VkQueryType queryType, uint32_t queryCount) {
+void VKQueryPool::create(VkDevice device, VkQueryType queryType, uint32_t queryCount) {
     VkResult vkResult;
+    this->device = device;
     const VkQueryPoolCreateInfo createInfo = {
         VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO, nullptr, 0,
         queryType, queryCount, 0
     };
-    V(vkCreateQueryPool(vk(ctx->device)->v, &createInfo, nullptr, &v));
+    V(vkCreateQueryPool(device, &createInfo, nullptr, &v));
 }
 
 VKQueryPool::~VKQueryPool() {
-    vkDestroyQueryPool(vk(ctx->device)->v, v, nullptr);
+    vkDestroyQueryPool(device, v, nullptr);
 }
 
