@@ -43,6 +43,9 @@ public:
                                uint32_t clearStencil = 0) = 0;
   virtual void endRenderPass(CommandBuffer *commandBuffer) = 0;
 
+  virtual void beginProfile(CommandBuffer *commandBuffer) = 0;
+  virtual uint64_t endProfile(CommandBuffer *commandBuffer) = 0;
+
   virtual void bindVertexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
                                 uint32_t location, uint32_t stride) = 0;
   virtual void
