@@ -237,6 +237,15 @@ void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {
   currentFramebuffer = nullptr;
 }
 
+void D3DGraphics::beginProfile(CommandBuffer *commandBuffer) {
+    NGFX_TODO();
+}
+
+uint64_t D3DGraphics::endProfile(CommandBuffer *commandBuffer) {
+    NGFX_TODO();
+    return 0;
+}
+
 void D3DGraphics::dispatch(CommandBuffer *commandBuffer, uint32_t groupCountX,
                            uint32_t groupCountY, uint32_t groupCountZ,
                            uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
