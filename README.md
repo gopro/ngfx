@@ -90,7 +90,7 @@ Install CMake 3.19.1 (or newer)
 
 We provide a helper script to help install 3rd-party dependencies
 
-`OS=*os* bash build_scripts/install_deps.sh`
+`OS=*os* python build_scripts/install_deps.py`
 
 - *os*: Windows, Linux, or Darwin (Mac OS)
 
