@@ -77,6 +77,15 @@ void MTLGraphics::endRenderPass(CommandBuffer* commandBuffer) {
     [autoReleasePool release];
 }
 
+void MTLGraphics::beginProfile(CommandBuffer *commandBuffer) {
+    NGFX_TODO();
+}
+
+uint64_t MTLGraphics::endProfile(CommandBuffer *commandBuffer) {
+    NGFX_TODO();
+    return 0;
+}
+
 void MTLGraphics::bindVertexBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, uint32_t location, uint32_t stride) {
     auto renderEncoder = (MTLRenderCommandEncoder*)currentCommandEncoder;
     [renderEncoder->v setVertexBuffer:mtl(buffer)->v offset:0 atIndex:location];
