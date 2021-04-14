@@ -69,6 +69,9 @@ void D3DTexture::create(D3DGraphicsContext *ctx, D3DGraphics *graphics,
     else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT &&
              (usageFlags & IMAGE_USAGE_SAMPLED_BIT))
       texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+    else if (texFormat == DXGI_FORMAT_D32_FLOAT &&
+        (usageFlags & IMAGE_USAGE_SAMPLED_BIT))
+        texFormat = DXGI_FORMAT_R32_FLOAT;
     resourceDesc =
         CD3DX12_RESOURCE_DESC::Tex2D(texFormat, w, h, d * arrayLayers,
                                      mipLevels, numSamples, 0, resourceFlags);

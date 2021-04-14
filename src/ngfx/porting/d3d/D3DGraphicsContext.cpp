@@ -32,7 +32,7 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   HRESULT hResult;
   this->debug = debug;
   this->enableDepthStencil = enableDepthStencil;
-  depthFormat = PIXELFORMAT_D16_UNORM;
+  depthFormat = PIXELFORMAT_D32_SFLOAT;
   UINT dxgiFactoryFlags = 0;
   if (debug) {
     ComPtr<ID3D12Debug> debugController;
