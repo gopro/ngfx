@@ -33,6 +33,8 @@
 #include "ngfx/porting/d3d/D3DSwapchain.h"
 #include "ngfx/porting/d3d/D3DTexture.h"
 #include "ngfx/porting/d3d/D3DUtil.h"
+#include "ngfx/porting/d3d/D3DQueryHeap.h"
+#include "ngfx/porting/d3d/D3DReadbackBuffer.h"
 #include <memory>
 
 namespace ngfx {
@@ -66,6 +68,8 @@ public:
   D3DFence d3dComputeFence;
   D3DComputePass d3dComputePass;
   std::unique_ptr<D3DTexture> d3dDepthStencilView;
+  D3DQueryHeap d3dQueryTimestampHeap;
+  D3DReadbackBuffer d3dTimestampResultBuffer;
   bool offscreen = true;
   uint32_t numSamples = 1;
 

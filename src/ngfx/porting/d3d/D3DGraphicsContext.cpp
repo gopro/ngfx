@@ -45,6 +45,8 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   d3dDevice.create(this);
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
+  d3dQueryTimestampHeap.create(d3dDevice.v.Get(), D3D12_QUERY_HEAP_TYPE_TIMESTAMP, 2);
+  d3dTimestampResultBuffer.create(this, 2 * sizeof(uint64_t));
 }
 
 void D3DGraphicsContext::createDescriptorHeaps() {

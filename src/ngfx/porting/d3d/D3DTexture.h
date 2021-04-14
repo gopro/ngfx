@@ -22,6 +22,7 @@
 #include "ngfx/core/DebugUtil.h"
 #include "ngfx/graphics/Texture.h"
 #include "ngfx/porting/d3d/D3DBuffer.h"
+#include "ngfx/porting/d3d/D3DCommandList.h"
 #include "ngfx/porting/d3d/D3DDescriptorHandle.h"
 #include "ngfx/porting/d3d/D3DReadbackBuffer.h"
 #include "ngfx/porting/d3d/D3DSamplerDesc.h"

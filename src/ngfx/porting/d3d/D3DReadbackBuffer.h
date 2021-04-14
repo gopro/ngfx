@@ -20,9 +20,9 @@
  */
 #pragma once
 #include "ngfx/porting/d3d/D3DBuffer.h"
-#include "ngfx/porting/d3d/D3DGraphicsContext.h"
 
 namespace ngfx {
+class D3DGraphicsContext;
 class D3DReadbackBuffer : public D3DBuffer {
 public:
   void create(D3DGraphicsContext *ctx, uint32_t size);

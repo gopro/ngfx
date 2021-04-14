@@ -238,12 +238,20 @@ void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {
 }
 
 void D3DGraphics::beginProfile(CommandBuffer *commandBuffer) {
-    NGFX_TODO();
+    d3d(commandBuffer)->v->EndQuery(d3d(ctx)->d3dQueryTimestampHeap.v.Get(), D3D12_QUERY_TYPE_TIMESTAMP, 0);
 }
 
 uint64_t D3DGraphics::endProfile(CommandBuffer *commandBuffer) {
-    NGFX_TODO();
-    return 0;
+    auto d3dCtx = d3d(ctx);
+    auto d3dCommandList = d3d(commandBuffer)->v;
+    auto queryHeap = d3dCtx->d3dQueryTimestampHeap.v.Get();
+    auto timestampResultBuffer = d3dCtx->d3dTimestampResultBuffer;
+    d3dCommandList->EndQuery(queryHeap, D3D12_QUERY_TYPE_TIMESTAMP, 1);
+    d3dCommandList->ResolveQueryData(queryHeap, D3D12_QUERY_TYPE_TIMESTAMP, 0, 2, timestampResultBuffer.v.Get(), 0);
+    uint64_t* t = (uint64_t*)timestampResultBuffer.map();
+    const UINT64 r = t[1] - t[0];
+    timestampResultBuffer.unmap();
+    return r;
 }
 
 void D3DGraphics::dispatch(CommandBuffer *commandBuffer, uint32_t groupCountX,
