@@ -80,12 +80,14 @@ void MTLGraphics::endRenderPass(CommandBuffer* commandBuffer) {
 }
 
 void MTLGraphics::beginProfile(CommandBuffer *commandBuffer) {
-    NGFX_TODO();
+    auto device = mtl(ctx)->mtlDevice.v;
+    [ device sampleTimestamps: &cpuTimestamp[0] gpuTimestamp: &gpuTimestamp[0] ];
 }
 
 uint64_t MTLGraphics::endProfile(CommandBuffer *commandBuffer) {
-    NGFX_TODO();
-    return 0;
+    auto device = mtl(ctx)->mtlDevice.v;
+    [ device sampleTimestamps: &cpuTimestamp[1] gpuTimestamp: &gpuTimestamp[1] ];
+    return gpuTimestamp[1] - gpuTimestamp[0];
 }
 
 void MTLGraphics::bindVertexBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, uint32_t location, uint32_t stride) {

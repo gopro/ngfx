@@ -79,6 +79,8 @@ public:
   ::MTLPrimitiveType currentPrimitiveType;
   MTLBuffer *currentIndexBuffer = nullptr;
   IndexFormat currentIndexFormat;
+  MTLTimestamp cpuTimestamp[2] = { 0 },
+               gpuTimestamp[2] = { 0 };
 
 private:
   NSAutoreleasePool *autoReleasePool = nullptr;
