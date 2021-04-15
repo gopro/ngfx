@@ -69,12 +69,14 @@ void MTLGraphics::beginRenderPass(CommandBuffer* commandBuffer, RenderPass* rend
     MTLRenderPassDescriptor* mtlRenderPassDescriptor = mtl(renderPass)->getDescriptor(mtl(ctx), mtl(framebuffer), clearColor, clearDepth, clearStencil);
     currentRenderCommandEncoder.v = [mtl(commandBuffer)->v renderCommandEncoderWithDescriptor:mtlRenderPassDescriptor];
     currentCommandEncoder = &currentRenderCommandEncoder;
+    currentRenderPass = renderPass;
 }
 
 void MTLGraphics::endRenderPass(CommandBuffer* commandBuffer) {
     [currentRenderCommandEncoder.v endEncoding];
     currentRenderCommandEncoder.v = nullptr;
     [autoReleasePool release];
+    currentRenderPass = nullptr;
 }
 
 void MTLGraphics::beginProfile(CommandBuffer *commandBuffer) {
