@@ -59,8 +59,7 @@ with the platform.
 
   Install Microsoft Visual Studio 2019 (or newer)
 
-  Install Windows Subsystem for Linux (Ubuntu 20.04.1 LTS or newer)
-  - Note: Git Bash or MSYS2 should work too
+  Install PowerShell Core version 7.1.3 (or newer)
 
 *On Linux (Ubuntu 20.04.1 or newer, other Linux distros should work too):*
 
@@ -112,7 +111,7 @@ Example:
 
 We provide a helper script to configure
 
-`OS=*os* bash build_scripts/configure.sh`
+`OS=*os* python build_scripts/configure.py`
 
 - *os*: Windows, Linux, or Darwin (Mac OS)
 
@@ -126,7 +125,7 @@ Alternatively, can build from IDE
 
 We provide a helper script to build
 
-`OS=*os* bash build_scripts/build.sh`
+`OS=*os* python build_scripts/build.py`
 
 - *os*: Windows, Linux, or Darwin (Mac OS)
 
@@ -136,7 +135,7 @@ We provide a helper script to build
 
 We provide a helper script to build
 
-`OS=*os* bash build_scripts/install.sh`
+`OS=*os* python build_scripts/install.py`
 
 - *os*: Windows, Linux, or Darwin (Mac OS)
 

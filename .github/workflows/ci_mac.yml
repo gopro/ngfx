@@ -19,6 +19,6 @@ jobs:
       run: |
         export OS=Darwin
         brew install bash coreutils ninja
-        python3 build_scripts/install_deps.py
-        /usr/local/bin/bash build_scripts/configure.sh
-        /usr/local/bin/bash build_scripts/build.sh
+        python3 build_scripts/install_deps.py && \
+        python3 build_scripts/configure.py && \
+        python3 build_scripts/build.py

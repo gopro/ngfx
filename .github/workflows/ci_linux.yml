@@ -20,6 +20,6 @@ jobs:
         export OS=Linux
         sudo apt -y update
         sudo apt -y install ninja-build
-        python3 build_scripts/install_deps.py
-        bash build_scripts/configure.sh
-        bash build_scripts/build.sh
+        python3 build_scripts/install_deps.py && \
+        python3 build_scripts/configure.py && \
+        python3 build_scripts/build.py
