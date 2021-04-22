@@ -14,28 +14,17 @@ jobs:
 
     defaults:
       run:
-        shell: wsl-bash {0}
+        shell: pwsh
 
     steps:
-      - uses: Vampire/setup-wsl@v1
-        with:
-          distribution: Ubuntu-20.04
-
       - uses: actions/checkout@v2
 
       - name: Build
         run: |
-          # Save the following commands to a variable
-          read -r -d '' COMMANDS << EOM || true
-          source build_scripts/windows/set_env.sh
-          sudo apt -y update
-          sudo apt -y install build-essential ninja-build
-          python3 build_scripts/install_deps.py
-          bash build_scripts/configure.sh
-          bash build_scripts/build.sh
-          EOM
-          tmpfile=$(mktemp)
-          echo "$COMMANDS" > $tmpfile
-          # Execute the commands in an msvc dev environment
-          bash build_scripts/windows/start_msvc_env.sh $tmpfile
+          pip install meson
+          .\build_scripts\windows\msvc-env.ps1
+          .\build_scripts\windows\set_env.ps1
+          python .\build_scripts\install_deps.py && `
+          python .\build_scripts\configure.py && `
+          python .\build_scripts\build.py
 
