@@ -21,6 +21,8 @@ if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "MSVC Runtime Library")
 endif()
 
+set(CMAKE_EXECUTE_PROCESS_COMMAND_ECHO STDOUT) # echo all process commands
+
 include(GNUInstallDirs)
 
 set(NGFX_DATA_DIR ${CMAKE_INSTALL_FULL_DATADIR}/ngfx/data)
