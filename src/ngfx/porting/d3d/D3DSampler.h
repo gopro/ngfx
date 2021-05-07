@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 GoPro Inc.
+ * Copyright 2021 GoPro Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,10 +19,16 @@
  * under the License.
  */
 #pragma once
-#include <d3dx12.h>
-#include <dxgi1_4.h>
-#include <wrl.h>
-using Microsoft::WRL::ComPtr;
+#include "ngfx/porting/d3d/D3DUtil.h"
+#include "ngfx/porting/d3d/D3DSamplerDesc.h"
+#include "ngfx/porting/d3d/D3DDescriptorHandle.h"
 
-#define D3D_CAST(name) \
-  inline D3D##name *d3d(name *g) { return (D3D##name *)g; }
+namespace ngfx {
+class D3DGraphicsContext;
+class D3DSampler {
+public:
+	void create(D3DGraphicsContext* ctx, const D3DSamplerDesc & samplerDesc);
+	D3DDescriptorHandle handle;
+	D3DSamplerDesc desc;
+};
+}

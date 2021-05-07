@@ -25,7 +25,7 @@
 #include "ngfx/porting/d3d/D3DCommandList.h"
 #include "ngfx/porting/d3d/D3DDescriptorHandle.h"
 #include "ngfx/porting/d3d/D3DReadbackBuffer.h"
-#include "ngfx/porting/d3d/D3DSamplerDesc.h"
+#include "ngfx/porting/d3d/D3DSampler.h"
 #include "ngfx/porting/d3d/D3DUtil.h"
 
 namespace ngfx {
@@ -65,11 +65,7 @@ public:
     D3DDescriptorHandle handle;
   };
   std::vector<RtvData> rtvDescriptorCache;
-  struct SamplerData {
-    D3DSamplerDesc desc;
-    D3DDescriptorHandle handle;
-  };
-  std::vector<SamplerData> samplerDescriptorCache;
+  std::vector<D3DSampler> samplerCache;
   D3DDescriptorHandle defaultSrvDescriptor{}, defaultRtvDescriptor{},
       dsvDescriptor{}, defaultSamplerDescriptor{};
   struct SrvData {
