@@ -30,23 +30,74 @@
 #include <vector>
 using json = nlohmann::json;
 
+/** \class ShaderTools
+ *
+ *  This class supports shader compilation and conversion, along with with reflection.
+ *  It uses shaderc to compile GLSL files to SPIRV, and spirv-cross to convert SPIRV to HLSL / MSL,
+ *  and also uses spirv-cross to do shader reflection.
+ */
+
 namespace ngfx {
 class ShaderTools {
 public:
   ShaderTools(bool verbose = false);
-  enum { PATCH_SHADER_LAYOUTS_GLSL = 1, REMOVE_UNUSED_VARIABLES = 2, FLIP_VERT_Y = 4 };
-  enum Format { FORMAT_GLSL, FORMAT_HLSL, FORMAT_MSL };
-  struct MacroDefinition {
-    std::string name, value;
+  enum { 
+      /**
+      * Patch the descriptor layout definitions.
+      * For example: convert 
+            layout (binding = 0) in vec3 position;
+            layout (binding = 1) in vec2 texcoord;
+        to
+            layout (set = 0, binding = 0) in vec3 position;
+            layout (set = 1, binding = 0) in vec2 texcoord;
+      */
+      PATCH_SHADER_LAYOUTS_GLSL = 1,
+      REMOVE_UNUSED_VARIABLES = 2, /*!< Remove unused input variables */
+      FLIP_VERT_Y = 4 /*!< Flip vertex y output in NDC space */
   };
-  typedef std::vector<MacroDefinition> MacroDefinitions;
+  enum Format { 
+      FORMAT_GLSL, /*!< GLSL shading language input format */
+      FORMAT_HLSL, /*!< HLSL shading language input format */
+      FORMAT_MSL   /*!< MSL shading language input format */
+  };
+  struct MacroDefinition {
+    std::string name, /*!< The macro name */
+                value; /*!< The macro value */
+  };
+  typedef std::vector<MacroDefinition> MacroDefinitions; /*!< A collection of macro definitions */
+
+  /** Compile shader files.
+      If the output files already exist, and are newer than the input files, then this function 
+      will skip re-compilation and return immediately.
+   *  @param files The shader input files
+   *  @param outDir The output directory
+   *  @param fmt The shader input format
+   *  @param defines The preprocessor macro definitions
+   *  @param flags Additional compile flags
+   *  @return The compiled shader filenames
+   */
   std::vector<std::string> compileShaders(const std::vector<std::string> &files,
                                           std::string outDir,
                                           Format fmt = FORMAT_GLSL,
                                           const MacroDefinitions &defines = {},
                                           int flags = 0);
+  /** Convert the SPIRV bytecode files to shaders.
+      If the output files already exist, and are newer than the input files, then this function
+      will skip conversion and return immediately.
+   *  @param files The SPIRV bytecode input files
+   *  @param outDir The output directory
+   *  @param fmt The shader output format
+   *  @return The converted shader filenames
+   */
   std::vector<std::string> convertShaders(const std::vector<std::string> &files,
                                           std::string outDir, Format fmt);
+  /** Generate shader reflection maps
+  *   If the output files already exist, and are newer than the input files, then this function
+  *   will skip processing and return immediately.
+  *   @param files The shader input files
+  *   @param outDir The output directory
+  *   @param fmt The shader input format
+   */
   std::vector<std::string>
   generateShaderMaps(const std::vector<std::string> &files, std::string outDir,
                      Format fmt);
