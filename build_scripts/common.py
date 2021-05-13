@@ -57,10 +57,7 @@ if OS == 'Windows':
     env('CMAKE_GENERATOR', 'Visual Studio 16 2019')
     CMAKE_SYSTEM_VERSION = env('CMAKE_SYSTEM_VERSION', '10.0.18362.0')
     env('SHADERC_VERSION', '2020.3')
-    VCPKG_DIR = env('VCPKG_DIR', 'C:\\vcpkg')
-    if not op.isdir(VCPKG_DIR):
-        err('{VCPKG_DIR} doesn\'t exist')
-    env('VCPKG_TRIPLET', 'x64-windows')
+    env('SPIRV_CROSS_VERSION', '2021-01-15')
     env('VULKAN_SDK_VERSION', '1.2.162.1')
     env('PKGCONF_VERSION', '1.7.4')
     CMAKE_MSVC_RUNTIME_LIBRARY = env('CMAKE_MSVC_RUNTIME_LIBRARY', 'MultiThreadedDLL')
