@@ -24,5 +24,5 @@
 #include <wrl.h>
 using Microsoft::WRL::ComPtr;
 
-#define D3D_CAST(name)                                                         \
+#define D3D_CAST(name) \
   inline D3D##name *d3d(name *g) { return (D3D##name *)g; }

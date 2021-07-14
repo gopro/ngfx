@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 GoPro Inc.
+ * Copyright 2021 GoPro Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,8 +19,16 @@
  * under the License.
  */
 #pragma once
-#include <string>
-#define PREFERRED_NUM_SWAPCHAIN_IMAGES 3 /*<! The preferred number of swapchain images */
-#define ENABLE_VSYNC /*<! Enable vertical sync */
-#define USE_PRECOMPILED_SHADERS /*<! Use precompiled shaders */
-#define ORIGIN_BOTTOM_LEFT /*<! Define the NDC origin as bottom left */
+#include "ngfx/porting/d3d/D3DUtil.h"
+#include "ngfx/porting/d3d/D3DSamplerDesc.h"
+#include "ngfx/porting/d3d/D3DDescriptorHandle.h"
+
+namespace ngfx {
+class D3DGraphicsContext;
+class D3DSampler {
+public:
+	void create(D3DGraphicsContext* ctx, const D3DSamplerDesc & samplerDesc);
+	D3DDescriptorHandle handle;
+	D3DSamplerDesc desc;
+};
+}

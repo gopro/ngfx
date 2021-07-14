@@ -111,23 +111,17 @@ void D3DTexture::create(D3DGraphicsContext *ctx, D3DGraphics *graphics,
 }
 
 D3DDescriptorHandle D3DTexture::getSamplerDescriptor(D3D12_FILTER filter) {
-  for (auto &samplerData : samplerDescriptorCache) {
-    if (samplerData.desc.Filter == filter)
-      return samplerData.handle;
+  for (auto &sampler : samplerCache) {
+    if (sampler.desc.Filter == filter)
+      return sampler.handle;
   }
   // Create sampler
   D3DSamplerDesc samplerDesc;
   samplerDesc.Filter = filter;
-  auto &samplerDescriptorHeap = ctx->d3dSamplerDescriptorHeap;
-  auto d3dDevice = ctx->d3dDevice.v.Get();
-  D3D_TRACE(d3dDevice->CreateSampler(&samplerDesc,
-                                     samplerDescriptorHeap.handle.cpuHandle));
-  SamplerData samplerData;
-  samplerData.desc = samplerDesc;
-  samplerData.handle = samplerDescriptorHeap.handle;
-  ++samplerDescriptorHeap.handle;
-  auto result = samplerData.handle;
-  samplerDescriptorCache.emplace_back(std::move(samplerData));
+  D3DSampler sampler;
+  sampler.create(ctx, samplerDesc);
+  D3DDescriptorHandle result = sampler.handle;
+  samplerCache.emplace_back(std::move(sampler));
   return result;
 }
 
