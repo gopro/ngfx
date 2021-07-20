@@ -156,6 +156,13 @@ enum VertexInputRate { VERTEX_INPUT_RATE_VERTEX, VERTEX_INPUT_RATE_INSTANCE };
 
 enum FilterMode { FILTER_NEAREST, FILTER_LINEAR };
 
+enum SamplerAddressMode {
+	CLAMP_TO_EDGE = MTLSamplerAddressModeClampToEdge,
+	MIRROR_CLAMP_TO_EDGE = MTLSamplerAddressModeMirrorClampToEdge,
+	REPEAT = MTLSamplerAddressModeRepeat,
+	MIRROR_REPEAT = MTLSamplerAddressModeMirrorRepeat
+};
+
 enum ImageLayout {
   IMAGE_LAYOUT_UNDEFINED,
   IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
