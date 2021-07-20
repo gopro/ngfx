@@ -21,6 +21,26 @@
 #include "ngfx/porting/d3d/D3DFramebuffer.h"
 #include "ngfx/porting/d3d/D3DTexture.h"
 using namespace ngfx;
+using D3DAttachment = D3DFramebuffer::D3DAttachment;
+
+void D3DAttachment::create(D3DTexture* texture, uint32_t level, uint32_t baseLayer, uint32_t layerCount) {
+    this->texture = texture;
+    this->level = level;
+    this->baseLayer = baseLayer;
+    this->layerCount = layerCount;
+    resource = texture->v.Get();
+    bool depthStencilAttachment =
+        texture->imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    cpuDescriptor = depthStencilAttachment
+        ? texture->dsvDescriptor.cpuHandle
+        : texture
+        ->getRtvDescriptor(level, baseLayer, layerCount)
+        .cpuHandle;
+    subresourceIndex = baseLayer * texture->mipLevels + level;
+    imageUsageFlags = texture->imageUsageFlags;
+    numSamples = texture->numSamples;
+    format = DXGI_FORMAT(texture->format);
+}
 
 void D3DFramebuffer::create(std::vector<D3DAttachment> &d3dAttachments,
                             int32_t w, uint32_t h, uint32_t layers) {

@@ -27,13 +27,17 @@ class D3DTexture;
 class D3DFramebuffer : public Framebuffer {
 public:
   struct D3DAttachment {
-    ID3D12Resource *resource;
-    D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor;
+    void create(D3DTexture* texture, uint32_t level = 0, uint32_t baseLayer = 0, uint32_t layerCount = 1);
+    ID3D12Resource *resource = nullptr;
+    D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor{};
     uint32_t subresourceIndex = 0;
     uint32_t imageUsageFlags = 0;
     uint32_t numSamples = 1;
     DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN;
     D3DTexture *texture = nullptr;
+    uint32_t level = 0;
+    uint32_t baseLayer = 0;
+    uint32_t layerCount = 1;
   };
   void create(std::vector<D3DAttachment> &attachments, int32_t w, uint32_t h,
               uint32_t layers = 1);
