@@ -92,7 +92,11 @@ Framebuffer *Framebuffer::create(Device *device, RenderPass *renderPass,
         d3dTexture->imageUsageFlags,
         d3dTexture->numSamples,
         DXGI_FORMAT(d3dTexture->format),
-        d3dTexture};
+        d3dTexture,
+        attachment.level,
+        attachment.layer,
+        1
+    };
   }
   d3dFramebuffer->create(d3dAttachments, w, h, layers);
   return d3dFramebuffer;
