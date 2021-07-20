@@ -31,10 +31,11 @@ void D3DSwapchain::create(D3DGraphicsContext *ctx, D3DSurface *surface) {
   auto d3dFactory = ctx->d3dFactory.Get();
   auto d3dCommandQueue = ctx->d3dCommandQueue.v.Get();
   numImages = PREFERRED_NUM_SWAPCHAIN_IMAGES;
-  UINT w = surface->w, h = surface->h;
+  this->w = surface->w; this->h = surface->h;
+  this->format = PIXELFORMAT_RGBA8_UNORM;
   DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {w,
                                          h,
-                                         DXGI_FORMAT_R8G8B8A8_UNORM,
+                                         DXGI_FORMAT(format),
                                          FALSE,
                                          {1, 0},
                                          DXGI_USAGE_RENDER_TARGET_OUTPUT,
