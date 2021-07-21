@@ -60,6 +60,7 @@ public:
   D3DDescriptorHandle getSrvDescriptor(uint32_t baseMipLevel,
                                        uint32_t numMipLevels, uint32_t plane = 0);
   D3DDescriptorHandle getUavDescriptor(uint32_t mipLevel);
+  void setName(const std::string& name) override;
   struct RtvData {
     D3D12_RENDER_TARGET_VIEW_DESC desc;
     D3DDescriptorHandle handle;

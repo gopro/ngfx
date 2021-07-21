@@ -3,6 +3,7 @@
 #include "D3DBuffer.h"
 #include "D3DDebugUtil.h"
 #include "D3DGraphicsContext.h"
+#include "ngfx/core/StringUtil.h"
 using namespace ngfx;
 using namespace std;
 
@@ -512,6 +513,10 @@ void D3DTexture::resourceBarrier(D3DCommandList* cmdList,
         D3D_TRACE(cmdList->v->ResourceBarrier(1, &resourceBarrier));
         currentResourceState[j] = newState;
     }
+}
+
+void D3DTexture::setName(const std::string& name) {
+    v->SetName(StringUtil::toWString(name).c_str());
 }
 
 Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data,

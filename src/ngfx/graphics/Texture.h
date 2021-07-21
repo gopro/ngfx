@@ -60,6 +60,11 @@ public:
   virtual void changeLayout(CommandBuffer *commandBuffer,
                             ImageLayout imageLayout) = 0;
   virtual void generateMipmaps(CommandBuffer *commandBuffer) = 0;
+  /** Set resource name
+      @param name The resource name
+  */
+  virtual void setName(const std::string& name) { this->name = name; }
+  std::string name;
   PixelFormat format;
   uint32_t w = 0, h = 0, d = 1, arrayLayers = 1, mipLevels = 1, numSamples = 1;
   uint32_t size = 0;
