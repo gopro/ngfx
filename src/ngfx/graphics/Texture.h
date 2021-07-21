@@ -52,7 +52,7 @@ public:
   virtual ~Texture() {}
   virtual void upload(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
                       uint32_t z = 0, int32_t w = -1, int32_t h = -1,
-                      int32_t d = -1, int32_t arrayLayers = -1) = 0;
+                      int32_t d = -1, int32_t arrayLayers = -1, int32_t numPlanes = -1) = 0;
   virtual void download(void *data, uint32_t size, uint32_t x = 0,
                         uint32_t y = 0, uint32_t z = 0, int32_t w = -1,
                         int32_t h = -1, int32_t d = -1,
@@ -62,6 +62,8 @@ public:
   virtual void generateMipmaps(CommandBuffer *commandBuffer) = 0;
   PixelFormat format;
   uint32_t w = 0, h = 0, d = 1, arrayLayers = 1, mipLevels = 1, numSamples = 1;
+  uint32_t size = 0;
+  std::vector<uint32_t> planeWidth, planeHeight, planeSize;
   ImageUsageFlags imageUsageFlags;
   TextureType textureType;
 };

@@ -19,16 +19,19 @@
  * under the License.
  */
 #pragma once
+#include "ngfx/graphics/Sampler.h"
 #include "ngfx/porting/d3d/D3DUtil.h"
 #include "ngfx/porting/d3d/D3DSamplerDesc.h"
 #include "ngfx/porting/d3d/D3DDescriptorHandle.h"
 
 namespace ngfx {
 class D3DGraphicsContext;
-class D3DSampler {
+class D3DSampler : public Sampler {
 public:
 	void create(D3DGraphicsContext* ctx, const D3DSamplerDesc & samplerDesc);
+	virtual ~D3DSampler() {}
 	D3DDescriptorHandle handle;
 	D3DSamplerDesc desc;
 };
+D3D_CAST(Sampler);
 }

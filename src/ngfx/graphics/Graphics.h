@@ -24,6 +24,7 @@
 #include "ngfx/graphics/CommandBuffer.h"
 #include "ngfx/graphics/Device.h"
 #include "ngfx/graphics/GraphicsPipeline.h"
+#include "ngfx/graphics/Sampler.h"
 #include "ngfx/graphics/Texture.h"
 #include <cstdint>
 #include <glm/glm.hpp>
@@ -133,13 +134,23 @@ public:
   virtual void bindGraphicsPipeline(CommandBuffer *cmdBuffer,
                                     GraphicsPipeline *graphicsPipeline) = 0;
   /** Bind texture.
-  *   This allows the GPU shader module to sample the texture.
+  *   If the texture has a built-in sampler, this also binds the sampler.
   *   @param cmdBuffer The command buffer
   *   @param texture The input texture
   *   @param set The descriptor set index
   */
   virtual void bindTexture(CommandBuffer *commandBuffer, Texture *texture,
                            uint32_t set) = 0;
+
+  /** Bind sampler.
+      This allows the GPU shader module to sample a texture.
+      When using a texture with a built-in sampler, this call is not necessary.
+      @param cmdBuffer THe command buffer
+      @param sampler The texture sampler
+      @param set The descriptor set index
+  */
+  virtual void bindSampler(CommandBuffer* cmdBuffer, Sampler* sampler,
+      uint32_t set) = 0;
 
   // TODO: copyBuffer: ToBuffer, copyBuffer: ToTexture, copyTexture: ToBuffer,
   // blit

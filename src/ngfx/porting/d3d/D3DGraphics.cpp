@@ -113,23 +113,50 @@ void D3DGraphics::bindStorageBuffer(CommandBuffer *commandBuffer,
   }
 }
 
+void D3DGraphics::bindSampler(CommandBuffer* commandBuffer, Sampler* sampler,
+    uint32_t set) {
+    auto d3dCommandList = d3d(commandBuffer)->v.Get();
+    auto d3dSampler = d3d(sampler);
+    if (D3DGraphicsPipeline* graphicsPipeline =
+        dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+            set, d3dSampler->handle.gpuHandle));
+    }
+    else if (D3DComputePipeline* computePipeline =
+        dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+            set, d3dSampler->handle.gpuHandle));
+    }
+}
+
 void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
-                              uint32_t set) {
-  auto d3dCommandList = d3d(commandBuffer)->v.Get();
-  auto d3dTexture = d3d(texture);
-  if (D3DGraphicsPipeline *graphicsPipeline =
-          dynamic_cast<D3DGraphicsPipeline *>(currentPipeline)) {
-    D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
-        set, d3dTexture->defaultSrvDescriptor.gpuHandle));
-    D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
-        set + 1, d3dTexture->defaultSamplerDescriptor.gpuHandle));
-  } else if (D3DComputePipeline *computePipeline =
-                 dynamic_cast<D3DComputePipeline *>(currentPipeline)) {
-    D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
-        set, d3dTexture->defaultSrvDescriptor.gpuHandle));
-    D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
-        set + 1, d3dTexture->defaultSamplerDescriptor.gpuHandle));
-  }
+    uint32_t set) {
+    auto d3dCommandList = d3d(commandBuffer)->v.Get();
+    auto d3dTexture = d3d(texture);
+    uint32_t numPlanes = d3dTexture->numPlanes;
+    if (D3DGraphicsPipeline* graphicsPipeline =
+        dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
+        for (uint32_t j = 0; j < numPlanes; j++) {
+            D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+                set + j, d3dTexture->defaultSrvDescriptor[j].gpuHandle));
+        }
+    }
+    else if (D3DComputePipeline* computePipeline =
+        dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
+        if (d3dTexture->imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+            for (uint32_t j = 0; j < numPlanes; j++) {
+                D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+                    set + j, d3dTexture->defaultSrvDescriptor[j].gpuHandle));
+            }
+        }
+        else {
+            D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+                set, d3dTexture->defaultUavDescriptor.gpuHandle));
+        }
+    }
+    if (d3dTexture->defaultSampler) {
+        bindSampler(commandBuffer, d3dTexture->defaultSampler, set + numPlanes);
+    }
 }
 
 static void resourceBarrier(
