@@ -33,7 +33,9 @@
            ##__VA_ARGS__)
 #include <cstdint>
 struct DebugUtil {
-  static inline void Exit(uint32_t code) { exit(code); };
+  static inline void Exit(uint32_t code) {
+      exit(code);
+  };
 };
 #define NGFX_ERR(fmt, ...)                                                     \
   {                                                                            \
