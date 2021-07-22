@@ -63,8 +63,13 @@ else()
 endif()
 
 set(SPIRV_CROSS_INCLUDE_DIRS ${SPIRV_CROSS_DIR}/include)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebugDLL")
+set(SPIRV_CROSS_LIBRARY_DIRS ${SPIRV_CROSS_DIR}/debug/lib)
+set(SPIRV_CROSS_LIBRARIES spirv-cross-cppd spirv-cross-cored spirv-cross-glsld spirv-cross-hlsld spirv-cross-msld spirv-cross-reflectd spirv-cross-utild spirv-cross-cd)
+else()
 set(SPIRV_CROSS_LIBRARY_DIRS ${SPIRV_CROSS_DIR}/lib)
 set(SPIRV_CROSS_LIBRARIES spirv-cross-cpp spirv-cross-core spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl spirv-cross-reflect spirv-cross-util spirv-cross-c)
+endif()
 
 file(GLOB_RECURSE NGFX_SOURCE_FILES
   src/ngfx/core/* src/ngfx/compute/*
