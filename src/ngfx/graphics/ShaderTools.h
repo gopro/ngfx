@@ -107,11 +107,20 @@ private:
   void applyPatches(const std::vector<std::string> &patchFiles,
                     std::string outDir);
   int cmd(std::string str);
-  int compileShaderGLSL(const std::string &src, shaderc_shader_kind shaderKind,
-                        const MacroDefinitions &defines, std::string &spv,
-                        bool verbose = true,
-                        shaderc_optimization_level optimizationLevel =
-                            shaderc_optimization_level_performance);
+  int compileShaderToSPV(
+      const std::string& src,
+      shaderc_source_language sourceLanguage,
+      shaderc_shader_kind shaderKind,
+      const MacroDefinitions& defines, std::string& spv, bool verbose = true,
+      shaderc_optimization_level optimizationLevel = shaderc_optimization_level_performance,
+      std::string parentPath = "");
+  inline int compileShaderGLSL(const std::string& src, shaderc_shader_kind shaderKind,
+          const MacroDefinitions& defines, std::string& spv,
+          bool verbose = true,
+          shaderc_optimization_level optimizationLevel =
+          shaderc_optimization_level_performance) {
+      return compileShaderToSPV(src, shaderc_source_language_glsl, shaderKind, defines, spv, verbose, optimizationLevel);
+  }
   int compileShaderGLSL(std::string filename, const MacroDefinitions &defines,
                         const std::string &outDir,
                         std::vector<std::string> &outFiles, int flags = 0);
@@ -163,8 +172,6 @@ private:
                                     const std::string &hlsl,
                                     std::string &hlslReflect);
   int patchShaderLayoutsGLSL(const std::string &src, std::string &dst);
-  int preprocess(const std::string &src, const std::string &dataPath,
-                 std::string &dst);
   int removeUnusedVariablesGLSL(const std::string &src,
                                 shaderc_shader_kind shaderKind,
                                 const MacroDefinitions &defines,

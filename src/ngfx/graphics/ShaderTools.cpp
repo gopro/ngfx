@@ -74,46 +74,39 @@ int ShaderTools::cmd(string str) {
   return system(str.c_str());
 }
 
-bool ShaderTools::findIncludeFile(const string &includeFilename,
-                                  const vector<string> &includePaths,
-                                  string &includeFile) {
-  for (const string &includePath : includePaths) {
-    fs::path filename = includePath / fs::path(includeFilename);
-    if (fs::exists(filename)) {
-      includeFile = filename.string();
-      return true;
+class FileIncluder : public shaderc::CompileOptions::IncluderInterface {
+public:
+    FileIncluder(const vector<string>& includePaths)
+        : includePaths(includePaths) {}
+    ~FileIncluder() override {}
+    shaderc_include_result* GetInclude(const char* requested_source,
+        shaderc_include_type type,
+        const char* requesting_source,
+        size_t include_depth) override {
+        auto r = new shaderc_include_result;
+        string contents = readFile(fs::path(includePaths[0] + "/" + requested_source).string());
+        r->source_name = strdup(requested_source);
+        r->source_name_length = strlen(requested_source);
+        r->content = strdup(contents.c_str());
+        r->content_length = contents.size();
+        r->user_data = nullptr;
+        return r;
     }
-  }
-  return false;
-}
-
-int ShaderTools::preprocess(const string &src, const string &dataPath,
-                            string &dst) {
-  dst = "";
-  vector<string> includePaths = defaultIncludePaths;
-  includePaths.push_back(dataPath);
-  istringstream sstream(src);
-  string line;
-  while (std::getline(sstream, line)) {
-    smatch matchIncludeGroups;
-    bool matchInclude =
-        regex_search(line, matchIncludeGroups, regex("#include \"([^\"]*)"));
-    if (matchInclude) {
-      string includeFilename = matchIncludeGroups[1];
-      string includeFilePath;
-      findIncludeFile(includeFilename, includePaths, includeFilePath);
-      dst += readFile(includeFilePath);
-    } else {
-      dst += line + "\n";
+    void ReleaseInclude(shaderc_include_result* r) override {
+        free((void*)r->source_name);
+        free((void*)r->content);
+        free(r);
     }
-  }
-  return 0;
-}
+    vector<string> includePaths;
+};
 
-int ShaderTools::compileShaderGLSL(
-    const string &src, shaderc_shader_kind shaderKind,
+int ShaderTools::compileShaderToSPV(
+    const string &src,
+    shaderc_source_language sourceLanguage,
+    shaderc_shader_kind shaderKind,
     const MacroDefinitions &defines, string &spv, bool verbose,
-    shaderc_optimization_level optimizationLevel) {
+    shaderc_optimization_level optimizationLevel,
+    std::string parentPath) {
   shaderc::Compiler compiler;
   shaderc::CompileOptions compileOptions;
   for (const MacroDefinition &define : defines) {
@@ -121,7 +114,10 @@ int ShaderTools::compileShaderGLSL(
   }
   compileOptions.SetOptimizationLevel(optimizationLevel);
   compileOptions.SetGenerateDebugInfo();
-
+  compileOptions.SetSourceLanguage(sourceLanguage);
+  vector<string> includePaths = { parentPath };
+  auto fileIncluder = make_unique<FileIncluder>(includePaths);
+  compileOptions.SetIncluder(std::move(fileIncluder));
   auto result = compiler.CompileGlslToSpv(src, shaderKind, "", compileOptions);
   if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
     NGFX_ERR("cannot compile file: %s", result.GetErrorMessage().c_str());
@@ -235,27 +231,22 @@ int ShaderTools::compileShaderMSL(const string &file,
 int ShaderTools::compileShaderHLSL(const string &file,
                                    const MacroDefinitions &defines,
                                    string outDir, vector<string> &outFiles) {
-  string strippedFilename =
-      FileUtil::splitExt(fs::path(file).filename().string())[0];
-  string inFileName = fs::path(outDir + "/" + strippedFilename + ".hlsl")
-                          .make_preferred()
-                          .string();
-  string outFileName = fs::path(outDir + "/" + strippedFilename + ".dxc")
-                           .make_preferred()
-                           .string();
+  string filename = fs::path(file).filename().string();
+  string inFileName =fs::path(file).make_preferred().string();
+  string outFileName = fs::path(outDir + "/" + filename + ".dxc").make_preferred().string();
   if (!FileUtil::srcFileNewerThanOutFile(inFileName, outFileName)) {
     outFiles.push_back(outFileName);
     return 0;
   }
 
   string shaderModel = "";
-  if (strstr(inFileName.c_str(), ".vert"))
-    shaderModel = "vs_5_0";
-  else if (strstr(inFileName.c_str(), ".frag"))
-    shaderModel = "ps_5_0";
-  else if (strstr(inFileName.c_str(), ".comp"))
-    shaderModel = "cs_5_0";
-  int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " " +
+  if (strstr(inFileName.c_str(), ".vert") || strstr(inFileName.c_str(), "_vertex"))
+      shaderModel = "vs_5_0";
+  else if (strstr(inFileName.c_str(), ".frag") || strstr(inFileName.c_str(), "_fragment"))
+      shaderModel = "ps_5_0";
+  else if (strstr(inFileName.c_str(), ".comp") || strstr(inFileName.c_str(), "_compute"))
+      shaderModel = "cs_5_0";
+  int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " -D DIRECT3D12 " +
                    inFileName);
   if (result == 0)
     NGFX_LOG("compiled file: %s", file.c_str());
