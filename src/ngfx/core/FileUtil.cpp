@@ -127,3 +127,11 @@ vector<string> FileUtil::findFiles(const vector<string> &paths,
   }
   return files;
 }
+
+void FileUtil::copyFiles(const vector<string>& files,
+    const string& outDir) {
+    for (const string& file : files) {
+        string filename = fs::path(file).filename().string();
+        FileUtil::writeFile(fs::path(outDir + "/" + filename).string(), FileUtil::readFile(file));
+    }
+}
