@@ -223,12 +223,8 @@ void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
                                                   descriptorHeaps.data()));
   std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> colorAttachmentHandles(
       colorAttachments.size());
-  for (uint32_t j = 0; j < colorAttachments.size(); j++)
-    colorAttachmentHandles[j] = colorAttachments[j]->cpuDescriptor;
-  D3D_TRACE(d3dCommandList->v->OMSetRenderTargets(
-      UINT(colorAttachments.size()), colorAttachmentHandles.data(), FALSE,
-      depthStencilAttachment ? &depthStencilAttachment->cpuDescriptor
-                             : nullptr));
+  setRenderTargets(d3dCommandList, d3dFramebuffer->colorAttachments, 
+      d3dFramebuffer->depthStencilAttachment);
   for (auto &colorAttachment : colorAttachments) {
     D3D_TRACE(d3dCommandList->v->ClearRenderTargetView(
         colorAttachment->cpuDescriptor, glm::value_ptr(clearColor), 0,
@@ -242,6 +238,19 @@ void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
   }
   currentRenderPass = renderPass;
   currentFramebuffer = framebuffer;
+}
+
+void D3DGraphics::setRenderTargets(D3DCommandList* d3dCommandList,
+    const std::vector<D3DFramebuffer::D3DAttachment*>& colorAttachments,
+    const D3DFramebuffer::D3DAttachment* depthStencilAttachment) {
+    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> colorAttachmentHandles(
+        colorAttachments.size());
+    for (uint32_t j = 0; j < colorAttachments.size(); j++)
+        colorAttachmentHandles[j] = colorAttachments[j]->cpuDescriptor;
+    D3D_TRACE(d3dCommandList->v->OMSetRenderTargets(
+        UINT(colorAttachments.size()), colorAttachmentHandles.data(), FALSE,
+        depthStencilAttachment ? &depthStencilAttachment->cpuDescriptor
+        : nullptr));
 }
 
 void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {

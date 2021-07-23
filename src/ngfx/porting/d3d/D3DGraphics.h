@@ -35,6 +35,9 @@ public:
                        glm::vec4 clearColor = glm::vec4(0.0f),
                        float clearDepth = 1.0f,
                        uint32_t clearStencil = 0) override;
+  void setRenderTargets(D3DCommandList* d3dCommandList,
+      const std::vector<D3DFramebuffer::D3DAttachment*>& colorAttachments,
+      const D3DFramebuffer::D3DAttachment* depthStencilAttachment);
   void endRenderPass(CommandBuffer *commandBuffer) override;
   void beginProfile(CommandBuffer *commandBuffer) override;
   uint64_t endProfile(CommandBuffer *commandBuffer) override;
