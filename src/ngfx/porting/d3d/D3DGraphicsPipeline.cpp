@@ -23,6 +23,7 @@
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
 #include "ngfx/porting/d3d/D3DShaderModule.h"
+#include "ngfx/porting/d3d/D3DPipelineUtil.h"
 #include <d3dx12.h>
 using namespace ngfx;
 using namespace std;
