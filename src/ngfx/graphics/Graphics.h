@@ -195,11 +195,12 @@ public:
   *   @param cmdBuffer The command buffer
   *   @param groupCountX, groupCountY, groupCountZ The number of groups (tensor)
   *   @param threadsPerGroupX, threadsPerGroupY, threadsPerGroupZ The number of threads per group (tensor)
+  *   If these parameters are already specified in the shader, then it is not necessary to set these parameters in this function call (set to -1).
   */
   virtual void dispatch(CommandBuffer *cmdBuffer, uint32_t groupCountX,
                         uint32_t groupCountY, uint32_t groupCountZ,
-                        uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                        uint32_t threadsPerGroupZ) = 0;
+                        int32_t threadsPerGroupX = -1, int32_t threadsPerGroupY = -1,
+                        int32_t threadsPerGroupZ = -1) = 0;
   /** Set the viewport
   *   This defines the mapping of view coordinates to NDC coordinates.
   *   @param cmdBuffer The command buffer

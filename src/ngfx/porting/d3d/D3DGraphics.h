@@ -72,8 +72,8 @@ public:
 
   void dispatch(CommandBuffer *cmdBuffer, uint32_t groupCountX,
                 uint32_t groupCountY, uint32_t groupCountZ,
-                uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                uint32_t threadsPerGroupZ) override;
+                int32_t threadsPerGroupX = -1, int32_t threadsPerGroupY = -1,
+                int32_t threadsPerGroupZ = -1) override;
 
   void setViewport(CommandBuffer *cmdBuffer, Rect2D rect) override;
   void setScissor(CommandBuffer *cmdBuffer, Rect2D rect) override;

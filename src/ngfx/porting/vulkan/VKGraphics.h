@@ -21,6 +21,7 @@
 #pragma once
 #include "ngfx/graphics/Graphics.h"
 #include "ngfx/porting/vulkan/VKUtil.h"
+#include "ngfx/core/DebugUtil.h"
 
 namespace ngfx {
 class VKGraphics : public Graphics {
@@ -59,8 +60,8 @@ public:
   }
   void dispatch(CommandBuffer *cmdBuffer, uint32_t groupCountX,
                 uint32_t groupCountY, uint32_t groupCountZ,
-                uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                uint32_t threadsPerGroupZ) override;
+                int32_t threadsPerGroupX, int32_t threadsPerGroupY,
+                int32_t threadsPerGroupZ) override;
   void draw(CommandBuffer *cmdBuffer, uint32_t vertexCount,
             uint32_t instanceCount = 1, uint32_t firstVertex = 0,
             uint32_t firstInstance = 0) override;

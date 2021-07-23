@@ -299,8 +299,7 @@ uint64_t D3DGraphics::endProfile(CommandBuffer *commandBuffer) {
 
 void D3DGraphics::dispatch(CommandBuffer *commandBuffer, uint32_t groupCountX,
                            uint32_t groupCountY, uint32_t groupCountZ,
-                           uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                           uint32_t threadsPerGroupZ) {
+                           int32_t, int32_t, int32_t) {
   D3D_TRACE(
       d3d(commandBuffer)->v->Dispatch(groupCountX, groupCountY, groupCountZ));
 }
