@@ -39,6 +39,10 @@ public:
     Texture *texture = nullptr;
     uint32_t level = 0, /**< The destination texture mipmap level */
              layer = 0; /**< The destination texture array layer index */
+    /** Get the attachment subresource index */
+    inline uint32_t subresourceIndex() {
+        return layer * texture->mipLevels + level;
+    };
   };
   /** Create a framebuffer object
    *  @param device The graphics device
