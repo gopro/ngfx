@@ -159,6 +159,22 @@ void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
     }
 }
 
+void D3DGraphics::bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,
+        uint32_t set) {
+    auto d3dCommandList = d3d(commandBuffer)->v.Get();
+    auto d3dTexture = d3d(texture);
+    if (D3DGraphicsPipeline* graphicsPipeline =
+        dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+            set, d3dTexture->defaultUavDescriptor.gpuHandle));
+    }
+    else if (D3DComputePipeline* computePipeline =
+        dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+            set, d3dTexture->defaultUavDescriptor.gpuHandle));
+    }
+}
+
 static void resourceBarrier(
     D3DCommandList *cmdList, D3DFramebuffer::D3DAttachment *p,
     D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState,

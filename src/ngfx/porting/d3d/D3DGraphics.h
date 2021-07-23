@@ -54,6 +54,8 @@ public:
                             GraphicsPipeline *graphicsPipeline) override;
   void bindTexture(CommandBuffer *commandBuffer, Texture *texture,
                    uint32_t set) override;
+  void bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,
+      uint32_t set) override;
   void bindSampler(CommandBuffer* commandBuffer, Sampler* sampler,
       uint32_t set) override;
 

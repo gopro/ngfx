@@ -142,6 +142,15 @@ public:
   virtual void bindTexture(CommandBuffer *commandBuffer, Texture *texture,
                            uint32_t set) = 0;
 
+  /** Bind texture to an image unit.
+ *   This supports random-access reading and writing to the texture from the shader.
+ *   @param cmdBuffer The command buffer
+ *   @param texture The input texture
+ *   @param set The descriptor set index
+ */
+  virtual void bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,
+      uint32_t set) = 0;
+
   /** Bind sampler.
       This allows the GPU shader module to sample a texture.
       When using a texture with a built-in sampler, this call is not necessary.

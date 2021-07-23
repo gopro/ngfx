@@ -59,6 +59,10 @@ public:
                             GraphicsPipeline *graphicsPipeline) override;
   void bindTexture(CommandBuffer *commandBuffer, Texture *texture,
                    uint32_t set) override;
+  void bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,
+      uint32_t set) override {
+      NGFX_TODO();
+  }
   void dispatch(CommandBuffer *cmdBuffer, uint32_t groupCountX,
                 uint32_t groupCountY, uint32_t groupCountZ,
                 uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
