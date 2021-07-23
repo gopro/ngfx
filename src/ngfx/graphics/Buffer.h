@@ -73,5 +73,7 @@ public:
   */
   virtual void setName(const std::string& name) { this->name = name; }
   std::string name;
+
+  uint32_t size = 0;
 };
 }; // namespace ngfx

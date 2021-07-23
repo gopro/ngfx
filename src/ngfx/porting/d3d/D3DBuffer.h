@@ -44,7 +44,6 @@ public:
     NGFX_TODO("");
   }
   void setName(const std::string& name) override;
-  uint32_t size;
   ComPtr<ID3D12Resource> v;
 
 protected:
