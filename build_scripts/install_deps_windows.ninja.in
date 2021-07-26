@@ -1,8 +1,7 @@
 CMAKE_GENERATOR = {CMAKE_GENERATOR}
 CMAKE_SYSTEM_VERSION = {CMAKE_SYSTEM_VERSION}
 SHADERC_VERSION = {SHADERC_VERSION}
-VCPKG_DIR = {VCPKG_DIR}
-VCPKG_TRIPLET = {VCPKG_TRIPLET}
+SPIRV_CROSS_VERSION = {SPIRV_CROSS_VERSION}
 VULKAN_SDK_VERSION = {VULKAN_SDK_VERSION}
 PKGCONF_VERSION = {PKGCONF_VERSION}
 PREFIX = {PREFIX}
@@ -57,8 +56,12 @@ build .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed: SHELL_COMMAND
 build VulkanSDK-${{VULKAN_SDK_VERSION}}: phony .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed
 
 build .spirv-cross-installed: SHELL_COMMAND
-    COMMAND = pushd ${{VCPKG_DIR}} && $
-    .\vcpkg.exe install --triplet ${{VCPKG_TRIPLET}} spirv-cross && $
+    COMMAND = ${{WGET}} https://github.com/KhronosGroup/SPIRV-Cross/archive/refs/tags/${{SPIRV_CROSS_VERSION}}.tar.gz -OutFile spirv-cross-${{SPIRV_CROSS_VERSION}}.tar.gz && $
+    tar xzf spirv-cross-${{SPIRV_CROSS_VERSION}}.tar.gz $
+    && pushd spirv-cross-${{SPIRV_CROSS_VERSION}} && $
+    cmake.exe -S . -B ${{BUILDDIR}}/spirv-cross -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${{PREFIX}}" -DCMAKE_MSVC_RUNTIME_LIBRARY:STRING=MultiThreadedDLL -DCMAKE_SYSTEM_VERSION='${{CMAKE_SYSTEM_VERSION}}' -G\"${{CMAKE_GENERATOR}}\" -DSHADERC_SKIP_TESTS=ON && $
+    cmake.exe --build ${{BUILDDIR}}/spirv-cross --config Release -j8 && $
+    cmake.exe --install ${{BUILDDIR}}/spirv-cross && $
     popd
 build spirv-cross: phony .spirv-cross-installed
 

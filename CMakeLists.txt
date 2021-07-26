@@ -11,7 +11,6 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug)
 set(EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external CACHE STRING "External Directory")
-set(VCPKG_DIR ${EXTERNAL_DIR}/vcpkg CACHE STRING "VCPKG Directory")
 set(CURRENT_VERSION 1.0.0)
 
 option(NGFX_GRAPHICS_BACKEND_METAL "build ngfx metal backend" OFF)
@@ -36,7 +35,7 @@ set(JSON_INCLUDE_DIRS ${JSON_DIR}/include)
 pkg_check_modules(SHADERC REQUIRED shaderc)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-  set(SPIRV_CROSS_DIR ${VCPKG_DIR}/installed/x64-windows)
+  set(SPIRV_CROSS_DIR ${EXTERNAL_DIR}/windows)
   set(GLM_INCLUDE_DIRS ${EXTERNAL_DIR}/glm-0.9.9.8/glm)
 
   if(NGFX_GRAPHICS_BACKEND_DIRECT3D12)
