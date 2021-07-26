@@ -18,13 +18,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#include "ngfx/porting/vulkan/VKSurface.h"
-#include "ngfx/core/DebugUtil.h"
+
+#include "D3DSurface.h"
 using namespace ngfx;
 
-void VKSurface::destroy() { vkDestroySurfaceKHR(instance, v, nullptr); }
-
 Surface* Surface::createFromWindowHandle(uint32_t w, uint32_t h, void* handle) {
-	NGFX_ERR("not supported");
-	return nullptr;
+	D3DSurface* d3dSurface = new D3DSurface();
+	d3dSurface->w = w;
+	d3dSurface->h = h;
+	d3dSurface->v = (HWND)handle;
+	return d3dSurface;
 }

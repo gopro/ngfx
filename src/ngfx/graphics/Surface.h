@@ -27,6 +27,7 @@ public:
   Surface() {}
   Surface(uint32_t w, uint32_t h, bool offscreen = false)
       : w(w), h(h), offscreen(offscreen) {}
+  static Surface* createFromWindowHandle(uint32_t w, uint32_t h, void* handle);
   virtual ~Surface() {}
   uint32_t w = 0, h = 0;
   bool offscreen = false;

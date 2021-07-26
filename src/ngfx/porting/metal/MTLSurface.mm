@@ -18,11 +18,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#include "ngfx/porting/vulkan/VKSurface.h"
+
+#include "MTLSurface.h"
 #include "ngfx/core/DebugUtil.h"
 using namespace ngfx;
-
-void VKSurface::destroy() { vkDestroySurfaceKHR(instance, v, nullptr); }
 
 Surface* Surface::createFromWindowHandle(uint32_t w, uint32_t h, void* handle) {
 	NGFX_ERR("not supported");
