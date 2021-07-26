@@ -108,7 +108,7 @@ public:
              *defaultOffscreenRenderPass = nullptr;
   Swapchain *swapchain = nullptr;
   Surface *surface = nullptr;
-  uint32_t currentImageIndex = 0;
+  int32_t currentImageIndex = -1;
   std::vector<Fence *> frameFences;
   Fence *computeFence = nullptr;
   Semaphore *presentCompleteSemaphore = nullptr,
