@@ -25,6 +25,7 @@
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
 using namespace ngfx;
+#define DEFAULT_SURFACE_FORMAT PIXELFORMAT_RGBA8_UNORM
 
 void D3DSwapchain::create(D3DGraphicsContext *ctx, D3DSurface *surface) {
   HRESULT hResult;
@@ -33,7 +34,7 @@ void D3DSwapchain::create(D3DGraphicsContext *ctx, D3DSurface *surface) {
   auto d3dCommandQueue = ctx->d3dCommandQueue.v.Get();
   numImages = PREFERRED_NUM_SWAPCHAIN_IMAGES;
   this->w = surface->w; this->h = surface->h;
-  this->format = PIXELFORMAT_RGBA8_UNORM;
+  this->format = DEFAULT_SURFACE_FORMAT;
   DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {w,
                                          h,
                                          DXGI_FORMAT(format),
