@@ -175,10 +175,10 @@ void D3DGraphics::bindTextureAsImage(CommandBuffer* commandBuffer, Texture* text
     }
 }
 
-static void resourceBarrier(
+void D3DGraphics::resourceBarrier(
     D3DCommandList *cmdList, D3DFramebuffer::D3DAttachment *p,
     D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState,
-    UINT subresourceIndex = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES) {
+    UINT subresourceIndex) {
   if (p->texture)
     p->texture->resourceBarrier(cmdList, newState, subresourceIndex);
   else {
@@ -188,6 +188,7 @@ static void resourceBarrier(
     D3D_TRACE(cmdList->v->ResourceBarrier(1, &resourceBarrier));
   }
 }
+
 void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
                                   RenderPass *renderPass,
                                   Framebuffer *framebuffer,
