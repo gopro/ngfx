@@ -32,6 +32,7 @@ public:
   virtual ~D3DSwapchain() {}
   void acquireNextImage() override;
   void present();
+  void setName(const std::string& name) override;
   ComPtr<IDXGISwapChain3> v;
   std::vector<ComPtr<ID3D12Resource>> renderTargets;
   std::vector<D3DDescriptorHandle> renderTargetDescriptors;

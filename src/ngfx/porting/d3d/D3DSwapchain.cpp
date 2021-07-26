@@ -20,6 +20,7 @@
  */
 #include "ngfx/porting/d3d/D3DSwapchain.h"
 #include "ngfx/core/DebugUtil.h"
+#include "ngfx/core/StringUtil.h"
 #include "ngfx/graphics/Config.h"
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
@@ -85,4 +86,13 @@ void D3DSwapchain::acquireNextImage() {
 void D3DSwapchain::present() {
   HRESULT hResult;
   V(v->Present(1, 0));
+}
+
+void D3DSwapchain::setName(const std::string& name) {
+    Swapchain::setName(name);
+    for (uint32_t j = 0; j < numImages; j++) {
+        auto& rt = renderTargets[j];
+        std::wstring wname = StringUtil::toWString(name).c_str() + std::to_wstring(j);
+        rt->SetName(wname.c_str());
+    }
 }

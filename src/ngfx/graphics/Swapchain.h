@@ -28,8 +28,13 @@ class Swapchain {
 public:
   virtual ~Swapchain() {}
   virtual void acquireNextImage() = 0;
+  /** Set resource name
+      @param name The resource name
+  */
+  virtual void setName(const std::string& name) { this->name = name; }
   uint32_t numImages = 0;
   uint32_t w = 0, h = 0;
   PixelFormat format;
+  std::string name;
 };
 } // namespace ngfx
