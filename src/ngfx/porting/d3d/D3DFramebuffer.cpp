@@ -20,6 +20,7 @@
  */
 #include "ngfx/porting/d3d/D3DFramebuffer.h"
 #include "ngfx/porting/d3d/D3DTexture.h"
+#include "ngfx/porting/d3d/D3DSwapchain.h"
 using namespace ngfx;
 using D3DAttachment = D3DFramebuffer::D3DAttachment;
 
@@ -69,6 +70,14 @@ void D3DFramebuffer::create(std::vector<D3DAttachment> &d3dAttachments,
   }
 }
 
+void D3DAttachment::createFromSwapchainImage(D3DSwapchain *d3dSwapchain, uint32_t index) {
+    resource = d3dSwapchain->renderTargets[index].Get();
+    cpuDescriptor = d3dSwapchain->renderTargetDescriptors[index].cpuHandle;
+    subresourceIndex = 0;
+    imageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    numSamples = 1;
+    format = DXGI_FORMAT(d3dSwapchain->format);
+}
 Framebuffer *Framebuffer::create(Device *device, RenderPass *renderPass,
                                  const std::vector<Attachment> &attachments,
                                  uint32_t w, uint32_t h, uint32_t layers) {
