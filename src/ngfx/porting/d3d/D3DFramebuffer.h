@@ -30,6 +30,7 @@ public:
   struct D3DAttachment {
     void create(D3DTexture* texture, uint32_t level = 0, uint32_t baseLayer = 0, uint32_t layerCount = 1);
     void createFromSwapchainImage(D3DSwapchain* d3dSwapchain, uint32_t index);
+    void createFromDepthStencilAttachment(D3DTexture* d3dDepthStencilAttachment);
     ID3D12Resource *resource = nullptr;
     D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptor{};
     uint32_t subresourceIndex = 0;

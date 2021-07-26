@@ -160,14 +160,10 @@ void D3DGraphicsContext::createSwapchainFramebuffers(int w, int h) {
   d3dSwapchainFramebuffers.resize(d3dSwapchain.numImages);
   for (uint32_t i = 0; i < d3dSwapchainFramebuffers.size(); i++) {
     // TODO: add support for MSAA
-    std::vector<D3DFramebuffer::D3DAttachment> attachments(1);
+    std::vector<D3DFramebuffer::D3DAttachment> attachments(enableDepthStencil ? 2 : 1);
     attachments[0].createFromSwapchainImage(&d3dSwapchain, i);
     if (enableDepthStencil) {
-      attachments.push_back({d3dDepthStencilView->v.Get(),
-                             d3dDepthStencilView->dsvDescriptor.cpuHandle, 0,
-                             IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, 1,
-                             DXGI_FORMAT(depthFormat),
-                             d3dDepthStencilView.get()});
+        attachments[1].createFromDepthStencilAttachment(d3dDepthStencilView.get());
     }
     d3dSwapchainFramebuffers[i].create(attachments, w, h);
   }

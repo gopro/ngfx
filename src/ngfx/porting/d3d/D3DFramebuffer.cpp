@@ -78,6 +78,17 @@ void D3DAttachment::createFromSwapchainImage(D3DSwapchain *d3dSwapchain, uint32_
     numSamples = 1;
     format = DXGI_FORMAT(d3dSwapchain->format);
 }
+
+void D3DAttachment::createFromDepthStencilAttachment(D3DTexture* d3dDepthStencilAttachment) {
+    resource = d3dDepthStencilAttachment->v.Get();
+    cpuDescriptor = d3dDepthStencilAttachment->dsvDescriptor.cpuHandle;
+    subresourceIndex = 0;
+    imageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    numSamples = 1;
+    format = DXGI_FORMAT(d3dDepthStencilAttachment->format);
+    texture = d3dDepthStencilAttachment;
+}
+
 Framebuffer *Framebuffer::create(Device *device, RenderPass *renderPass,
                                  const std::vector<Attachment> &attachments,
                                  uint32_t w, uint32_t h, uint32_t layers) {
