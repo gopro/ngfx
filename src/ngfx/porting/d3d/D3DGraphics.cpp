@@ -38,13 +38,19 @@ void D3DGraphics::bindComputePipeline(CommandBuffer *commandBuffer,
       d3dComputePipeline->d3dPipelineState.Get()));
   D3D_TRACE(d3dCommandList->SetComputeRootSignature(
       d3dComputePipeline->d3dRootSignature.Get()));
-  auto cbvSrvUavHeap = d3dCtx->d3dCbvSrvUavDescriptorHeap.v.Get();
-  auto samplerDescriptorHeap = d3dCtx->d3dSamplerDescriptorHeap.v.Get();
-  std::vector<ID3D12DescriptorHeap *> descriptorHeaps = {cbvSrvUavHeap,
-                                                         samplerDescriptorHeap};
-  D3D_TRACE(d3dCommandList->SetDescriptorHeaps(UINT(descriptorHeaps.size()),
-                                               descriptorHeaps.data()));
+  setDescriptorHeaps(commandBuffer);
   currentPipeline = computePipeline;
+}
+
+void D3DGraphics::setDescriptorHeaps(CommandBuffer *commandBuffer) {
+    auto d3dCtx = d3d(ctx);
+    auto d3dCommandList = d3d(commandBuffer)->v;
+    auto cbvSrvUavHeap = d3dCtx->d3dCbvSrvUavDescriptorHeap.v.Get();
+    auto samplerDescriptorHeap = d3dCtx->d3dSamplerDescriptorHeap.v.Get();
+    std::vector<ID3D12DescriptorHeap*> descriptorHeaps = { cbvSrvUavHeap,
+                                                           samplerDescriptorHeap };
+    D3D_TRACE(d3dCommandList->SetDescriptorHeaps(UINT(descriptorHeaps.size()),
+        descriptorHeaps.data()));
 }
 
 void D3DGraphics::bindGraphicsPipeline(CommandBuffer *commandBuffer,
@@ -57,6 +63,7 @@ void D3DGraphics::bindGraphicsPipeline(CommandBuffer *commandBuffer,
       d3dGraphicsPipeline->d3dPrimitiveTopology));
   D3D_TRACE(d3dCommandList->SetGraphicsRootSignature(
       d3dGraphicsPipeline->d3dRootSignature.Get()));
+  setDescriptorHeaps(commandBuffer);
   currentPipeline = graphicsPipeline;
 }
 

@@ -84,10 +84,11 @@ public:
   void waitIdle(CommandBuffer *cmdBuffer) override {
     d3d(ctx)->d3dDevice.waitIdle();
   }
-  void D3DGraphics::resourceBarrier(
+  void resourceBarrier(
       D3DCommandList* cmdList, D3DFramebuffer::D3DAttachment* p,
       D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState,
       UINT subresourceIndex = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
+  void setDescriptorHeaps(CommandBuffer* commandBuffer);
 };
 D3D_CAST(Graphics);
 } // namespace ngfx
