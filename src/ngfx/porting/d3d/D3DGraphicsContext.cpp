@@ -45,6 +45,8 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   d3dDevice.create(this);
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
+  d3dCopyCommandList.create(d3dDevice.v.Get());
+  d3dComputeCommandList.create(d3dDevice.v.Get());
   d3dQueryTimestampHeap.create(d3dDevice.v.Get(), D3D12_QUERY_HEAP_TYPE_TIMESTAMP, 2);
   d3dTimestampResultBuffer.create(this, 2 * sizeof(uint64_t));
 }
@@ -78,8 +80,6 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
   for (auto &cmdList : d3dDrawCommandLists) {
     cmdList.create(d3dDevice.v.Get());
   }
-  d3dCopyCommandList.create(d3dDevice.v.Get());
-  d3dComputeCommandList.create(d3dDevice.v.Get());
   if (surface && numSamples != 1) {
     NGFX_TODO("");
   }
