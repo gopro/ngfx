@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 GoPro Inc.
+ * Copyright 2021 GoPro Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,19 +18,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#pragma once
-#include "ngfx/graphics/CommandBuffer.h"
-#include "ngfx/graphics/Pipeline.h"
-#include "ngfx/graphics/ShaderModule.h"
+#include "ngfx/compute/ComputePipeline.h"
+using namespace ngfx;
 
-namespace ngfx {
-class GraphicsContext;
-class ComputePipeline : public Pipeline {
-public:
-  static ComputePipeline *create(GraphicsContext *graphicsContext,
-                                 ComputeShaderModule *cs);
-  virtual ~ComputePipeline() {}
-  void getBindings(std::vector<uint32_t*> pDescriptorBindings);
-  std::vector<uint32_t> descriptorBindings;
-};
-}; // namespace ngfx
+void ComputePipeline::getBindings(
+    std::vector<uint32_t*> pDescriptorBindings) {
+    for (uint32_t j = 0; j < pDescriptorBindings.size(); j++)
+        *pDescriptorBindings[j] = descriptorBindings[j];
+}
