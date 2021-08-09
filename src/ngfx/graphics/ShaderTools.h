@@ -53,8 +53,19 @@ public:
             layout (set = 1, binding = 0) in vec2 texcoord;
       */
       PATCH_SHADER_LAYOUTS_GLSL = 1,
-      REMOVE_UNUSED_VARIABLES = 2, /*!< Remove unused input variables */
-      FLIP_VERT_Y = 4 /*!< Flip vertex y output in NDC space */
+      /**
+      * Patch the HLSL descriptor layout definitions.
+      * Use a different register space for each descriptor, with base register 0.
+      * For example: convert
+      *     register(t1)
+      *     register(b0)
+      * to
+      *     register(t0, space0)
+      *     register(b0, space1)
+      */
+      PATCH_SHADER_LAYOUTS_HLSL = 2,
+      REMOVE_UNUSED_VARIABLES = 4, /*!< Remove unused input variables */
+      FLIP_VERT_Y = 8 /*!< Flip vertex y output in NDC space */
   };
   enum Format { 
       FORMAT_GLSL, /*!< GLSL shading language input format */
@@ -126,9 +137,9 @@ private:
                         std::vector<std::string> &outFiles, int flags = 0);
   int compileShaderHLSL(const std::string &file,
                         const MacroDefinitions &defines, std::string outDir,
-                        std::vector<std::string> &outFiles);
+                        std::vector<std::string> &outFiles, int flags = 0);
   int compileShaderMSL(const std::string &file, const MacroDefinitions &defines,
-                       std::string outDir, std::vector<std::string> &outFiles);
+                       std::string outDir, std::vector<std::string> &outFiles, int flags = 0);
   int convertSPVToGLSL(const std::string &spv, shaderc_shader_kind shaderKind,
                        std::string &glsl, int flags = 0);
   int convertSPVToHLSL(const std::string &spv, shaderc_shader_kind shaderKind,
@@ -172,6 +183,7 @@ private:
                                     const std::string &hlsl,
                                     std::string &hlslReflect);
   int patchShaderLayoutsGLSL(const std::string &src, std::string &dst);
+  int patchShaderLayoutsHLSL(const std::string& src, std::string& dst);
   int removeUnusedVariablesGLSL(const std::string &src,
                                 shaderc_shader_kind shaderKind,
                                 const MacroDefinitions &defines,

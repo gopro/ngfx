@@ -155,6 +155,34 @@ int ShaderTools::patchShaderLayoutsGLSL(const string &src, string &dst) {
   return 0;
 }
 
+int ShaderTools::patchShaderLayoutsHLSL(const string& src, string& dst) {
+    dst = "";
+    istringstream sstream(src);
+    string line;
+    int registerSpace = 0;
+    while (std::getline(sstream, line)) {
+        // Patch HLSL shader layouts
+        smatch g;
+
+        bool matchLayout = regex_search(line, g,
+            regex("^(.*)"
+                "register\\s*\\("
+                "\\s*"
+                "([bstu])"
+                "\\d"
+                "\\s*"
+                "\\)"
+                "(.*)\r*$"));
+        if (matchLayout) {
+           dst += g[1].str() + "register(" + g[2].str() + "0,space" +std::to_string(registerSpace++) + ")" + g[3].str() + "\n";
+        }
+        else {
+            dst += line + "\n";
+        }
+    }
+    return 0;
+}
+
 static shaderc_shader_kind toShaderKind(const string &ext) {
   static const map<string, shaderc_shader_kind> shaderKindMap = {
       {".vert", shaderc_vertex_shader},
@@ -200,7 +228,7 @@ int ShaderTools::compileShaderGLSL(string filename,
 
 int ShaderTools::compileShaderMSL(const string &file,
                                   const MacroDefinitions &defines,
-                                  string outDir, vector<string> &outFiles) {
+                                  string outDir, vector<string> &outFiles, int flags) {
   string strippedFilename =
       FileUtil::splitExt(fs::path(file).filename().string())[0];
   string inFileName = fs::path(outDir + "/" + strippedFilename + ".metal")
@@ -230,13 +258,21 @@ int ShaderTools::compileShaderMSL(const string &file,
 
 int ShaderTools::compileShaderHLSL(const string &file,
                                    const MacroDefinitions &defines,
-                                   string outDir, vector<string> &outFiles) {
+                                   string outDir, vector<string> &outFiles, int flags) {
   string filename = fs::path(file).filename().string();
   string inFileName =fs::path(file).make_preferred().string();
   string outFileName = fs::path(outDir + "/" + filename + ".dxc").make_preferred().string();
   if (!FileUtil::srcFileNewerThanOutFile(inFileName, outFileName)) {
     outFiles.push_back(outFileName);
     return 0;
+  }
+  int ret = 0;
+  if (flags & PATCH_SHADER_LAYOUTS_HLSL) {
+      const string &src = FileUtil::readFile(inFileName);
+      string dst;
+      V(patchShaderLayoutsHLSL(src, dst));
+      inFileName += ".tmp";
+      FileUtil::writeFile(inFileName, dst);
   }
 
   string shaderModel = "";
@@ -248,6 +284,9 @@ int ShaderTools::compileShaderHLSL(const string &file,
       shaderModel = "cs_5_0";
   int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " -D DIRECT3D12 " +
                    inFileName);
+  if (flags & PATCH_SHADER_LAYOUTS_HLSL) {
+      fs::remove(inFileName);
+  }
   if (result == 0)
     NGFX_LOG("compiled file: %s", file.c_str());
   else
@@ -769,9 +808,9 @@ vector<string> ShaderTools::compileShaders(const vector<string> &files,
     if (fmt == FORMAT_GLSL)
       compileShaderGLSL(file, defines, outDir, outFiles, flags);
     else if (fmt == FORMAT_MSL)
-      compileShaderMSL(file, defines, outDir, outFiles);
+      compileShaderMSL(file, defines, outDir, outFiles, flags);
     else if (fmt == FORMAT_HLSL)
-      compileShaderHLSL(file, defines, outDir, outFiles);
+      compileShaderHLSL(file, defines, outDir, outFiles, flags);
   }
   return outFiles;
 }
