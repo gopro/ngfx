@@ -27,7 +27,7 @@
 namespace ngfx {
 class MTLShaderModule {
 public:
-  virtual void initFromFile(id<MTLDevice> device, const std::string &filename);
+  virtual bool initFromFile(id<MTLDevice> device, const std::string &filename);
   virtual ~MTLShaderModule() {}
   id<MTLLibrary> mtlLibrary;
   id<MTLFunction> mtlFunction;
