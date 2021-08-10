@@ -43,6 +43,9 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   }
   V(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&d3dFactory)));
   d3dDevice.create(this);
+  ID3D12InfoQueue *infoQueue = nullptr;
+  d3dDevice.v->QueryInterface(&infoQueue);
+  infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
   d3dCopyCommandList.create(d3dDevice.v.Get());
