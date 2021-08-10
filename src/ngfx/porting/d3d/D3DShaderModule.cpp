@@ -28,17 +28,20 @@
 using namespace ngfx;
 using namespace std;
 
-void D3DShaderModule::initFromFile(const std::string &filename) {
+bool D3DShaderModule::initFromFile(const std::string &filename) {
   File file;
 #ifdef USE_PRECOMPILED_SHADERS
-  file.read(filename + ".dxc");
+  if (!file.read(filename + ".dxc")) {
+      return false;
+  }
   initFromByteCode(file.data.get(), file.size);
 #else
   compile(filename + ".hlsl");
 #endif
+  return true;
 }
 
-void D3DShaderModule::compile(const std::string &filename) {
+bool D3DShaderModule::compile(const std::string &filename) {
   HRESULT hResult;
   UINT compileFlags = 0;
   if (DEBUG_SHADERS)
@@ -56,11 +59,13 @@ void D3DShaderModule::compile(const std::string &filename) {
                                nullptr, "main", target.c_str(), compileFlags, 0,
                                &byteCode, &errorBlob);
   if (errorBlob) {
-    NGFX_ERR("%s %s", (char *)errorBlob->GetBufferPointer(), filename.c_str());
+    NGFX_LOG("%s %s", (char *)errorBlob->GetBufferPointer(), filename.c_str());
+    return false;
   }
   V0(hResult, "%s", filename.c_str());
   initFromByteCode(byteCode->GetBufferPointer(),
                    uint32_t(byteCode->GetBufferSize()));
+  return true;
 }
 
 void D3DShaderModule::initFromByteCode(void *bytecodeData,
@@ -80,7 +85,9 @@ template <typename T>
 static std::unique_ptr<T> createShaderModule(Device *device,
                                              const std::string &filename) {
   auto d3dShaderModule = make_unique<T>();
-  d3dShaderModule->initFromFile(filename);
+  if (!d3dShaderModule->initFromFile(filename)) {
+      return nullptr;
+  }
   d3dShaderModule->initBindings(filename + ".map");
   return d3dShaderModule;
 }
