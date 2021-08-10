@@ -25,7 +25,7 @@
 namespace ngfx {
 class File {
 public:
-  void read(const std::string &filename);
+  bool read(const std::string &filename);
   std::unique_ptr<char[]> data;
   int size;
 };
