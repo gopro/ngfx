@@ -22,17 +22,8 @@
 #include <d3d12.h>
 
 namespace ngfx {
+struct SamplerDesc;
 struct D3DSamplerDesc : public D3D12_SAMPLER_DESC {
-  D3DSamplerDesc() {
-    Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
-    AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-    AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-    AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-    MipLODBias = 0;
-    MaxAnisotropy = 0;
-    ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-    MinLOD = 0.0f;
-    MaxLOD = D3D12_FLOAT32_MAX;
-  }
+	D3DSamplerDesc(const SamplerDesc* samplerDesc = nullptr);
 };
 } // namespace ngfx

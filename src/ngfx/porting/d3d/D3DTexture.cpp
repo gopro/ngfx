@@ -524,23 +524,14 @@ Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data,
     uint32_t h, uint32_t d, uint32_t arrayLayers,
     ImageUsageFlags imageUsageFlags,
     TextureType textureType, bool genMipmaps,
-    FilterMode minFilter, FilterMode magFilter,
-    FilterMode mipFilter, uint32_t numSamples) {
+    uint32_t numSamples, SamplerDesc *samplerDesc) {
     D3DTexture* d3dTexture = new D3DTexture();
-    D3DSamplerDesc samplerDesc;
-    uint32_t filter = minFilter << 2 | magFilter << 1 | mipFilter;
-    static D3D12_FILTER filterMap[] = {
-        D3D12_FILTER_MIN_MAG_MIP_POINT,
-        D3D12_FILTER_MIN_MAG_POINT_MIP_LINEAR,
-        D3D12_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT,
-        D3D12_FILTER_MIN_POINT_MAG_MIP_LINEAR,
-        D3D12_FILTER_MIN_LINEAR_MAG_MIP_POINT,
-        D3D12_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR,
-        D3D12_FILTER_MIN_MAG_LINEAR_MIP_POINT,
-        D3D12_FILTER_MIN_MAG_MIP_LINEAR };
-    samplerDesc.Filter = filterMap[filter];
+    unique_ptr<D3DSamplerDesc> d3dSamplerDesc;
+    if (samplerDesc) {
+        d3dSamplerDesc.reset(new D3DSamplerDesc(samplerDesc));
+    }
     d3dTexture->create(d3d(ctx), (D3DGraphics*)graphics, data, size, w, h, d,
         arrayLayers, DXGI_FORMAT(format), imageUsageFlags,
-        textureType, genMipmaps, numSamples, &samplerDesc);
+        textureType, genMipmaps, numSamples, d3dSamplerDesc.get());
     return d3dTexture;
 }

@@ -33,22 +33,7 @@ void D3DSampler::create(D3DGraphicsContext* ctx, const D3DSamplerDesc &samplerDe
 }
 
 Sampler* Sampler::create(GraphicsContext *ctx, const SamplerDesc &samplerDesc) {
-	D3DSamplerDesc d3dSamplerDesc;
-	static const vector<D3D12_FILTER> filterMap = {
-		 D3D12_FILTER_MIN_MAG_MIP_POINT,
-		D3D12_FILTER_MIN_MAG_POINT_MIP_LINEAR,
-		D3D12_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT,
-		D3D12_FILTER_MIN_POINT_MAG_MIP_LINEAR,
-		D3D12_FILTER_MIN_LINEAR_MAG_MIP_POINT,
-		D3D12_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR,
-		D3D12_FILTER_MIN_MAG_LINEAR_MIP_POINT,
-		D3D12_FILTER_MIN_MAG_MIP_LINEAR
-	};
-	uint32_t filterIndex = samplerDesc.minFilter << 2 | samplerDesc.magFilter << 1 | samplerDesc.mipFilter;
-	d3dSamplerDesc.Filter = filterMap.at(filterIndex);
-    d3dSamplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE(samplerDesc.addressModeU);
-    d3dSamplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE(samplerDesc.addressModeV);
-    d3dSamplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE(samplerDesc.addressModeW);
+	D3DSamplerDesc d3dSamplerDesc(&samplerDesc);
 	D3DSampler* d3dSampler = new D3DSampler();
 	d3dSampler->create(d3d(ctx), d3dSamplerDesc);
 	return d3dSampler;

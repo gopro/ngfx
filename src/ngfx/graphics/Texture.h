@@ -22,6 +22,7 @@
 #include "ngfx/compute/ComputePipeline.h"
 #include "ngfx/graphics/CommandBuffer.h"
 #include "ngfx/graphics/GraphicsPipeline.h"
+#include "ngfx/graphics/SamplerDesc.h"
 
 namespace ngfx {
 class Graphics;
@@ -35,9 +36,7 @@ public:
              IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT |
              IMAGE_USAGE_TRANSFER_DST_BIT),
          TextureType textureType = TEXTURE_TYPE_2D, bool genMipmaps = false,
-         FilterMode minFilter = FILTER_NEAREST,
-         FilterMode magFilter = FILTER_NEAREST,
-         FilterMode mipFilter = FILTER_NEAREST, uint32_t numSamples = 1);
+         uint32_t numSamples = 1, SamplerDesc *samplerDesc = nullptr);
   static Texture *
   create(GraphicsContext *graphicsContext, Graphics *graphics, void *data,
          PixelFormat format, uint32_t size, uint32_t w, uint32_t h, uint32_t d,
@@ -46,9 +45,7 @@ public:
              IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT |
              IMAGE_USAGE_TRANSFER_DST_BIT),
          TextureType textureType = TEXTURE_TYPE_2D, bool genMipmaps = false,
-         FilterMode minFilter = FILTER_NEAREST,
-         FilterMode magFilter = FILTER_NEAREST,
-         FilterMode mipFilter = FILTER_NEAREST, uint32_t numSamples = 1);
+         uint32_t numSamples = 1, SamplerDesc *samplerDesc = nullptr);
   virtual ~Texture() {}
   virtual void upload(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
                       uint32_t z = 0, int32_t w = -1, int32_t h = -1,
