@@ -207,8 +207,8 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
     if (instanceAttributes.find(va.name) != instanceAttributes.end())
       inputRate = D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA;
-    uint32_t semanticIndexOffset =
-        uint32_t(va.semantic.find_first_of("0123456789"));
+    int32_t semanticIndexOffset =
+        va.semantic.find_first_of("0123456789");
     string &semanticName = semanticData[j].name;
     uint32_t &semanticIndex = semanticData[j].index;
     if (semanticIndexOffset != string::npos) {
