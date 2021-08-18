@@ -35,9 +35,9 @@
 #include <sstream>
 using namespace std;
 using namespace ngfx;
-auto readFile = FileUtil::readFile;
-auto writeFile = FileUtil::writeFile;
-auto toLower = StringUtil::toLower;
+static auto readFile = FileUtil::readFile;
+static auto writeFile = FileUtil::writeFile;
+static auto toLower = StringUtil::toLower;
 namespace fs = std::filesystem;
 #define V(func)                                                                \
   {                                                                            \
