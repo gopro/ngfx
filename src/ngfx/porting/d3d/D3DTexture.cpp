@@ -61,7 +61,7 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     uint32_t d, uint32_t arrayLayers, DXGI_FORMAT format,
     ImageUsageFlags usageFlags, TextureType textureType,
     bool genMipmaps, uint32_t numSamples,
-    const D3DSamplerDesc *samplerDesc) {
+    const D3DSamplerDesc *samplerDesc, int32_t dataPitch) {
     HRESULT hResult;
     this->ctx = ctx;
     this->graphics = graphics;
@@ -118,7 +118,7 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
         createDepthStencilView();
     }
 
-    upload(data, size);
+    upload(data, size, 0, 0, 0, -1, -1, -1, -1, -1, dataPitch);
 }
 
 D3DSampler* D3DTexture::getSampler(D3D12_FILTER filter) {
@@ -323,7 +323,7 @@ void D3DTexture::generateMipmapsFn(D3DCommandList* cmdList) {
 
 void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
     uint32_t z, int32_t w, int32_t h, int32_t d,
-    int32_t arrayLayers, int32_t numPlanes) {
+    int32_t arrayLayers, int32_t numPlanes, int32_t dataPitch) {
     auto& copyCommandList = ctx->d3dCopyCommandList;
     std::unique_ptr<D3DBuffer> stagingBuffer;
     if (w == -1)
@@ -346,7 +346,7 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
     }
     copyCommandList.begin();
     uploadFn(&copyCommandList, data, size, stagingBuffer.get(), x, y, z, w, h, d,
-        arrayLayers, numPlanes);
+        arrayLayers, numPlanes, dataPitch);
     D3D12_RESOURCE_STATES resourceState =
         (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
         ? D3D12_RESOURCE_STATE_DEPTH_WRITE
@@ -380,21 +380,19 @@ void D3DTexture::generateMipmaps(CommandBuffer* commandBuffer) {
 void D3DTexture::uploadFn(D3DCommandList* cmdList, void* data, uint32_t size,
     D3DBuffer* stagingBuffer, uint32_t, uint32_t,
     uint32_t, int32_t, int32_t, int32_t,
-    int32_t, int32_t) {
+    int32_t, int32_t, int32_t dataPitch) {
     if (data) {
         resourceBarrier(cmdList, D3D12_RESOURCE_STATE_COPY_DEST);
         vector<D3D12_SUBRESOURCE_DATA> textureData(arrayLayers * numPlanes);
-        uint8_t* planeData = (uint8_t*)data;
+        uint8_t* srcData = (uint8_t*)data;
         uint32_t subresourceIndex = 0;
         for (uint32_t i = 0; i < numPlanes; i++) {
-            uint32_t slicePitch = planeSize[i] / (d * arrayLayers);
-            uint32_t rowPitch = slicePitch / planeHeight[i];
-            uint8_t* srcData = planeData;
+            uint32_t rowPitch = (dataPitch == -1) ? planeSize[i] / (d * arrayLayers * planeHeight[i]) : dataPitch;
+            uint32_t slicePitch = rowPitch * planeHeight[i];
             for (uint32_t j = 0; j < arrayLayers; j++) {
                 textureData[subresourceIndex++] = { srcData, long(rowPitch), slicePitch };
                 srcData += slicePitch;
             }
-            planeData += planeSize[i];
         }
         uint64_t bufferSize =
             UpdateSubresources(cmdList->v.Get(), v.Get(), stagingBuffer->v.Get(), 0,
@@ -524,7 +522,7 @@ Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data,
     uint32_t h, uint32_t d, uint32_t arrayLayers,
     ImageUsageFlags imageUsageFlags,
     TextureType textureType, bool genMipmaps,
-    uint32_t numSamples, SamplerDesc *samplerDesc) {
+    uint32_t numSamples, SamplerDesc *samplerDesc, int32_t dataPitch) {
     D3DTexture* d3dTexture = new D3DTexture();
     unique_ptr<D3DSamplerDesc> d3dSamplerDesc;
     if (samplerDesc) {
@@ -532,6 +530,6 @@ Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data,
     }
     d3dTexture->create(d3d(ctx), (D3DGraphics*)graphics, data, size, w, h, d,
         arrayLayers, DXGI_FORMAT(format), imageUsageFlags,
-        textureType, genMipmaps, numSamples, d3dSamplerDesc.get());
+        textureType, genMipmaps, numSamples, d3dSamplerDesc.get(), dataPitch);
     return d3dTexture;
 }

@@ -39,10 +39,11 @@ public:
               uint32_t arrayLayers, DXGI_FORMAT format,
               ImageUsageFlags usageFlags, TextureType textureType,
               bool genMipmaps, uint32_t numSamples,
-              const D3DSamplerDesc *samplerDesc = nullptr);
+              const D3DSamplerDesc *samplerDesc = nullptr, int32_t dataPitch = -1);
   void upload(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
               uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
-              int32_t arrayLayers = -1, int32_t numPlanes = -1) override;
+              int32_t arrayLayers = -1, int32_t numPlanes = -1,
+              int32_t dataPitch = -1) override;
    void download(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
                 uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
                 int32_t arrayLayers = -1) override;
@@ -101,7 +102,8 @@ private:
   void uploadFn(D3DCommandList *cmdList, void *data, uint32_t size,
                 D3DBuffer *stagingBuffer, uint32_t x = 0, uint32_t y = 0,
                 uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
-                int32_t arrayLayers = -1, int32_t numPlanes = -1);
+                int32_t arrayLayers = -1, int32_t numPlanes = -1,
+                int32_t dataPitch = -1);
   void generateMipmapsFn(D3DCommandList *cmdList);
   D3DGraphicsContext *ctx = nullptr;
   D3DGraphics *graphics = nullptr;
