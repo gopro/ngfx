@@ -283,7 +283,7 @@ int ShaderTools::compileShaderHLSL(const string &file,
   else if (strstr(inFileName.c_str(), ".comp") || strstr(inFileName.c_str(), "_compute"))
       shaderModel = "cs_5_0";
   int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " -D DIRECT3D12 " +
-                   inFileName);
+                   inFileName + " -Zi -Fc " + outFileName + ".info");
   if (flags & PATCH_SHADER_LAYOUTS_HLSL) {
       fs::remove(inFileName);
   }
@@ -801,7 +801,7 @@ string HLSLReflector::parseDescriptorType(const string& type) {
     else if (type._Starts_with("cbuffer"))
         return "DESCRIPTOR_TYPE_UNIFORM_BUFFER";
     else if (type._Starts_with("StructuredBuffer"))
-        return "DESCRIPTOR_TYPE_UNIFORM_BUFFER";
+        return "DESCRIPTOR_TYPE_STORAGE_BUFFER";
     else {
         NGFX_ERR("unknown descriptor type: %s", type.c_str());
     }
@@ -823,7 +823,7 @@ string HLSLReflector::parse(const string& src) {
 
         bool matchDescriptor = regex_search(line, g,
             regex(
-                "^"
+                "^\\s*"
                 "([^\\s]+)"
                 "\\s+"
                 "([^\\s]+)"
