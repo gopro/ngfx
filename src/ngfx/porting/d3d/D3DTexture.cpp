@@ -500,6 +500,10 @@ void D3DTexture::changeLayout(CommandBuffer *commandBuffer,
         break;
     };
     resourceBarrierTransition(d3d(commandBuffer), resourceState);
+     if (imageLayout == IMAGE_LAYOUT_UNORDERED_ACCESS) {
+        CD3DX12_RESOURCE_BARRIER resourceBarrier = CD3DX12_RESOURCE_BARRIER::UAV(v.Get());
+        D3D_TRACE(d3d(commandBuffer)->v->ResourceBarrier(1, &resourceBarrier));
+    }
 }
 void D3DTexture::resourceBarrierTransition(D3DCommandList* cmdList,
     D3D12_RESOURCE_STATES newState,
