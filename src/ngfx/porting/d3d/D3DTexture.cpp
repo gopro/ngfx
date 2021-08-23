@@ -495,6 +495,9 @@ void D3DTexture::changeLayout(CommandBuffer *commandBuffer,
     case IMAGE_LAYOUT_GENERAL:
         resourceState = D3D12_RESOURCE_STATE_COMMON;
         break;
+    case IMAGE_LAYOUT_UNORDERED_ACCESS:
+        resourceState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+        break;
     };
 
     resourceBarrier(d3d(commandBuffer), resourceState);
