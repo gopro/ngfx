@@ -362,7 +362,7 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
         : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
 
-    resourceBarrier(&copyCommandList, resourceState);
+    resourceBarrierTransition(&copyCommandList, resourceState);
 
     copyCommandList.end();
     ctx->d3dCommandQueue.submit(copyCommandList.v.Get(), nullptr);
@@ -391,7 +391,7 @@ void D3DTexture::uploadFn(D3DCommandList* cmdList, void* data, uint32_t size,
     uint32_t, int32_t, int32_t, int32_t,
     int32_t, int32_t, int32_t dataPitch) {
     if (data) {
-        resourceBarrier(cmdList, D3D12_RESOURCE_STATE_COPY_DEST);
+        resourceBarrierTransition(cmdList, D3D12_RESOURCE_STATE_COPY_DEST);
         vector<D3D12_SUBRESOURCE_DATA> textureData(arrayLayers * numPlanes);
         uint8_t* srcData = (uint8_t*)data;
         uint32_t subresourceIndex = 0;
@@ -457,7 +457,7 @@ void D3DTexture::downloadFn(D3DCommandList* cmdList,
     D3DReadbackBuffer& readbackBuffer,
     D3D12_BOX& srcRegion,
     D3D12_PLACED_SUBRESOURCE_FOOTPRINT& dstFootprint) {
-    resourceBarrier(cmdList, D3D12_RESOURCE_STATE_COPY_SOURCE);
+    resourceBarrierTransition(cmdList, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
     D3D12_TEXTURE_COPY_LOCATION dstLocation = {
         readbackBuffer.v.Get(),
@@ -473,7 +473,7 @@ void D3DTexture::downloadFn(D3DCommandList* cmdList,
         ? D3D12_RESOURCE_STATE_DEPTH_WRITE
         : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-    resourceBarrier(cmdList, resourceState);
+    resourceBarrierTransition(cmdList, resourceState);
     for (auto& s : currentResourceState)
         s = resourceState;
 }
@@ -499,10 +499,9 @@ void D3DTexture::changeLayout(CommandBuffer *commandBuffer,
         resourceState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         break;
     };
-
-    resourceBarrier(d3d(commandBuffer), resourceState);
+    resourceBarrierTransition(d3d(commandBuffer), resourceState);
 }
-void D3DTexture::resourceBarrier(D3DCommandList* cmdList,
+void D3DTexture::resourceBarrierTransition(D3DCommandList* cmdList,
     D3D12_RESOURCE_STATES newState,
     UINT subresource) {
     uint32_t j0, j1;

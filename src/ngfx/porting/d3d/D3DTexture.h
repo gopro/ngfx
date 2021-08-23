@@ -50,7 +50,7 @@ public:
   void changeLayout(CommandBuffer *commandBuffer,
                     ImageLayout imageLayout) override;
   void
-  resourceBarrier(D3DCommandList *cmdList, D3D12_RESOURCE_STATES newState,
+  resourceBarrierTransition(D3DCommandList *cmdList, D3D12_RESOURCE_STATES newState,
                   UINT subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
   void generateMipmaps(CommandBuffer *commandBuffer) override;
   ComPtr<ID3D12Resource> v;

@@ -187,7 +187,7 @@ void D3DGraphics::resourceBarrier(
     D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState,
     UINT subresourceIndex) {
   if (p->texture)
-    p->texture->resourceBarrier(cmdList, newState, subresourceIndex);
+    p->texture->resourceBarrierTransition(cmdList, newState, subresourceIndex);
   else {
     CD3DX12_RESOURCE_BARRIER resourceBarrier =
         CD3DX12_RESOURCE_BARRIER::Transition(p->resource, currentState,
