@@ -527,6 +527,7 @@ void D3DTexture::resourceBarrier(D3DCommandList* cmdList,
 
 void D3DTexture::setName(const std::string& name) {
     v->SetName(StringUtil::toWString(name).c_str());
+    this->name = name;
 }
 
 Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data,
