@@ -80,8 +80,6 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     this->numSamples = numSamples;
     numPlanes = (format == DXGI_FORMAT_NV12) ? 2 : 1;
     d3dDevice = ctx->d3dDevice.v.Get();
-    isRenderTarget =
-        (resourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
     numSubresources = numPlanes * arrayLayers * mipLevels;
     currentResourceState.resize(numSubresources);
     defaultSrvDescriptor.resize(numPlanes);
@@ -93,7 +91,10 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
         planeHeight[j] = (format == DXGI_FORMAT_NV12 && j == 1) ? h / 2 : h;
         planeSize[j] = (format == DXGI_FORMAT_NV12) ? planeWidth[j] * planeHeight[j] : size;
     }
+
     getResourceDesc();
+    isRenderTarget =
+        (resourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
     createResource();
 
     for (auto& s : currentResourceState)
@@ -119,6 +120,66 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     }
 
     upload(data, size, 0, 0, 0, -1, -1, -1, -1, -1, dataPitch);
+}
+
+void D3DTexture::createFromHandle(D3DGraphicsContext* ctx, D3DGraphics* graphics, void* handle,
+    uint32_t w, uint32_t h, uint32_t d,
+    uint32_t arrayLayers, DXGI_FORMAT format,
+    ImageUsageFlags usageFlags, TextureType textureType,
+    uint32_t numSamples,
+    const D3DSamplerDesc* samplerDesc) {
+    HRESULT hResult;
+    this->ctx = ctx;
+    this->graphics = graphics;
+    this->w = w;
+    this->h = h;
+    this->d = d;
+    this->arrayLayers = arrayLayers;
+    this->format = PixelFormat(format);
+    this->textureType = textureType;
+    this->imageUsageFlags = usageFlags;
+    this->numSamples = numSamples;
+    numPlanes = (format == DXGI_FORMAT_NV12) ? 2 : 1;
+    d3dDevice = ctx->d3dDevice.v.Get();
+    numSubresources = numPlanes * arrayLayers * mipLevels;
+    currentResourceState.resize(numSubresources);
+    defaultSrvDescriptor.resize(numPlanes);
+    planeWidth.resize(numPlanes);
+    planeHeight.resize(numPlanes);
+    planeSize.resize(numPlanes);
+    for (uint32_t j = 0; j < numPlanes; j++) {
+        planeWidth[j] = w;
+        planeHeight[j] = (format == DXGI_FORMAT_NV12 && j == 1) ? h / 2 : h;
+        planeSize[j] = (format == DXGI_FORMAT_NV12) ? planeWidth[j] * planeHeight[j] : size;
+    }
+
+    getResourceDesc();
+    isRenderTarget =
+        (resourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+    V(d3dDevice->OpenSharedHandle(handle, IID_PPV_ARGS(&v)));
+
+    for (auto& s : currentResourceState)
+        s = D3D12_RESOURCE_STATE_COPY_DEST;
+
+    if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+        for (uint32_t j = 0; j < numPlanes; j++) {
+            defaultSrvDescriptor[j] = getSrvDescriptor(0, mipLevels, j);
+        }
+        if (samplerDesc)
+            defaultSampler = getSampler(samplerDesc->Filter);
+    }
+    if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT) {
+        defaultUavDescriptor = getUavDescriptor(0);
+    }
+
+    if (isRenderTarget) {
+        defaultRtvDescriptor = getRtvDescriptor();
+    }
+
+    if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+        createDepthStencilView();
+    }
+
 }
 
 D3DSampler* D3DTexture::getSampler(D3D12_FILTER filter) {
@@ -547,5 +608,21 @@ Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data,
     d3dTexture->create(d3d(ctx), (D3DGraphics*)graphics, data, size, w, h, d,
         arrayLayers, DXGI_FORMAT(format), imageUsageFlags,
         textureType, genMipmaps, numSamples, d3dSamplerDesc.get(), dataPitch);
+    return d3dTexture;
+}
+
+Texture* Texture::createFromHandle(GraphicsContext* ctx, Graphics* graphics, void* handle,
+    PixelFormat format, uint32_t w, uint32_t h, uint32_t d, uint32_t arrayLayers,
+    ImageUsageFlags imageUsageFlags,
+    TextureType textureType,
+    uint32_t numSamples, SamplerDesc* samplerDesc) {
+    D3DTexture* d3dTexture = new D3DTexture();
+    unique_ptr<D3DSamplerDesc> d3dSamplerDesc;
+    if (samplerDesc) {
+        d3dSamplerDesc.reset(new D3DSamplerDesc(samplerDesc));
+    }
+    d3dTexture->createFromHandle(d3d(ctx), (D3DGraphics*)graphics, handle, w, h, d,
+        arrayLayers, DXGI_FORMAT(format), imageUsageFlags,
+        textureType, numSamples, d3dSamplerDesc.get());
     return d3dTexture;
 }
