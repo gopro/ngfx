@@ -41,5 +41,5 @@ struct DebugUtil {
   {                                                                            \
     fprintf(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                 \
             __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
-    DebugUtil::Exit(1);                                                        \
+    ::DebugUtil::Exit(1);                                                      \
   }
