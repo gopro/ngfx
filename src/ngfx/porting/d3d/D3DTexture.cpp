@@ -156,7 +156,7 @@ void D3DTexture::createFromHandle(D3DGraphicsContext* ctx, D3DGraphics* graphics
     getResourceDesc();
     isRenderTarget =
         (resourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
-    V(d3dDevice->OpenSharedHandle(handle, IID_PPV_ARGS(&v)));
+    v = (ID3D12Resource*)handle;
 
     for (auto& s : currentResourceState)
         s = D3D12_RESOURCE_STATE_COPY_DEST;
