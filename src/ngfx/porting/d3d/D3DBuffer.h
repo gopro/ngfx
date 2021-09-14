@@ -43,7 +43,7 @@ public:
   void download(void *data, uint32_t size, uint32_t offset = 0) override {
     NGFX_TODO("");
   }
-  uint32_t size;
+  void setName(const std::string& name) override;
   ComPtr<ID3D12Resource> v;
 
 protected:

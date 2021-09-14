@@ -18,19 +18,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#pragma once
-#include "ngfx/graphics/CommandBuffer.h"
-#include "ngfx/graphics/Pipeline.h"
-#include "ngfx/graphics/ShaderModule.h"
 
-namespace ngfx {
-class GraphicsContext;
-class ComputePipeline : public Pipeline {
-public:
-  static ComputePipeline *create(GraphicsContext *graphicsContext,
-                                 ComputeShaderModule *cs);
-  virtual ~ComputePipeline() {}
-  void getBindings(std::vector<uint32_t*> pDescriptorBindings);
-  std::vector<uint32_t> descriptorBindings;
-};
-}; // namespace ngfx
+#include "D3DSurface.h"
+using namespace ngfx;
+
+Surface* Surface::createFromWindowHandle(uint32_t w, uint32_t h, void* handle) {
+	D3DSurface* d3dSurface = new D3DSurface();
+	d3dSurface->w = w;
+	d3dSurface->h = h;
+	d3dSurface->v = (HWND)handle;
+	return d3dSurface;
+}

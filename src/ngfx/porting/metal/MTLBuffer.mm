@@ -25,6 +25,7 @@
 using namespace ngfx;
 
 void MTLBuffer::create(MTLGraphicsContext* ctx, const void* data, uint32_t size, MTLResourceOptions resourceOptions) {
+    this->size = size;
     if (!data) v = [ctx->mtlDevice.v newBufferWithLength:size options:resourceOptions];
     else v = [ctx->mtlDevice.v newBufferWithBytes:data length:size options:resourceOptions];
 }

@@ -24,6 +24,7 @@
 #include "ngfx/graphics/CommandBuffer.h"
 #include "ngfx/graphics/Device.h"
 #include "ngfx/graphics/GraphicsPipeline.h"
+#include "ngfx/graphics/Sampler.h"
 #include "ngfx/graphics/Texture.h"
 #include <cstdint>
 #include <glm/glm.hpp>
@@ -133,13 +134,32 @@ public:
   virtual void bindGraphicsPipeline(CommandBuffer *cmdBuffer,
                                     GraphicsPipeline *graphicsPipeline) = 0;
   /** Bind texture.
-  *   This allows the GPU shader module to sample the texture.
+  *   If the texture has a built-in sampler, this also binds the sampler.
   *   @param cmdBuffer The command buffer
   *   @param texture The input texture
   *   @param set The descriptor set index
   */
   virtual void bindTexture(CommandBuffer *commandBuffer, Texture *texture,
                            uint32_t set) = 0;
+
+  /** Bind texture to an image unit.
+ *   This supports random-access reading and writing to the texture from the shader.
+ *   @param cmdBuffer The command buffer
+ *   @param texture The input texture
+ *   @param set The descriptor set index
+ */
+  virtual void bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,
+      uint32_t set) = 0;
+
+  /** Bind sampler.
+      This allows the GPU shader module to sample a texture.
+      When using a texture with a built-in sampler, this call is not necessary.
+      @param cmdBuffer THe command buffer
+      @param sampler The texture sampler
+      @param set The descriptor set index
+  */
+  virtual void bindSampler(CommandBuffer* cmdBuffer, Sampler* sampler,
+      uint32_t set) = 0;
 
   // TODO: copyBuffer: ToBuffer, copyBuffer: ToTexture, copyTexture: ToBuffer,
   // blit
@@ -175,11 +195,12 @@ public:
   *   @param cmdBuffer The command buffer
   *   @param groupCountX, groupCountY, groupCountZ The number of groups (tensor)
   *   @param threadsPerGroupX, threadsPerGroupY, threadsPerGroupZ The number of threads per group (tensor)
+  *   If these parameters are already specified in the shader, then it is not necessary to set these parameters in this function call (set to -1).
   */
   virtual void dispatch(CommandBuffer *cmdBuffer, uint32_t groupCountX,
                         uint32_t groupCountY, uint32_t groupCountZ,
-                        uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                        uint32_t threadsPerGroupZ) = 0;
+                        int32_t threadsPerGroupX = -1, int32_t threadsPerGroupY = -1,
+                        int32_t threadsPerGroupZ = -1) = 0;
   /** Set the viewport
   *   This defines the mapping of view coordinates to NDC coordinates.
   *   @param cmdBuffer The command buffer

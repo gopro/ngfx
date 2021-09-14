@@ -23,10 +23,18 @@
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
 using namespace ngfx;
+using namespace std;
 
 void D3DSampler::create(D3DGraphicsContext* ctx, const D3DSamplerDesc &samplerDesc) {
 	desc = samplerDesc;
 	D3D_TRACE(ctx->d3dDevice.v->CreateSampler(&samplerDesc, ctx->d3dSamplerDescriptorHeap.handle.cpuHandle));
 	handle = ctx->d3dSamplerDescriptorHeap.handle;
 	++ctx->d3dSamplerDescriptorHeap.handle;
+}
+
+Sampler* Sampler::create(GraphicsContext *ctx, const SamplerDesc &samplerDesc) {
+	D3DSamplerDesc d3dSamplerDesc(&samplerDesc);
+	D3DSampler* d3dSampler = new D3DSampler();
+	d3dSampler->create(d3d(ctx), d3dSamplerDesc);
+	return d3dSampler;
 }

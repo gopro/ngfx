@@ -38,13 +38,19 @@ void D3DGraphics::bindComputePipeline(CommandBuffer *commandBuffer,
       d3dComputePipeline->d3dPipelineState.Get()));
   D3D_TRACE(d3dCommandList->SetComputeRootSignature(
       d3dComputePipeline->d3dRootSignature.Get()));
-  auto cbvSrvUavHeap = d3dCtx->d3dCbvSrvUavDescriptorHeap.v.Get();
-  auto samplerDescriptorHeap = d3dCtx->d3dSamplerDescriptorHeap.v.Get();
-  std::vector<ID3D12DescriptorHeap *> descriptorHeaps = {cbvSrvUavHeap,
-                                                         samplerDescriptorHeap};
-  D3D_TRACE(d3dCommandList->SetDescriptorHeaps(UINT(descriptorHeaps.size()),
-                                               descriptorHeaps.data()));
+  setDescriptorHeaps(commandBuffer);
   currentPipeline = computePipeline;
+}
+
+void D3DGraphics::setDescriptorHeaps(CommandBuffer *commandBuffer) {
+    auto d3dCtx = d3d(ctx);
+    auto d3dCommandList = d3d(commandBuffer)->v;
+    auto cbvSrvUavHeap = d3dCtx->d3dCbvSrvUavDescriptorHeap.v.Get();
+    auto samplerDescriptorHeap = d3dCtx->d3dSamplerDescriptorHeap.v.Get();
+    std::vector<ID3D12DescriptorHeap*> descriptorHeaps = { cbvSrvUavHeap,
+                                                           samplerDescriptorHeap };
+    D3D_TRACE(d3dCommandList->SetDescriptorHeaps(UINT(descriptorHeaps.size()),
+        descriptorHeaps.data()));
 }
 
 void D3DGraphics::bindGraphicsPipeline(CommandBuffer *commandBuffer,
@@ -57,6 +63,7 @@ void D3DGraphics::bindGraphicsPipeline(CommandBuffer *commandBuffer,
       d3dGraphicsPipeline->d3dPrimitiveTopology));
   D3D_TRACE(d3dCommandList->SetGraphicsRootSignature(
       d3dGraphicsPipeline->d3dRootSignature.Get()));
+  setDescriptorHeaps(commandBuffer);
   currentPipeline = graphicsPipeline;
 }
 
@@ -113,31 +120,74 @@ void D3DGraphics::bindStorageBuffer(CommandBuffer *commandBuffer,
   }
 }
 
-void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
-                              uint32_t set) {
-  auto d3dCommandList = d3d(commandBuffer)->v.Get();
-  auto d3dTexture = d3d(texture);
-  if (D3DGraphicsPipeline *graphicsPipeline =
-          dynamic_cast<D3DGraphicsPipeline *>(currentPipeline)) {
-    D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
-        set, d3dTexture->defaultSrvDescriptor.gpuHandle));
-    D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
-        set + 1, d3dTexture->defaultSamplerDescriptor.gpuHandle));
-  } else if (D3DComputePipeline *computePipeline =
-                 dynamic_cast<D3DComputePipeline *>(currentPipeline)) {
-    D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
-        set, d3dTexture->defaultSrvDescriptor.gpuHandle));
-    D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
-        set + 1, d3dTexture->defaultSamplerDescriptor.gpuHandle));
-  }
+void D3DGraphics::bindSampler(CommandBuffer* commandBuffer, Sampler* sampler,
+    uint32_t set) {
+    auto d3dCommandList = d3d(commandBuffer)->v.Get();
+    auto d3dSampler = d3d(sampler);
+    if (D3DGraphicsPipeline* graphicsPipeline =
+        dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+            set, d3dSampler->handle.gpuHandle));
+    }
+    else if (D3DComputePipeline* computePipeline =
+        dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+            set, d3dSampler->handle.gpuHandle));
+    }
 }
 
-static void resourceBarrier(
+void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
+    uint32_t set) {
+    auto d3dCommandList = d3d(commandBuffer)->v.Get();
+    auto d3dTexture = d3d(texture);
+    uint32_t numPlanes = d3dTexture->numPlanes;
+    if (D3DGraphicsPipeline* graphicsPipeline =
+        dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
+        for (uint32_t j = 0; j < numPlanes; j++) {
+            D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+                set + j, d3dTexture->defaultSrvDescriptor[j].gpuHandle));
+        }
+    }
+    else if (D3DComputePipeline* computePipeline =
+        dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
+        if (d3dTexture->imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+            for (uint32_t j = 0; j < numPlanes; j++) {
+                D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+                    set + j, d3dTexture->defaultSrvDescriptor[j].gpuHandle));
+            }
+        }
+        else {
+            D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+                set, d3dTexture->defaultUavDescriptor.gpuHandle));
+        }
+    }
+    if (d3dTexture->defaultSampler) {
+        bindSampler(commandBuffer, d3dTexture->defaultSampler, set + numPlanes);
+    }
+}
+
+void D3DGraphics::bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,
+        uint32_t set) {
+    auto d3dCommandList = d3d(commandBuffer)->v.Get();
+    auto d3dTexture = d3d(texture);
+    if (D3DGraphicsPipeline* graphicsPipeline =
+        dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+            set, d3dTexture->defaultUavDescriptor.gpuHandle));
+    }
+    else if (D3DComputePipeline* computePipeline =
+        dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
+        D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+            set, d3dTexture->defaultUavDescriptor.gpuHandle));
+    }
+}
+
+void D3DGraphics::resourceBarrier(
     D3DCommandList *cmdList, D3DFramebuffer::D3DAttachment *p,
     D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState,
-    UINT subresourceIndex = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES) {
+    UINT subresourceIndex) {
   if (p->texture)
-    p->texture->resourceBarrier(cmdList, newState, subresourceIndex);
+    p->texture->resourceBarrierTransition(cmdList, newState, subresourceIndex);
   else {
     CD3DX12_RESOURCE_BARRIER resourceBarrier =
         CD3DX12_RESOURCE_BARRIER::Transition(p->resource, currentState,
@@ -145,6 +195,7 @@ static void resourceBarrier(
     D3D_TRACE(cmdList->v->ResourceBarrier(1, &resourceBarrier));
   }
 }
+
 void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
                                   RenderPass *renderPass,
                                   Framebuffer *framebuffer,
@@ -180,12 +231,8 @@ void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
                                                   descriptorHeaps.data()));
   std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> colorAttachmentHandles(
       colorAttachments.size());
-  for (uint32_t j = 0; j < colorAttachments.size(); j++)
-    colorAttachmentHandles[j] = colorAttachments[j]->cpuDescriptor;
-  D3D_TRACE(d3dCommandList->v->OMSetRenderTargets(
-      UINT(colorAttachments.size()), colorAttachmentHandles.data(), FALSE,
-      depthStencilAttachment ? &depthStencilAttachment->cpuDescriptor
-                             : nullptr));
+  setRenderTargets(d3dCommandList, d3dFramebuffer->colorAttachments, 
+      d3dFramebuffer->depthStencilAttachment);
   for (auto &colorAttachment : colorAttachments) {
     D3D_TRACE(d3dCommandList->v->ClearRenderTargetView(
         colorAttachment->cpuDescriptor, glm::value_ptr(clearColor), 0,
@@ -199,6 +246,19 @@ void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
   }
   currentRenderPass = renderPass;
   currentFramebuffer = framebuffer;
+}
+
+void D3DGraphics::setRenderTargets(D3DCommandList* d3dCommandList,
+    const std::vector<D3DFramebuffer::D3DAttachment*>& colorAttachments,
+    const D3DFramebuffer::D3DAttachment* depthStencilAttachment) {
+    std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> colorAttachmentHandles(
+        colorAttachments.size());
+    for (uint32_t j = 0; j < colorAttachments.size(); j++)
+        colorAttachmentHandles[j] = colorAttachments[j]->cpuDescriptor;
+    D3D_TRACE(d3dCommandList->v->OMSetRenderTargets(
+        UINT(colorAttachments.size()), colorAttachmentHandles.data(), FALSE,
+        depthStencilAttachment ? &depthStencilAttachment->cpuDescriptor
+        : nullptr));
 }
 
 void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {
@@ -256,8 +316,7 @@ uint64_t D3DGraphics::endProfile(CommandBuffer *commandBuffer) {
 
 void D3DGraphics::dispatch(CommandBuffer *commandBuffer, uint32_t groupCountX,
                            uint32_t groupCountY, uint32_t groupCountZ,
-                           uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                           uint32_t threadsPerGroupZ) {
+                           int32_t, int32_t, int32_t) {
   D3D_TRACE(
       d3d(commandBuffer)->v->Dispatch(groupCountX, groupCountY, groupCountZ));
 }

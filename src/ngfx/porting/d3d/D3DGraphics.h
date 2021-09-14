@@ -35,6 +35,9 @@ public:
                        glm::vec4 clearColor = glm::vec4(0.0f),
                        float clearDepth = 1.0f,
                        uint32_t clearStencil = 0) override;
+  void setRenderTargets(D3DCommandList* d3dCommandList,
+      const std::vector<D3DFramebuffer::D3DAttachment*>& colorAttachments,
+      const D3DFramebuffer::D3DAttachment* depthStencilAttachment);
   void endRenderPass(CommandBuffer *commandBuffer) override;
   void beginProfile(CommandBuffer *commandBuffer) override;
   uint64_t endProfile(CommandBuffer *commandBuffer) override;
@@ -54,6 +57,10 @@ public:
                             GraphicsPipeline *graphicsPipeline) override;
   void bindTexture(CommandBuffer *commandBuffer, Texture *texture,
                    uint32_t set) override;
+  void bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,
+      uint32_t set) override;
+  void bindSampler(CommandBuffer* commandBuffer, Sampler* sampler,
+      uint32_t set) override;
 
   // TODO: copyBuffer: ToBuffer, copyBuffer: ToTexture, copyTexture: ToBuffer,
   // blit
@@ -68,8 +75,8 @@ public:
 
   void dispatch(CommandBuffer *cmdBuffer, uint32_t groupCountX,
                 uint32_t groupCountY, uint32_t groupCountZ,
-                uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                uint32_t threadsPerGroupZ) override;
+                int32_t threadsPerGroupX = -1, int32_t threadsPerGroupY = -1,
+                int32_t threadsPerGroupZ = -1) override;
 
   void setViewport(CommandBuffer *cmdBuffer, Rect2D rect) override;
   void setScissor(CommandBuffer *cmdBuffer, Rect2D rect) override;
@@ -77,6 +84,11 @@ public:
   void waitIdle(CommandBuffer *cmdBuffer) override {
     d3d(ctx)->d3dDevice.waitIdle();
   }
+  void resourceBarrier(
+      D3DCommandList* cmdList, D3DFramebuffer::D3DAttachment* p,
+      D3D12_RESOURCE_STATES currentState, D3D12_RESOURCE_STATES newState,
+      UINT subresourceIndex = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
+  void setDescriptorHeaps(CommandBuffer* commandBuffer);
 };
 D3D_CAST(Graphics);
 } // namespace ngfx

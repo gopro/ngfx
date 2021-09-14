@@ -22,6 +22,7 @@
 #include "ngfx/compute/ComputePipeline.h"
 #include "ngfx/graphics/CommandBuffer.h"
 #include "ngfx/graphics/GraphicsPipeline.h"
+#include "ngfx/graphics/SamplerDesc.h"
 
 namespace ngfx {
 class Graphics;
@@ -35,9 +36,7 @@ public:
              IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT |
              IMAGE_USAGE_TRANSFER_DST_BIT),
          TextureType textureType = TEXTURE_TYPE_2D, bool genMipmaps = false,
-         FilterMode minFilter = FILTER_NEAREST,
-         FilterMode magFilter = FILTER_NEAREST,
-         FilterMode mipFilter = FILTER_NEAREST, uint32_t numSamples = 1);
+         uint32_t numSamples = 1, SamplerDesc *samplerDesc = nullptr);
   static Texture *
   create(GraphicsContext *graphicsContext, Graphics *graphics, void *data,
          PixelFormat format, uint32_t size, uint32_t w, uint32_t h, uint32_t d,
@@ -46,13 +45,20 @@ public:
              IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT |
              IMAGE_USAGE_TRANSFER_DST_BIT),
          TextureType textureType = TEXTURE_TYPE_2D, bool genMipmaps = false,
-         FilterMode minFilter = FILTER_NEAREST,
-         FilterMode magFilter = FILTER_NEAREST,
-         FilterMode mipFilter = FILTER_NEAREST, uint32_t numSamples = 1);
+         uint32_t numSamples = 1, SamplerDesc *samplerDesc = nullptr, int32_t dataPitch = -1);
+  static Texture*
+  createFromHandle(GraphicsContext* graphicsContext, Graphics* graphics, void* handle, 
+        PixelFormat format, uint32_t w, uint32_t h, uint32_t d, uint32_t arrayLayers,
+        ImageUsageFlags imageUsageFlags = ImageUsageFlags(
+            IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT |
+            IMAGE_USAGE_TRANSFER_DST_BIT),
+        TextureType textureType = TEXTURE_TYPE_2D,
+        uint32_t numSamples = 1, SamplerDesc* samplerDesc = nullptr);
   virtual ~Texture() {}
   virtual void upload(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
                       uint32_t z = 0, int32_t w = -1, int32_t h = -1,
-                      int32_t d = -1, int32_t arrayLayers = -1) = 0;
+                      int32_t d = -1, int32_t arrayLayers = -1, int32_t numPlanes = -1,
+                      int32_t dataPitch = -1) = 0;
   virtual void download(void *data, uint32_t size, uint32_t x = 0,
                         uint32_t y = 0, uint32_t z = 0, int32_t w = -1,
                         int32_t h = -1, int32_t d = -1,
@@ -60,8 +66,15 @@ public:
   virtual void changeLayout(CommandBuffer *commandBuffer,
                             ImageLayout imageLayout) = 0;
   virtual void generateMipmaps(CommandBuffer *commandBuffer) = 0;
+  /** Set resource name
+      @param name The resource name
+  */
+  virtual void setName(const std::string& name) { this->name = name; }
+  std::string name;
   PixelFormat format;
   uint32_t w = 0, h = 0, d = 1, arrayLayers = 1, mipLevels = 1, numSamples = 1;
+  uint32_t size = 0;
+  std::vector<uint32_t> planeWidth, planeHeight, planeSize;
   ImageUsageFlags imageUsageFlags;
   TextureType textureType;
 };

@@ -40,7 +40,6 @@ public:
   void download(void *data, uint32_t size, uint32_t offset = 0) override;
   VkDeviceMemory memory = VK_NULL_HANDLE;
   VkBuffer v = VK_NULL_HANDLE;
-  uint32_t size;
   VkBufferCreateInfo createInfo;
   VkMemoryAllocateInfo allocInfo;
   const VkDescriptorSet &getUboDescriptorSet(ShaderStageFlags shaderStageFlags);

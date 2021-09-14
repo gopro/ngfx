@@ -20,10 +20,12 @@
  */
 #include "ngfx/porting/d3d/D3DSwapchain.h"
 #include "ngfx/core/DebugUtil.h"
+#include "ngfx/core/StringUtil.h"
 #include "ngfx/graphics/Config.h"
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
 using namespace ngfx;
+#define DEFAULT_SURFACE_FORMAT PIXELFORMAT_RGBA8_UNORM
 
 void D3DSwapchain::create(D3DGraphicsContext *ctx, D3DSurface *surface) {
   HRESULT hResult;
@@ -31,10 +33,11 @@ void D3DSwapchain::create(D3DGraphicsContext *ctx, D3DSurface *surface) {
   auto d3dFactory = ctx->d3dFactory.Get();
   auto d3dCommandQueue = ctx->d3dCommandQueue.v.Get();
   numImages = PREFERRED_NUM_SWAPCHAIN_IMAGES;
-  UINT w = surface->w, h = surface->h;
+  this->w = surface->w; this->h = surface->h;
+  this->format = DEFAULT_SURFACE_FORMAT;
   DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {w,
                                          h,
-                                         DXGI_FORMAT_R8G8B8A8_UNORM,
+                                         DXGI_FORMAT(format),
                                          FALSE,
                                          {1, 0},
                                          DXGI_USAGE_RENDER_TARGET_OUTPUT,
@@ -84,4 +87,13 @@ void D3DSwapchain::acquireNextImage() {
 void D3DSwapchain::present() {
   HRESULT hResult;
   V(v->Present(1, 0));
+}
+
+void D3DSwapchain::setName(const std::string& name) {
+    Swapchain::setName(name);
+    for (uint32_t j = 0; j < numImages; j++) {
+        auto& rt = renderTargets[j];
+        std::wstring wname = StringUtil::toWString(name).c_str() + std::to_wstring(j);
+        rt->SetName(wname.c_str());
+    }
 }

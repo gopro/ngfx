@@ -4,12 +4,15 @@ if(MSVC)
 cmake_policy(SET CMP0091 NEW)
 endif()
 
+# Enable multiprocessor compilation when using MSVC
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+
 project(ngfx)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug)
+set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build)
 set(EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external CACHE STRING "External Directory")
 set(VCPKG_DIR ${EXTERNAL_DIR}/vcpkg CACHE STRING "VCPKG Directory")
 set(CURRENT_VERSION 1.0.0)
@@ -63,8 +66,13 @@ else()
 endif()
 
 set(SPIRV_CROSS_INCLUDE_DIRS ${SPIRV_CROSS_DIR}/include)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_MSVC_RUNTIME_LIBRARY STREQUAL "MultiThreadedDebugDLL")
+set(SPIRV_CROSS_LIBRARY_DIRS ${SPIRV_CROSS_DIR}/debug/lib)
+set(SPIRV_CROSS_LIBRARIES spirv-cross-cppd spirv-cross-cored spirv-cross-glsld spirv-cross-hlsld spirv-cross-msld spirv-cross-reflectd spirv-cross-utild spirv-cross-cd)
+else()
 set(SPIRV_CROSS_LIBRARY_DIRS ${SPIRV_CROSS_DIR}/lib)
 set(SPIRV_CROSS_LIBRARIES spirv-cross-cpp spirv-cross-core spirv-cross-glsl spirv-cross-hlsl spirv-cross-msl spirv-cross-reflect spirv-cross-util spirv-cross-c)
+endif()
 
 file(GLOB_RECURSE NGFX_SOURCE_FILES
   src/ngfx/core/* src/ngfx/compute/*

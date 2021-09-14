@@ -24,14 +24,17 @@
 #include <fstream>
 using namespace ngfx;
 
-void File::read(const std::string &filename) {
+bool File::read(const std::string &filename) {
   std::ifstream in(filename.c_str(),
                    std::ios::binary | std::ios::in | std::ios::ate);
-  if (!in.is_open())
-    NGFX_ERR("cannot open file: %s", filename.c_str());
+  if (!in.is_open()) {
+      NGFX_LOG("cannot open file: %s", filename.c_str());
+      return false;
+  }
   size = int(in.tellg());
   in.seekg(0, std::ios::beg);
   data.reset(new char[size]);
   in.read(data.get(), size);
   in.close();
+  return true;
 }

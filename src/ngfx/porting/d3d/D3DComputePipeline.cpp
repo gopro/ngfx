@@ -21,6 +21,7 @@
 #include "ngfx/porting/d3d/D3DComputePipeline.h"
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DShaderModule.h"
+#include "ngfx/porting/d3d/D3DPipelineUtil.h"
 using namespace ngfx;
 
 void D3DComputePipeline::create(

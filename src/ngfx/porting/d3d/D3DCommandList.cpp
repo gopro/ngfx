@@ -36,6 +36,7 @@ void D3DCommandList::begin() {
   V(cmdAllocator->Reset());
   V(v->Reset(cmdAllocator.Get(), nullptr));
 }
+
 void D3DCommandList::end() {
   HRESULT hResult;
   V(v->Close());

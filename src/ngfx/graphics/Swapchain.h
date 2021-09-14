@@ -20,6 +20,7 @@
  */
 #pragma once
 #include "ngfx/graphics/Semaphore.h"
+#include "ngfx/graphics/GraphicsCore.h"
 #include <cstdint>
 
 namespace ngfx {
@@ -27,6 +28,13 @@ class Swapchain {
 public:
   virtual ~Swapchain() {}
   virtual void acquireNextImage() = 0;
-  uint32_t numImages;
+  /** Set resource name
+      @param name The resource name
+  */
+  virtual void setName(const std::string& name) { this->name = name; }
+  uint32_t numImages = 0;
+  uint32_t w = 0, h = 0;
+  PixelFormat format;
+  std::string name;
 };
 } // namespace ngfx

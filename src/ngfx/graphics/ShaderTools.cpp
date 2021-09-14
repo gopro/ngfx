@@ -35,9 +35,9 @@
 #include <sstream>
 using namespace std;
 using namespace ngfx;
-auto readFile = FileUtil::readFile;
-auto writeFile = FileUtil::writeFile;
-auto toLower = StringUtil::toLower;
+static auto readFile = FileUtil::readFile;
+static auto writeFile = FileUtil::writeFile;
+static auto toLower = StringUtil::toLower;
 namespace fs = std::filesystem;
 #define V(func)                                                                \
   {                                                                            \
@@ -74,46 +74,39 @@ int ShaderTools::cmd(string str) {
   return system(str.c_str());
 }
 
-bool ShaderTools::findIncludeFile(const string &includeFilename,
-                                  const vector<string> &includePaths,
-                                  string &includeFile) {
-  for (const string &includePath : includePaths) {
-    fs::path filename = includePath / fs::path(includeFilename);
-    if (fs::exists(filename)) {
-      includeFile = filename.string();
-      return true;
+class FileIncluder : public shaderc::CompileOptions::IncluderInterface {
+public:
+    FileIncluder(const vector<string>& includePaths)
+        : includePaths(includePaths) {}
+    ~FileIncluder() override {}
+    shaderc_include_result* GetInclude(const char* requested_source,
+        shaderc_include_type type,
+        const char* requesting_source,
+        size_t include_depth) override {
+        auto r = new shaderc_include_result;
+        string contents = readFile(fs::path(includePaths[0] + "/" + requested_source).string());
+        r->source_name = strdup(requested_source);
+        r->source_name_length = strlen(requested_source);
+        r->content = strdup(contents.c_str());
+        r->content_length = contents.size();
+        r->user_data = nullptr;
+        return r;
     }
-  }
-  return false;
-}
-
-int ShaderTools::preprocess(const string &src, const string &dataPath,
-                            string &dst) {
-  dst = "";
-  vector<string> includePaths = defaultIncludePaths;
-  includePaths.push_back(dataPath);
-  istringstream sstream(src);
-  string line;
-  while (std::getline(sstream, line)) {
-    smatch matchIncludeGroups;
-    bool matchInclude =
-        regex_search(line, matchIncludeGroups, regex("#include \"([^\"]*)"));
-    if (matchInclude) {
-      string includeFilename = matchIncludeGroups[1];
-      string includeFilePath;
-      findIncludeFile(includeFilename, includePaths, includeFilePath);
-      dst += readFile(includeFilePath);
-    } else {
-      dst += line + "\n";
+    void ReleaseInclude(shaderc_include_result* r) override {
+        free((void*)r->source_name);
+        free((void*)r->content);
+        free(r);
     }
-  }
-  return 0;
-}
+    vector<string> includePaths;
+};
 
-int ShaderTools::compileShaderGLSL(
-    const string &src, shaderc_shader_kind shaderKind,
+int ShaderTools::compileShaderToSPV(
+    const string &src,
+    shaderc_source_language sourceLanguage,
+    shaderc_shader_kind shaderKind,
     const MacroDefinitions &defines, string &spv, bool verbose,
-    shaderc_optimization_level optimizationLevel) {
+    shaderc_optimization_level optimizationLevel,
+    std::string parentPath) {
   shaderc::Compiler compiler;
   shaderc::CompileOptions compileOptions;
   for (const MacroDefinition &define : defines) {
@@ -121,7 +114,10 @@ int ShaderTools::compileShaderGLSL(
   }
   compileOptions.SetOptimizationLevel(optimizationLevel);
   compileOptions.SetGenerateDebugInfo();
-
+  compileOptions.SetSourceLanguage(sourceLanguage);
+  vector<string> includePaths = { parentPath };
+  auto fileIncluder = make_unique<FileIncluder>(includePaths);
+  compileOptions.SetIncluder(std::move(fileIncluder));
   auto result = compiler.CompileGlslToSpv(src, shaderKind, "", compileOptions);
   if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
     NGFX_ERR("cannot compile file: %s", result.GetErrorMessage().c_str());
@@ -157,6 +153,34 @@ int ShaderTools::patchShaderLayoutsGLSL(const string &src, string &dst) {
     }
   }
   return 0;
+}
+
+int ShaderTools::patchShaderLayoutsHLSL(const string& src, string& dst) {
+    dst = "";
+    istringstream sstream(src);
+    string line;
+    int registerSpace = 0;
+    while (std::getline(sstream, line)) {
+        // Patch HLSL shader layouts
+        smatch g;
+
+        bool matchLayout = regex_search(line, g,
+            regex("^(.*)"
+                "register\\s*\\("
+                "\\s*"
+                "([bstu])"
+                "\\d"
+                "\\s*"
+                "\\)"
+                "(.*)\r*$"));
+        if (matchLayout) {
+           dst += g[1].str() + "register(" + g[2].str() + "0,space" +std::to_string(registerSpace++) + ")" + g[3].str() + "\n";
+        }
+        else {
+            dst += line + "\n";
+        }
+    }
+    return 0;
 }
 
 static shaderc_shader_kind toShaderKind(const string &ext) {
@@ -204,7 +228,7 @@ int ShaderTools::compileShaderGLSL(string filename,
 
 int ShaderTools::compileShaderMSL(const string &file,
                                   const MacroDefinitions &defines,
-                                  string outDir, vector<string> &outFiles) {
+                                  string outDir, vector<string> &outFiles, int flags) {
   string strippedFilename =
       FileUtil::splitExt(fs::path(file).filename().string())[0];
   string inFileName = fs::path(outDir + "/" + strippedFilename + ".metal")
@@ -234,29 +258,35 @@ int ShaderTools::compileShaderMSL(const string &file,
 
 int ShaderTools::compileShaderHLSL(const string &file,
                                    const MacroDefinitions &defines,
-                                   string outDir, vector<string> &outFiles) {
-  string strippedFilename =
-      FileUtil::splitExt(fs::path(file).filename().string())[0];
-  string inFileName = fs::path(outDir + "/" + strippedFilename + ".hlsl")
-                          .make_preferred()
-                          .string();
-  string outFileName = fs::path(outDir + "/" + strippedFilename + ".dxc")
-                           .make_preferred()
-                           .string();
+                                   string outDir, vector<string> &outFiles, int flags) {
+  string filename = fs::path(file).filename().string();
+  string inFileName =fs::path(file).make_preferred().string();
+  string outFileName = fs::path(outDir + "/" + filename + ".dxc").make_preferred().string();
   if (!FileUtil::srcFileNewerThanOutFile(inFileName, outFileName)) {
     outFiles.push_back(outFileName);
     return 0;
   }
+  int ret = 0;
+  if (flags & PATCH_SHADER_LAYOUTS_HLSL) {
+      const string &src = FileUtil::readFile(inFileName);
+      string dst;
+      V(patchShaderLayoutsHLSL(src, dst));
+      inFileName += ".tmp";
+      FileUtil::writeFile(inFileName, dst);
+  }
 
   string shaderModel = "";
-  if (strstr(inFileName.c_str(), ".vert"))
-    shaderModel = "vs_5_0";
-  else if (strstr(inFileName.c_str(), ".frag"))
-    shaderModel = "ps_5_0";
-  else if (strstr(inFileName.c_str(), ".comp"))
-    shaderModel = "cs_5_0";
-  int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " " +
-                   inFileName);
+  if (strstr(inFileName.c_str(), ".vert") || strstr(inFileName.c_str(), "_vertex"))
+      shaderModel = "vs_5_0";
+  else if (strstr(inFileName.c_str(), ".frag") || strstr(inFileName.c_str(), "_fragment"))
+      shaderModel = "ps_5_0";
+  else if (strstr(inFileName.c_str(), ".comp") || strstr(inFileName.c_str(), "_compute"))
+      shaderModel = "cs_5_0";
+  int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " -D DIRECT3D12 " +
+                   inFileName + " -Zi -Fc " + outFileName + ".info");
+  if (flags & PATCH_SHADER_LAYOUTS_HLSL) {
+      fs::remove(inFileName);
+  }
   if (result == 0)
     NGFX_LOG("compiled file: %s", file.c_str());
   else
@@ -678,7 +708,7 @@ string ShaderTools::parseReflectionData(const json &reflectData, string ext) {
 }
 
 int ShaderTools::generateShaderMapGLSL(const string &file, string outDir,
-                                       vector<string> &outFiles) {
+                                       vector<string> &outFiles, int flags) {
   string filename = fs::path(file).filename().string();
   string ext = FileUtil::splitExt(filename)[1];
 
@@ -704,7 +734,7 @@ int ShaderTools::generateShaderMapGLSL(const string &file, string outDir,
 }
 
 int ShaderTools::generateShaderMapMSL(const string &file, string outDir,
-                                      vector<string> &outFiles) {
+                                      vector<string> &outFiles, int flags) {
   auto splitFilename = FileUtil::splitExt(fs::path(file).filename().string());
   string glslFilename = splitFilename[0];
   string ext = FileUtil::splitExt(splitFilename[0])[1];
@@ -732,8 +762,102 @@ int ShaderTools::generateShaderMapMSL(const string &file, string outDir,
   return 0;
 }
 
+class HLSLReflector {
+public:
+    HLSLReflector(const string& file, string outDir, vector<string>& outFiles)
+        : file(file), outDir(outDir), outFiles(&outFiles) {}
+    int run();
+private:
+    string parse(const string& hlsl);
+    string parseDescriptorType(const string& type);
+    string file;
+    string outDir;
+    vector<string>* outFiles;
+};
+
+int HLSLReflector::run() {
+    string hlslFileName = fs::path(file).filename().string();
+    string hlslMapFile = fs::path(outDir + "/" + hlslFileName + ".map")
+        .make_preferred()
+        .string();
+    if (!FileUtil::srcFileNewerThanOutFile(file, hlslMapFile)) {
+        outFiles->push_back(hlslMapFile);
+        return 0;
+    }
+    string hlsl = readFile(file), hlslMap;
+    hlslMap = parse(hlsl);
+    writeFile(hlslMapFile, hlslMap);
+    outFiles->push_back(hlslMapFile);
+    return 0;
+}
+
+string HLSLReflector::parseDescriptorType(const string& type) {
+    if (type._Starts_with("Texture"))
+        return "DESCRIPTOR_TYPE_SAMPLED_IMAGE";
+    else if (type._Starts_with("SamplerState"))
+        return "DESCRIPTOR_TYPE_SAMPLER";
+    else if (type._Starts_with("RWTexture2D"))
+        return "DESCRIPTOR_TYPE_STORAGE_IMAGE";
+    else if (type._Starts_with("cbuffer"))
+        return "DESCRIPTOR_TYPE_UNIFORM_BUFFER";
+    else if (type._Starts_with("StructuredBuffer"))
+        return "DESCRIPTOR_TYPE_STORAGE_BUFFER";
+    else {
+        NGFX_ERR("unknown descriptor type: %s", type.c_str());
+    }
+}
+
+string HLSLReflector::parse(const string& src) {
+    string hlslFileName = fs::path(file).filename().string();
+    string contents = "";
+    struct DescriptorInfo {
+        string type, name;
+        int binding;
+    };
+    vector<DescriptorInfo> descriptors;
+    istringstream sstream(src);
+    string line;
+    int binding = 0;
+    while (std::getline(sstream, line)) {
+        smatch g;
+
+        bool matchDescriptor = regex_search(line, g,
+            regex(
+                "^\\s*"
+                "([^\\s]+)"
+                "\\s+"
+                "([^\\s]+)"
+                "\\s*"
+                ":"
+                "\\s*"
+                "register\\s*\\("
+                "([^)]*)"
+                "\\)"
+                ".*\r*$"));
+        if (matchDescriptor) {
+            descriptors.push_back({ g[1], g[2], binding++ });
+        }
+    }
+    if (strstr(hlslFileName.c_str(), "_vertex")) {
+        contents += "INPUT_ATTRIBUTES 0\n";
+    }
+    contents += "DESCRIPTORS " + to_string(descriptors.size()) + "\n";
+    for (auto& desc: descriptors) {
+        contents += "\t" + desc.name + " " + parseDescriptorType(desc.type) + " " + to_string(desc.binding) + "\n";
+    }
+    //TODO
+    contents += "UNIFORM_BUFFER_INFOS 0\n";
+    contents += "SHADER_STORAGE_BUFFER_INFOS 0\n";
+    return contents;
+}
+
+
 int ShaderTools::generateShaderMapHLSL(const string &file, string outDir,
-                                       vector<string> &outFiles) {
+                                       vector<string> &outFiles, int flags) {
+  if (flags & USE_INTERNAL_REFLECTOR) {
+    HLSLReflector hlslReflector(file, outDir, outFiles);
+    return hlslReflector.run();
+  }
   auto splitFilename = FileUtil::splitExt(fs::path(file).filename().string());
   string glslFilename = splitFilename[0];
   string ext = FileUtil::splitExt(splitFilename[0])[1];
@@ -778,9 +902,9 @@ vector<string> ShaderTools::compileShaders(const vector<string> &files,
     if (fmt == FORMAT_GLSL)
       compileShaderGLSL(file, defines, outDir, outFiles, flags);
     else if (fmt == FORMAT_MSL)
-      compileShaderMSL(file, defines, outDir, outFiles);
+      compileShaderMSL(file, defines, outDir, outFiles, flags);
     else if (fmt == FORMAT_HLSL)
-      compileShaderHLSL(file, defines, outDir, outFiles);
+      compileShaderHLSL(file, defines, outDir, outFiles, flags);
   }
   return outFiles;
 }
@@ -801,15 +925,15 @@ void ShaderTools::applyPatches(const vector<string> &patchFiles,
 }
 
 vector<string> ShaderTools::generateShaderMaps(const vector<string> &files,
-                                               string outDir, Format fmt) {
+                                               string outDir, Format fmt, int flags) {
   vector<string> outFiles;
   for (const string &file : files) {
     if (fmt == FORMAT_GLSL)
-      generateShaderMapGLSL(file, outDir, outFiles);
+      generateShaderMapGLSL(file, outDir, outFiles, flags);
     else if (fmt == FORMAT_MSL)
-      generateShaderMapMSL(file, outDir, outFiles);
+      generateShaderMapMSL(file, outDir, outFiles, flags);
     else if (fmt == FORMAT_HLSL)
-      generateShaderMapHLSL(file, outDir, outFiles);
+      generateShaderMapHLSL(file, outDir, outFiles, flags);
   }
   return outFiles;
 }

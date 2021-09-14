@@ -26,7 +26,7 @@
 namespace ngfx {
 class VKShaderModule {
 public:
-  virtual void initFromFile(VkDevice device, const std::string &filename);
+  virtual bool initFromFile(VkDevice device, const std::string &filename);
   virtual ~VKShaderModule();
   VkShaderModule v = VK_NULL_HANDLE;
 

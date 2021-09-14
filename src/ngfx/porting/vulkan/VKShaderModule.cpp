@@ -26,15 +26,18 @@
 using namespace ngfx;
 using namespace std;
 
-void VKShaderModule::initFromFile(VkDevice device,
+bool VKShaderModule::initFromFile(VkDevice device,
                                   const std::string &filename) {
   File file;
 #ifdef USE_PRECOMPILED_SHADERS
-  file.read(filename + ".spv");
+  if (!file.read(filename + ".spv")) {
+      return false;
+  }
   initFromByteCode(device, file.data.get(), file.size);
 #else
   NGFX_ERR("TODO: Support runtime shader compilation");
 #endif
+  return true;
 }
 void VKShaderModule::initFromByteCode(VkDevice device, void *data,
                                       uint32_t size) {
@@ -55,7 +58,9 @@ template <typename T>
 static std::unique_ptr<T> createShaderModule(Device *device,
                                              const std::string &filename) {
   auto vkShaderModule = make_unique<T>();
-  vkShaderModule->initFromFile(vk(device)->v, filename);
+  if (!vkShaderModule->initFromFile(vk(device)->v, filename)) {
+      return nullptr;
+  }
   vkShaderModule->initBindings(filename + ".map");
   return vkShaderModule;
 }

@@ -52,9 +52,21 @@ public:
             layout (set = 0, binding = 0) in vec3 position;
             layout (set = 1, binding = 0) in vec2 texcoord;
       */
-      PATCH_SHADER_LAYOUTS_GLSL = 1,
-      REMOVE_UNUSED_VARIABLES = 2, /*!< Remove unused input variables */
-      FLIP_VERT_Y = 4 /*!< Flip vertex y output in NDC space */
+      PATCH_SHADER_LAYOUTS_GLSL = 1<<0,
+      /**
+      * Patch the HLSL descriptor layout definitions.
+      * Use a different register space for each descriptor, with base register 0.
+      * For example: convert
+      *     register(t1)
+      *     register(b0)
+      * to
+      *     register(t0, space0)
+      *     register(b0, space1)
+      */
+      PATCH_SHADER_LAYOUTS_HLSL = 1<<1,
+      REMOVE_UNUSED_VARIABLES = 1<<2, /*!< Remove unused input variables */
+      FLIP_VERT_Y = 1<<3, /*!< Flip vertex y output in NDC space */
+      USE_INTERNAL_REFLECTOR = 1<<4 /*!< Use internal reflector, not spirv-cross */
   };
   enum Format { 
       FORMAT_GLSL, /*!< GLSL shading language input format */
@@ -98,28 +110,39 @@ public:
   *   @param files The shader input files
   *   @param outDir The output directory
   *   @param fmt The shader input format
+  *   @param Additional flags
+  *   @return The reflection map filenames
    */
   std::vector<std::string>
   generateShaderMaps(const std::vector<std::string> &files, std::string outDir,
-                     Format fmt);
+                     Format fmt, int flags = 0);
 
 private:
   void applyPatches(const std::vector<std::string> &patchFiles,
                     std::string outDir);
   int cmd(std::string str);
-  int compileShaderGLSL(const std::string &src, shaderc_shader_kind shaderKind,
-                        const MacroDefinitions &defines, std::string &spv,
-                        bool verbose = true,
-                        shaderc_optimization_level optimizationLevel =
-                            shaderc_optimization_level_performance);
+  int compileShaderToSPV(
+      const std::string& src,
+      shaderc_source_language sourceLanguage,
+      shaderc_shader_kind shaderKind,
+      const MacroDefinitions& defines, std::string& spv, bool verbose = true,
+      shaderc_optimization_level optimizationLevel = shaderc_optimization_level_performance,
+      std::string parentPath = "");
+  inline int compileShaderGLSL(const std::string& src, shaderc_shader_kind shaderKind,
+          const MacroDefinitions& defines, std::string& spv,
+          bool verbose = true,
+          shaderc_optimization_level optimizationLevel =
+          shaderc_optimization_level_performance) {
+      return compileShaderToSPV(src, shaderc_source_language_glsl, shaderKind, defines, spv, verbose, optimizationLevel);
+  }
   int compileShaderGLSL(std::string filename, const MacroDefinitions &defines,
                         const std::string &outDir,
                         std::vector<std::string> &outFiles, int flags = 0);
   int compileShaderHLSL(const std::string &file,
                         const MacroDefinitions &defines, std::string outDir,
-                        std::vector<std::string> &outFiles);
+                        std::vector<std::string> &outFiles, int flags = 0);
   int compileShaderMSL(const std::string &file, const MacroDefinitions &defines,
-                       std::string outDir, std::vector<std::string> &outFiles);
+                       std::string outDir, std::vector<std::string> &outFiles, int flags = 0);
   int convertSPVToGLSL(const std::string &spv, shaderc_shader_kind shaderKind,
                        std::string &glsl, int flags = 0);
   int convertSPVToHLSL(const std::string &spv, shaderc_shader_kind shaderKind,
@@ -148,11 +171,11 @@ private:
   int genShaderReflectionMSL(const std::string &msl, const std::string &ext,
                              const std::string &spv, std::string &mslMap);
   int generateShaderMapGLSL(const std::string &file, std::string outDir,
-                            std::vector<std::string> &outFiles);
+                            std::vector<std::string> &outFiles, int flags = 0);
   int generateShaderMapHLSL(const std::string &file, std::string outDir,
-                            std::vector<std::string> &outFiles);
+                            std::vector<std::string> &outFiles, int flags = 0);
   int generateShaderMapMSL(const std::string &file, std::string outDir,
-                           std::vector<std::string> &outFiles);
+                           std::vector<std::string> &outFiles, int flags = 0);
   std::string parseReflectionData(const json &reflectData, std::string ext);
   int patchShaderReflectionDataMSL(const std::string &glslReflect,
                                    const std::string &ext,
@@ -163,8 +186,7 @@ private:
                                     const std::string &hlsl,
                                     std::string &hlslReflect);
   int patchShaderLayoutsGLSL(const std::string &src, std::string &dst);
-  int preprocess(const std::string &src, const std::string &dataPath,
-                 std::string &dst);
+  int patchShaderLayoutsHLSL(const std::string& src, std::string& dst);
   int removeUnusedVariablesGLSL(const std::string &src,
                                 shaderc_shader_kind shaderKind,
                                 const MacroDefinitions &defines,

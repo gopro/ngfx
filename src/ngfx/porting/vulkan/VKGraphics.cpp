@@ -200,8 +200,8 @@ void VKGraphics::bindStorageBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
 
 void VKGraphics::dispatch(CommandBuffer *commandBuffer, uint32_t groupCountX,
                           uint32_t groupCountY, uint32_t groupCountZ,
-                          uint32_t threadsPerGroupX, uint32_t threadsPerGroupY,
-                          uint32_t threadsPerGroupZ) {
+                          int32_t threadsPerGroupX, int32_t threadsPerGroupY,
+                          int32_t threadsPerGroupZ) {
   VK_TRACE(vkCmdDispatch(vk(commandBuffer)->v, groupCountX, groupCountY,
                          groupCountZ));
 }

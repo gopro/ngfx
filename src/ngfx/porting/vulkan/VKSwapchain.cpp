@@ -180,6 +180,8 @@ VKSwapchain::VKSwapchain(VKGraphicsContext *ctx, VKSurface *surface) {
   auto &vkDevice = ctx->vkDevice;
   this->device = vkDevice.v;
   this->surface = surface;
+  this->w = surface->w;
+  this->h = surface->h;
   chooseNumSwapchainImages();
   auto physicalDevice = vkDevice.vkPhysicalDevice->v;
   getSurfaceCapabilities(physicalDevice);
@@ -189,6 +191,7 @@ VKSwapchain::VKSwapchain(VKGraphicsContext *ctx, VKSurface *surface) {
   assert(queueFamilyProperties[vkDevice.queueFamilyIndices.graphics]
              .supportsPresent);
   chooseSurfaceFormat();
+  this->format = PixelFormat(surfaceFormat);
   choosePresentMode();
   chooseCompositeAlphaMode();
   choosePreTransform();

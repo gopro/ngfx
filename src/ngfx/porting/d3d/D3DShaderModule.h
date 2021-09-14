@@ -25,11 +25,11 @@
 namespace ngfx {
 class D3DShaderModule {
 public:
-  void initFromFile(const std::string &filename);
+  bool initFromFile(const std::string &filename);
   virtual ~D3DShaderModule();
   D3D12_SHADER_BYTECODE d3dShaderByteCode{};
   void initFromByteCode(void *bytecodeData, uint32_t bytecodeSize);
-  void compile(const std::string &filename);
+  bool compile(const std::string &filename);
 };
 D3D_CAST(ShaderModule);
 

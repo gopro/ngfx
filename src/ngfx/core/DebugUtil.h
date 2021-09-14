@@ -33,11 +33,13 @@
            ##__VA_ARGS__)
 #include <cstdint>
 struct DebugUtil {
-  static inline void Exit(uint32_t code) { exit(code); };
+  static inline void Exit(uint32_t code) {
+      exit(code);
+  };
 };
 #define NGFX_ERR(fmt, ...)                                                     \
   {                                                                            \
     fprintf(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                 \
             __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
-    DebugUtil::Exit(1);                                                        \
+    ::DebugUtil::Exit(1);                                                      \
   }

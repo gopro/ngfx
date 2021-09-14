@@ -64,6 +64,13 @@ enum MTLColorWriteMask {
   MTLColorWriteMaskAlpha = 0x1 << 0,
   MTLColorWriteMaskAll = 0xf
 };
+enum MTLSamplerAddressMode {
+    MTLSamplerAddressModeClampToEdge = 0,
+    MTLSamplerAddressModeMirrorClampToEdge = 1,
+    MTLSamplerAddressModeRepeat = 2,
+    MTLSamplerAddressModeMirrorRepeat = 3,
+    MTLSamplerAddressModeClampToZero = 4,
+};
 enum MTLCullMode {
   MTLCullModeNone = 0,
   MTLCullModeFront = 1,

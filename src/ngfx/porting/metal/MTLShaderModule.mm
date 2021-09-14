@@ -27,14 +27,17 @@
 using namespace ngfx;
 using namespace std;
 
-void MTLShaderModule::initFromFile(id<MTLDevice> device, const std::string &filename) {
+bool MTLShaderModule::initFromFile(id<MTLDevice> device, const std::string &filename) {
     File file;
 #ifdef USE_PRECOMPILED_SHADERS
-    file.read(filename + ".metallib");
+    if (!file.read(filename + ".metallib")) {
+        return false;
+    }
     initFromByteCode(device, file.data.get(), file.size);
 #else
     NGFX_ERR("TODO: Support runtime shader compilation");
 #endif
+    return true;
 }
 
 void MTLShaderModule::initFromByteCode(id<MTLDevice> device, void* data, uint32_t size) {
@@ -48,7 +51,9 @@ void MTLShaderModule::initFromByteCode(id<MTLDevice> device, void* data, uint32_
 template <typename T>
 static std::unique_ptr<T> createShaderModule(Device* device, const std::string& filename) {
     auto mtlShaderModule = make_unique<T>();
-    mtlShaderModule->initFromFile(mtl(device)->v, filename);
+    if (!mtlShaderModule->initFromFile(mtl(device)->v, filename)) {
+        return nullptr;
+    }
     mtlShaderModule->initBindings(filename+".metal.map");
     return mtlShaderModule;
 }

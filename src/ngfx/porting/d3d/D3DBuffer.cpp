@@ -22,6 +22,7 @@
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
 #include "ngfx/porting/d3d/D3DReadbackBuffer.h"
+#include "ngfx/core/StringUtil.h"
 #include <cassert>
 #include <d3dx12.h>
 using namespace ngfx;
@@ -139,6 +140,10 @@ void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
     memcpy(dst + offset, data, size);
     unmap();
   }
+}
+
+void D3DBuffer::setName(const std::string& name) {
+    v->SetName(StringUtil::toWString(name).c_str());
 }
 
 Buffer *Buffer::create(GraphicsContext *ctx, const void *data, uint32_t size,
