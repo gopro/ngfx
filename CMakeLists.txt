@@ -4,6 +4,9 @@ if(MSVC)
 cmake_policy(SET CMP0091 NEW)
 endif()
 
+# Enable multiprocessor compilation when using MSVC
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
+
 project(ngfx)
 
 set(CMAKE_CXX_STANDARD 17)
