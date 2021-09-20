@@ -15,21 +15,21 @@ build .stb-installed: SHELL_COMMAND
     COMMAND = ${{WGET}} -q https://raw.githubusercontent.com/nothings/stb/master/stb_image.h -P stb
 build stb: phony .stb-installed
 
-build .pkg-config-installed: SHELL_COMMAND
-    COMMAND = brew install pkg-config
-build pkg-config: phony .pkg-config-installed
+#build .pkg-config-installed: SHELL_COMMAND
+#    COMMAND = brew install pkg-config
+#build pkg-config: phony .pkg-config-installed
 
-build .glm-installed: SHELL_COMMAND
-    COMMAND = brew install glm
-build glm: phony .glm-installed
+#build .glm-installed: SHELL_COMMAND
+#    COMMAND = brew install glm
+#build glm: phony .glm-installed
 
-build .spirv-cross-installed: SHELL_COMMAND
-    COMMAND = brew install spirv-cross
-build spirv-cross: phony .spirv-cross-installed
+#build .spirv-cross-installed: SHELL_COMMAND
+#    COMMAND = brew install spirv-cross
+#build spirv-cross: phony .spirv-cross-installed
 
-build .cmake-installed: SHELL_COMMAND
-    COMMAND = brew install cmake
-build cmake: phony .cmake-installed
+#build .cmake-installed: SHELL_COMMAND
+#    COMMAND = brew install cmake
+#build cmake: phony .cmake-installed
 
 build .shaderc-${{SHADERC_VERSION}}-installed: SHELL_COMMAND
     COMMAND = ${{WGET}} https://github.com/google/shaderc/archive/v${{SHADERC_VERSION}}.tar.gz && $
