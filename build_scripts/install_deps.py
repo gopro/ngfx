@@ -2,7 +2,10 @@ from common import *
 
 os.chdir(EXTERNAL_DIR)
 
-PKGS = env('PKGS', 'all')
+if not PKGS:
+    PKGS = env('PKGS', 'all')
+    
+print("PKGS: %s" % PKGS)
 
 ninja_template = read_file(f'{SCRIPT_DIR}/install_deps_{OS_LOWER_CASE}.ninja.in')
 write_file(f'install_deps_{OS_LOWER_CASE}.ninja', ninja_template.format(**ENV_PARAMS))
