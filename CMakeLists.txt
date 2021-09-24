@@ -13,6 +13,7 @@ set(BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-debug)
 set(EXTERNAL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external CACHE STRING "External Directory")
 set(VCPKG_DIR ${EXTERNAL_DIR}/vcpkg CACHE STRING "VCPKG Directory")
 set(CURRENT_VERSION 1.0.0)
+set(GLM_INCLUDE_DIRS /usr/local/include) -> pkg_check_modules(GLM REQUIRED glm)
 
 option(NGFX_GRAPHICS_BACKEND_METAL "build ngfx metal backend" OFF)
 option(NGFX_GRAPHICS_BACKEND_DIRECT3D12 "build ngfx directx12 backend" OFF)
