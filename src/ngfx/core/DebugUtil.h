@@ -21,25 +21,45 @@
 #pragma once
 #include <cstdio>
 #include <cstdlib>
+#include <cstdint>
+#include <cstdarg>
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
-#define NGFX_LOG(fmt, ...) fprintf(stderr, fmt "\n", ##__VA_ARGS__)
+#define LOG_TO_DEBUG_CONSOLE
+
+#if defined(WIN32) && defined(LOG_TO_DEBUG_CONSOLE)
+#include <Windows.h>
+inline void debugMessage(FILE* filenum, const char* fmt, ...) {
+    char buffer[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(buffer, fmt, args);
+    va_end(args);
+    OutputDebugStringA((buffer));
+}
+#define LOG_FN debugMessage
+#else
+#define LOG_FUNCTION fprintf
+#endif
+
+#define NGFX_LOG(fmt, ...) LOG_FN(stderr, fmt "\n", ##__VA_ARGS__)
+#define NGFX_ERR(fmt, ...)                                                     \
+  {                                                                            \
+    LOG_FN(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                 \
+            __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
+    ::DebugUtil::Exit(1);                                                      \
+  }
 #define NGFX_LOG_TRACE(fmt, ...)                                               \
   NGFX_LOG("[%s][%s][%d] " fmt, __FILE__, __PRETTY_FUNCTION__, __LINE__,       \
            ##__VA_ARGS__)
 #define NGFX_TODO(fmt, ...)                                                    \
   NGFX_LOG("[%s][%s][%d] TODO: " fmt, __FILE__, __FUNCTION__, __LINE__,        \
            ##__VA_ARGS__)
-#include <cstdint>
+
 struct DebugUtil {
   static inline void Exit(uint32_t code) {
       exit(code);
   };
 };
-#define NGFX_ERR(fmt, ...)                                                     \
-  {                                                                            \
-    fprintf(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                 \
-            __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
-    ::DebugUtil::Exit(1);                                                      \
-  }
+
