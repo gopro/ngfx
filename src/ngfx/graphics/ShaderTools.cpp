@@ -282,7 +282,9 @@ int ShaderTools::compileShaderHLSL(const string &file,
       shaderModel = "ps_5_0";
   else if (strstr(inFileName.c_str(), ".comp") || strstr(inFileName.c_str(), "_compute"))
       shaderModel = "cs_5_0";
-  int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " -D DIRECT3D12 " +
+  const char* dxc_path_env = getenv("DXC_PATH");
+  string dxc_path = dxc_path_env ? std::string(dxc_path_env) : "dxc.exe";
+  int result = cmd(dxc_path +" /T " + shaderModel + " /Fo " + outFileName + " - D DIRECT3D12 " +
                    inFileName + " -Zi -Fc " + outFileName + ".info");
   if (flags & PATCH_SHADER_LAYOUTS_HLSL) {
       fs::remove(inFileName);
