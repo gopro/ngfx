@@ -806,6 +806,7 @@ string HLSLReflector::parseDescriptorType(const string& type) {
         return "DESCRIPTOR_TYPE_STORAGE_BUFFER";
     else {
         NGFX_ERR("unknown descriptor type: %s", type.c_str());
+        return "";
     }
 }
 
