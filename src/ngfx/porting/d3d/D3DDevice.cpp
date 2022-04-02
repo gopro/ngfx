@@ -22,6 +22,7 @@
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DFence.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
+#include "ngfx/core/StringUtil.h"
 using namespace ngfx;
 
 void D3DDevice::create(D3DGraphicsContext *ctx) {
@@ -37,6 +38,13 @@ void D3DDevice::create(D3DGraphicsContext *ctx) {
     hardwareAdapter->GetDesc1(&desc);
     if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
       continue;
+
+    const char* gpu_filter_env = getenv("GPU_FILTER");
+    std::wstring gpu_filter = gpu_filter_env ? StringUtil::toWString(gpu_filter_env) : L"";
+    //Skip GPUs not matching user filter
+    if (wcsstr(desc.Description, gpu_filter.c_str()) == nullptr)
+        continue;
+
     // Check to see if the adapter supports Direct3D 12
     if (SUCCEEDED(D3D12CreateDevice(hardwareAdapter.Get(),
                                     D3D_FEATURE_LEVEL_11_0,
