@@ -176,33 +176,67 @@ Install CMake 3.19.1 (or newer)
 - spirv-cross 2021-01-15 (or newer)
 - vulkan sdk 1.2.162.1 (or newer, if using Vulkan backend)
 
-We provide a helper script to help install 3rd-party dependencies
+We provide a helper script to install these 3rd-party dependencies.  Run from the root directory of the repository:
 
-`OS=*os* python build_scripts/install_deps.py`
+**Mac (using zsh or bash):**
+```
+export OS=Darwin
+python .\build_scripts\install_deps.py
+```
 
-- *os*: Windows, Linux, or Darwin (Mac OS)
+Linux:
+```
+export OS=Linux
+python .\build_scripts\install_deps.py
+```
+
+Windows (Powershell Core version 7.1.3 or newer):
+```
+$env:OS="Windows"
+.\build_scripts\windows\msvc-env.ps1 &&
+.\build_scripts\windows\set_env.ps1 &&
+python .\build_scripts\install_deps.py
+```
 
 **2) Configure**
 
-`cmake.exe -H. -B*build_folder* -DCMAKE_BUILD_TYPE=*build_type* -D*ngfx_graphics_backend*=ON -G *cmake_generator*`
+We provide a helper script to configure:
 
-- *build_folder*: the build output folder 
+**Mac (using zsh or bash):**
+```
+export OS=Darwin
+python build_scripts/configure.py
+```
+
+Linux:
+```
+export OS=Linux
+python python build_scripts/configure.py
+```
+
+Windows (Powershell Core version 7.1.3 or newer):
+```
+$env:OS="Windows"
+python build_scripts/configure.py
+```
+
+Manually:
+
+`cmake.exe -B <build_folder> -D CMAKE_BUILD_TYPE=<build_type> -D <ngfx_graphics_backend>=ON -G <cmake_generator>`
+
+Where:
+- build_folder:  The build output folder 
 (e.g. cmake-build-debug, or cmake-build-release)
-- *build type*: Debug or Release
-- *ngfx_graphics_backend*: the graphics backend 
+- build_type:  Debug or Release
+- gfx_graphics_backen:  The graphics backend 
 (NGFX_GRAPHICS_BACKEND_VULKAN, NGFX_GRAPHICS_BACKEND_METAL, or 
 NGFX_GRAPHICS_BACKEND_DIRECT3D12)
-- *cmake_generator*: CMake generator (e.g. Visual Studio 16 2019)
+- cmake_generator:  CMake generator (e.g. Visual Studio 16 2019)
 
 Example:
 
-`cmake.exe -H. -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DNGFX_GRAPHICS_BACKEND_DIRECT3D12=ON`
+`cmake.exe -H. -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DNGFX_GRAPHICS_BACKEND_DIRECT3D12=ON` -C "Visual Studio 16 2019"
 
-We provide a helper script to configure
-
-`OS=*os* python build_scripts/configure.py`
-
-- *os*: Windows, Linux, or Darwin (Mac OS)
 
 **3) Build**
 
@@ -210,7 +244,7 @@ From command line:
 
 `cmake.exe --build *build_folder*`
 
-Alternatively, can build from IDE
+Alternatively, you can build from an IDE.
 
 We provide a helper script to build
 
