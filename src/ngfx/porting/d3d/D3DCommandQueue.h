@@ -21,6 +21,7 @@
 #pragma once
 #include "ngfx/graphics/Queue.h"
 #include "ngfx/porting/d3d/D3DUtil.h"
+#include "ngfx/porting/d3d/D3DFence.h"
 
 namespace ngfx {
 class D3DGraphicsContext;
@@ -29,6 +30,7 @@ public:
   void create(D3DGraphicsContext *ctx);
   virtual ~D3DCommandQueue() {}
   void present() override;
+  void signal(D3DFence* fence, D3DFence::Value value = D3DFence::Value::SIGNALED);
   void submit(CommandBuffer *commandBuffer) override;
   void submit(ID3D12CommandList *commandList, ID3D12Fence *fence);
   void waitIdle() override;

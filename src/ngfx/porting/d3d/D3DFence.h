@@ -29,6 +29,7 @@ public:
   void create(ID3D12Device *device, Value initialValue = UNSIGNALED);
   virtual ~D3DFence() {}
   void wait() override;
+  bool isSignaled();
   void reset() override;
   ComPtr<ID3D12Fence> v;
   HANDLE fenceEvent;

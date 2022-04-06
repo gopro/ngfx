@@ -39,6 +39,8 @@ public:
   virtual ~Fence() {}
   /** Wait for the fence to be signaled by the GPU */
   virtual void wait() = 0;
+  /** Poll to see if the fence has been signaled by the GPU */
+  virtual bool isSignaled() = 0;
   /** Reset the fence */
   virtual void reset() = 0;
 };

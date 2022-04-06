@@ -20,7 +20,14 @@
  */
 #include "ngfx/porting/d3d/D3DFence.h"
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
+#include "ngfx/porting/d3d/D3DDevice.h"
 using namespace ngfx;
+
+Fence* Fence::create(Device* device, FenceCreateFlags flags) {
+    auto d3dFence = new D3DFence();
+    d3dFence->create(d3d(device)->v.Get(), D3DFence::Value(flags) );
+    return d3dFence;
+}
 
 void D3DFence::create(ID3D12Device *device, Value initialValue) {
   HRESULT hResult;
@@ -34,6 +41,10 @@ void D3DFence::wait() {
     return;
   V(v->SetEventOnCompletion(SIGNALED, fenceEvent));
   D3D_TRACE(WaitForSingleObjectEx(fenceEvent, INFINITE, FALSE));
+}
+
+bool D3DFence::isSignaled() {
+    return (v->GetCompletedValue() == SIGNALED);
 }
 
 void D3DFence::reset() {

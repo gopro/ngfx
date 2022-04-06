@@ -51,6 +51,10 @@ void D3DCommandQueue::submit(ID3D12CommandList *commandList,
   if (fence)
     V(v->Signal(fence, D3DFence::SIGNALED));
 }
+void D3DCommandQueue::signal(D3DFence* fence, D3DFence::Value value) {
+    HRESULT hResult;
+    V(v->Signal(fence->v.Get(), value));
+}
 void D3DCommandQueue::waitIdle() {
   HRESULT hResult;
   D3DFence fence;
