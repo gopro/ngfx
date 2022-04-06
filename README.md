@@ -144,23 +144,23 @@ hardware-accelerated neural network computation.
 
 1.1) Install Platform-Specific Dependencies
 
-*On Windows 10 (or newer):*
+*Windows 10 (or newer):*
 
-  Install Microsoft Visual Studio 2019 (or newer)
+- Install Microsoft Visual Studio 2019 (or newer)
+- Install PowerShell Core version 7.1.3 (or newer)
+- Install Ninja build latest release (https://github.com/ninja-build/ninja/releases) **NOTE:** If there are other apps called ninja on your system that are in your PATH, you will need to put this one before it in PATH while building.
 
-  Install PowerShell Core version 7.1.3 (or newer)
+*Linux (Ubuntu 20.04.1 or newer, other Linux distros should work too):*
 
-*On Linux (Ubuntu 20.04.1 or newer, other Linux distros should work too):*
+- Install GNU Toolchain (apt install build-essential)
 
-  Install GNU Toolchain (apt install build-essential)
+*macOS:*
 
-*On Mac:*
-
-  Install XCode
+- Install XCode
 
 1.2) Install Common System Dependencies
 
-Install CMake 3.19.1 (or newer)
+- Install CMake 3.19.1 (or newer)
 
 1.3) Install Third-Party Dependencies
 
@@ -178,19 +178,17 @@ Install CMake 3.19.1 (or newer)
 
 We provide a helper script to install these 3rd-party dependencies.  Run from the root directory of the repository:
 
-**Mac (using zsh or bash):**
+*Mac (using zsh or bash):*
 ```
-export OS=Darwin
-python .\build_scripts\install_deps.py
-```
-
-Linux:
-```
-export OS=Linux
-python .\build_scripts\install_deps.py
+export OS=Darwin; python .\build_scripts\install_deps.py
 ```
 
-Windows (Powershell Core version 7.1.3 or newer):
+*Linux:*
+```
+export OS=Linux; python .\build_scripts\install_deps.py
+```
+
+*Windows (Powershell Core version 7.1.3 or newer):*
 ```
 $env:OS="Windows"
 .\build_scripts\windows\msvc-env.ps1 &&
@@ -200,70 +198,98 @@ python .\build_scripts\install_deps.py
 
 **2) Configure**
 
-We provide a helper script to configure:
+We provide a helper script to configure. Run from the root directory of the repository:
 
-**Mac (using zsh or bash):**
+*Mac (using zsh or bash):*
 ```
-export OS=Darwin
-python build_scripts/configure.py
-```
-
-Linux:
-```
-export OS=Linux
-python python build_scripts/configure.py
+export OS=Darwin; python build_scripts/configure.py
 ```
 
-Windows (Powershell Core version 7.1.3 or newer):
+*Linux:*
+```
+export OS=Linux; python build_scripts/configure.py
+```
+
+*Windows (Powershell Core version 7.1.3 or newer):*
 ```
 $env:OS="Windows"
 python build_scripts/configure.py
 ```
 
-Manually:
+*From command line*
 
-`cmake.exe -B <build_folder> -D CMAKE_BUILD_TYPE=<build_type> -D <ngfx_graphics_backend>=ON -G <cmake_generator>`
+```
+cmake.exe -B <build_folder> -D CMAKE_BUILD_TYPE=<build_type> -D <ngfx_graphics_backend>=ON -G <cmake_generator>
+```
 
 Where:
-- build_folder:  The build output folder 
+- \<build_folder>:  The build output folder 
 (e.g. cmake-build-debug, or cmake-build-release)
-- build_type:  Debug or Release
-- gfx_graphics_backen:  The graphics backend 
+- \<build_type>:  Debug or Release
+- \<gfx_graphics_backend>:  The graphics backend 
 (NGFX_GRAPHICS_BACKEND_VULKAN, NGFX_GRAPHICS_BACKEND_METAL, or 
 NGFX_GRAPHICS_BACKEND_DIRECT3D12)
-- cmake_generator:  CMake generator (e.g. Visual Studio 16 2019)
+- \<cmake_generator>:  CMake generator (e.g. "Visual Studio 16 2019")
 
-Example:
-
-`cmake.exe -H. -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DNGFX_GRAPHICS_BACKEND_DIRECT3D12=ON` -C "Visual Studio 16 2019"
+```
+cmake.exe -Bcmake-build-debug -DCMAKE_BUILD_TYPE=Debug -DNGFX_GRAPHICS_BACKEND_DIRECT3D12=ON -C "Visual Studio 16 2019"
+```
 
 
 **3) Build**
 
-From command line: 
+We provide helper a helper script to build. Run from the root directory of the repository:
 
-`cmake.exe --build *build_folder*`
+*Mac (using zsh or bash):*
+```
+export OS=Darwin; python build_scripts/build.py
+```
 
-Alternatively, you can build from an IDE.
+*Linux:*
+```
+export OS=Linux; python build_scripts/build.py
+```
 
-We provide a helper script to build
+*Windows (Powershell Core version 7.1.3 or newer):*
+```
+$env:OS="Windows"
+python build_scripts/build.py
+```
 
-`OS=*os* python build_scripts/build.py`
+*From command line:*
 
-- *os*: Windows, Linux, or Darwin (Mac OS)
+```
+cmake.exe --build <build_folder>
+```
+
+Alternatively, you can build using an IDE.
+
 
 **4) Install**
 
-`cmake.exe --install *build_folder* --config *build_type*`
+We provide helper a helper script to install. Run from the root directory of the repository:
 
-We provide a helper script to build
+*Mac (using zsh or bash):*
+```
+export OS=Darwin; python build_scripts/install.py
+```
 
-`OS=*os* python build_scripts/install.py`
+*Linux:*
+```
+export OS=Linux; python build_scripts/install.py
+```
 
-- *os*: Windows, Linux, or Darwin (Mac OS)
+*Windows (Powershell Core version 7.1.3 or newer):*
+```
+$env:OS="Windows"
+python build_scripts/install.py
+```
 
+*From command line:*
+```
+cmake.exe --install <build_folder> --config <build_type>
+```
 ---
-
 ## API Documentation
 
 <https://gopro.github.io/ngfx/api/Classes/>
