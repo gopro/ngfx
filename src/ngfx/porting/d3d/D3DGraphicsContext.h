@@ -58,7 +58,7 @@ public:
   D3DDescriptorHeap d3dRtvDescriptorHeap, d3dCbvSrvUavDescriptorHeap,
       d3dSamplerDescriptorHeap, d3dDsvDescriptorHeap;
   D3DPipelineCache d3dPipelineCache;
-  D3DSwapchain d3dSwapchain;
+  std::unique_ptr<D3DSwapchain> d3dSwapchain;
   std::vector<D3DCommandList> d3dDrawCommandLists;
   D3DCommandList d3dCopyCommandList, d3dComputeCommandList;
   D3DRenderPass *d3dDefaultRenderPass = nullptr,

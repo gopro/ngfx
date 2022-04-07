@@ -73,9 +73,10 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
   defaultOffscreenSurfaceFormat = PIXELFORMAT_RGBA8_UNORM;
   if (surface && !surface->offscreen) {
     offscreen = false;
-    d3dSwapchain.create(this, d3d(surface));
+    d3dSwapchain = make_unique<D3DSwapchain>();
+    d3dSwapchain->create(this, d3d(surface));
     surfaceFormat = PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM);
-    numDrawCommandBuffers = d3dSwapchain.numImages;
+    numDrawCommandBuffers = d3dSwapchain->numImages;
   } else {
     offscreen = true;
     numDrawCommandBuffers = 1;
@@ -162,11 +163,11 @@ void D3DGraphicsContext::createFences(ID3D12Device *device) {
 
 void D3DGraphicsContext::createSwapchainFramebuffers(int w, int h) {
   // Create frame buffers for every swap chain image
-  d3dSwapchainFramebuffers.resize(d3dSwapchain.numImages);
+  d3dSwapchainFramebuffers.resize(d3dSwapchain->numImages);
   for (uint32_t i = 0; i < d3dSwapchainFramebuffers.size(); i++) {
     // TODO: add support for MSAA
     std::vector<D3DFramebuffer::D3DAttachment> attachments(enableDepthStencil ? 2 : 1);
-    attachments[0].createFromSwapchainImage(&d3dSwapchain, i);
+    attachments[0].createFromSwapchainImage(d3dSwapchain.get(), i);
     if (enableDepthStencil) {
         attachments[1].createFromDepthStencilAttachment(d3dDepthStencilView.get());
     }
@@ -194,7 +195,7 @@ void D3DGraphicsContext::createBindings() {
   defaultRenderPass =
       offscreen ? d3dDefaultOffscreenRenderPass : d3dDefaultRenderPass;
   defaultOffscreenRenderPass = d3dDefaultOffscreenRenderPass;
-  swapchain = &d3dSwapchain;
+  swapchain = d3dSwapchain.get();
   frameFences.resize(d3dWaitFences.size());
   for (int j = 0; j < d3dWaitFences.size(); j++)
     frameFences[j] = &d3dWaitFences[j];

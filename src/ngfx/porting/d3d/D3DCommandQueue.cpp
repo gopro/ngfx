@@ -33,7 +33,7 @@ void D3DCommandQueue::create(D3DGraphicsContext *ctx) {
                                         D3D12_COMMAND_LIST_TYPE_DIRECT};
   V(d3dDevice->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&v)));
 }
-void D3DCommandQueue::present() { ctx->d3dSwapchain.present(); }
+void D3DCommandQueue::present() { ctx->d3dSwapchain->present(); }
 void D3DCommandQueue::submit(CommandBuffer *commandBuffer) {
   ID3D12CommandList *d3dCommandList = d3d(commandBuffer)->v.Get();
   ID3D12Fence *fence = nullptr;
