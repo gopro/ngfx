@@ -20,6 +20,7 @@
  */
 #include "ngfx/porting/d3d/D3DCommandList.h"
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
+#include "ngfx/porting/d3d/D3DGraphicsContext.h"
 using namespace ngfx;
 
 void D3DCommandList::create(ID3D12Device *device,
@@ -40,4 +41,10 @@ void D3DCommandList::begin() {
 void D3DCommandList::end() {
   HRESULT hResult;
   V(v->Close());
+}
+
+CommandBuffer* CommandBuffer::create(GraphicsContext* ctx, CommandBufferLevel level) {
+    D3DCommandList* d3dCommandList = new D3DCommandList();
+    d3dCommandList->create(d3d(ctx)->d3dDevice.v.Get(), D3D12_COMMAND_LIST_TYPE(level));
+    return d3dCommandList;
 }
