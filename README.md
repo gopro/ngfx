@@ -175,6 +175,7 @@ hardware-accelerated neural network computation.
 - shaderc v2020.4 (or newer)
 - spirv-cross 2021-01-15 (or newer)
 - vulkan sdk 1.2.162.1 (or newer, if using Vulkan backend)
+- meson 0.61.4 or newer (used by 3rd party dependencies, not by ngfx directly)
 
 We provide a helper script to install these 3rd-party dependencies.  Run from the root directory of the repository:
 
