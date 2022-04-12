@@ -7,6 +7,24 @@
 using namespace ngfx;
 using namespace std;
 
+DXGI_FORMAT D3DTexture::getViewFormat(DXGI_FORMAT resourceFormat, uint32_t planeIndex) {
+    DXGI_FORMAT format;
+    switch (resourceFormat) {
+    case DXGI_FORMAT_R16_TYPELESS:
+        format = DXGI_FORMAT_R16_UNORM;
+        break;
+    case DXGI_FORMAT_R24G8_TYPELESS:
+        format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+        break;
+    case DXGI_FORMAT_NV12:
+        format = (planeIndex == 0) ? DXGI_FORMAT_R8_UNORM : DXGI_FORMAT_R8G8_UNORM;
+        break;
+    default:
+        format = resourceFormat;
+    }
+    return format;
+}
+
 void D3DTexture::getResourceDesc() {
     resourceFlags = D3D12_RESOURCE_FLAG_NONE;
     if (imageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
@@ -83,6 +101,7 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     numSubresources = numPlanes * arrayLayers * mipLevels;
     currentResourceState.resize(numSubresources);
     defaultSrvDescriptor.resize(numPlanes);
+    defaultRtvDescriptor.resize(numPlanes);
     planeWidth.resize(numPlanes);
     planeHeight.resize(numPlanes);
     planeSize.resize(numPlanes);
@@ -112,7 +131,8 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     }
 
     if (isRenderTarget) {
-        defaultRtvDescriptor = getRtvDescriptor();
+        for (uint32_t j = 0; j < numPlanes; j++)
+            defaultRtvDescriptor[j] = getRtvDescriptor(0, 0, 1, j);
     }
 
     if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
@@ -173,7 +193,8 @@ void D3DTexture::createFromHandle(D3DGraphicsContext* ctx, D3DGraphics* graphics
     }
 
     if (isRenderTarget) {
-        defaultRtvDescriptor = getRtvDescriptor();
+        for (uint32_t j = 0; j < numPlanes; j++)
+            defaultRtvDescriptor[j] = getRtvDescriptor(0, 0, 1, j);
     }
 
     if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
@@ -225,14 +246,7 @@ D3DDescriptorHandle D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
     // Create shader resource view
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = resourceDesc.Format;
-    if (srvDesc.Format == DXGI_FORMAT_R16_TYPELESS)
-        srvDesc.Format = DXGI_FORMAT_R16_UNORM;
-    else if (srvDesc.Format == DXGI_FORMAT_R24G8_TYPELESS)
-        srvDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-    else if (srvDesc.Format == DXGI_FORMAT_NV12) {
-        srvDesc.Format = (plane == 0) ? DXGI_FORMAT_R8_UNORM : DXGI_FORMAT_R8G8_UNORM;
-    }
+    srvDesc.Format = getViewFormat(resourceDesc.Format, plane);
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION(textureType);
     if (textureType == TEXTURE_TYPE_2D) {
         srvDesc.Texture2D.MostDetailedMip = baseMipLevel;
@@ -300,10 +314,10 @@ D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel) {
 }
 
 D3D12_RENDER_TARGET_VIEW_DESC
-getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples,
-    uint32_t level, uint32_t baseLayer, uint32_t layerCount) {
+D3DTexture::getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples,
+    uint32_t level, uint32_t baseLayer, uint32_t layerCount, uint32_t plane) {
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-    rtvDesc.Format = DXGI_FORMAT(format);
+    rtvDesc.Format = getViewFormat(format, plane);
     if (textureType == TEXTURE_TYPE_2D) {
         if (numSamples > 1) {
             rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DMS;
@@ -335,7 +349,8 @@ getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples,
 }
 D3DDescriptorHandle D3DTexture::getRtvDescriptor(uint32_t level,
     uint32_t baseLayer,
-    uint32_t layerCount) {
+    uint32_t layerCount,
+    uint32_t planeIndex) {
     for (auto& rtvData : rtvDescriptorCache) {
         if (textureType == TEXTURE_TYPE_2D && numSamples > 1)
             return rtvData.handle;
@@ -363,7 +378,7 @@ D3DDescriptorHandle D3DTexture::getRtvDescriptor(uint32_t level,
     auto d3dDevice = ctx->d3dDevice.v.Get();
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc =
         getRtvDesc(textureType, DXGI_FORMAT(format), numSamples, level, baseLayer,
-            layerCount);
+            layerCount, planeIndex);
     D3D_TRACE(d3dDevice->CreateRenderTargetView(
         v.Get(), &rtvDesc, rtvDescriptorHeap->handle.cpuHandle));
     RtvData rtvData;

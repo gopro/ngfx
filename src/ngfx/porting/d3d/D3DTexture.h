@@ -62,7 +62,8 @@ public:
   ComPtr<ID3D12Resource> v;
   D3DDescriptorHandle getRtvDescriptor(uint32_t level = 0,
                                        uint32_t baseLayer = 0,
-                                       uint32_t layerCount = 1);
+                                       uint32_t layerCount = 1,
+                                       uint32_t plane = 0);
   D3DSampler* getSampler(D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_MIP_POINT);
   D3DDescriptorHandle getSrvDescriptor(uint32_t baseMipLevel,
                                        uint32_t numMipLevels, uint32_t plane = 0);
@@ -76,8 +77,8 @@ public:
   std::vector<std::unique_ptr<D3DSampler>> samplerCache;
   std::vector<D3DDescriptorHandle> defaultSrvDescriptor;
   uint32_t numPlanes = 1;
-  D3DDescriptorHandle defaultRtvDescriptor{},
-      defaultUavDescriptor{},
+  std::vector<D3DDescriptorHandle> defaultRtvDescriptor;
+  D3DDescriptorHandle defaultUavDescriptor{},
       dsvDescriptor{};
   D3DSampler *defaultSampler = nullptr;
   
@@ -111,6 +112,10 @@ private:
                 int32_t arrayLayers = -1, int32_t numPlanes = -1,
                 int32_t dataPitch = -1);
   void generateMipmapsFn(D3DCommandList *cmdList);
+  DXGI_FORMAT getViewFormat(DXGI_FORMAT resourceFormat, uint32_t planeIndex = 0);
+  D3D12_RENDER_TARGET_VIEW_DESC
+      getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples,
+          uint32_t level, uint32_t baseLayer, uint32_t layerCount, uint32_t plane);
   D3DGraphicsContext *ctx = nullptr;
   D3DGraphics *graphics = nullptr;
   ID3D12Device* d3dDevice = nullptr;
