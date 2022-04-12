@@ -177,7 +177,7 @@ void D3DGraphicsContext::createSwapchainFramebuffers(int w, int h) {
 
 CommandBuffer *D3DGraphicsContext::drawCommandBuffer(int32_t index) {
   if (index == -1)
-    index = std::max(currentImageIndex, 0);
+    index = currentImageIndex;
   return &d3dDrawCommandLists[index];
 }
 
