@@ -67,7 +67,7 @@ public:
   D3DSampler* getSampler(D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_MIP_POINT);
   D3DDescriptorHandle getSrvDescriptor(uint32_t baseMipLevel,
                                        uint32_t numMipLevels, uint32_t plane = 0);
-  D3DDescriptorHandle getUavDescriptor(uint32_t mipLevel);
+  D3DDescriptorHandle getUavDescriptor(uint32_t mipLevel, uint32_t plane = 0);
   void setName(const std::string& name) override;
   struct RtvData {
     D3D12_RENDER_TARGET_VIEW_DESC desc;
@@ -78,8 +78,8 @@ public:
   std::vector<D3DDescriptorHandle> defaultSrvDescriptor;
   uint32_t numPlanes = 1;
   std::vector<D3DDescriptorHandle> defaultRtvDescriptor;
-  D3DDescriptorHandle defaultUavDescriptor{},
-      dsvDescriptor{};
+  std::vector<D3DDescriptorHandle> defaultUavDescriptor;
+  D3DDescriptorHandle dsvDescriptor{};
   D3DSampler *defaultSampler = nullptr;
   
   struct SrvData {

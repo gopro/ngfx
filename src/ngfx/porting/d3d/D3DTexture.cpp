@@ -102,6 +102,7 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     currentResourceState.resize(numSubresources);
     defaultSrvDescriptor.resize(numPlanes);
     defaultRtvDescriptor.resize(numPlanes);
+    defaultUavDescriptor.resize(numPlanes);
     planeWidth.resize(numPlanes);
     planeHeight.resize(numPlanes);
     planeSize.resize(numPlanes);
@@ -127,7 +128,9 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
             defaultSampler = getSampler(samplerDesc->Filter);
     }
     if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT) {
-        defaultUavDescriptor = getUavDescriptor(0);
+        for (uint32_t j = 0; j < numPlanes; j++) {
+            defaultUavDescriptor[j] = getUavDescriptor(0, j);
+        }
     }
 
     if (isRenderTarget) {
@@ -189,7 +192,9 @@ void D3DTexture::createFromHandle(D3DGraphicsContext* ctx, D3DGraphics* graphics
             defaultSampler = getSampler(samplerDesc->Filter);
     }
     if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT) {
-        defaultUavDescriptor = getUavDescriptor(0);
+        for (uint32_t j = 0; j < numPlanes; j++) {
+            defaultUavDescriptor[j] = getUavDescriptor(0, j);
+        }
     }
 
     if (isRenderTarget) {
@@ -279,7 +284,7 @@ D3DDescriptorHandle D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
     return result;
 }
 
-D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel) {
+D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel, uint32_t plane) {
     for (auto& uavData : uavDescriptorCache) {
         if (textureType == TEXTURE_TYPE_2D &&
             uavData.desc.Texture2D.MipSlice == mipLevel)
@@ -287,7 +292,7 @@ D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel) {
     }
     // Create an unordered access view
     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
-    uavDesc.Format = DXGI_FORMAT(format);
+    uavDesc.Format = getViewFormat(resourceDesc.Format, plane);
     if (textureType == TEXTURE_TYPE_CUBE) {
         uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
         uavDesc.Texture2DArray.ArraySize = 6;
