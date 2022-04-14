@@ -33,7 +33,6 @@ string StringUtil::toLower(const string &str) {
 }
 
 std::wstring StringUtil::toWString(const std::string &str) {
-  std::wstring target;
   std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
   return converter.from_bytes(str);
 }
