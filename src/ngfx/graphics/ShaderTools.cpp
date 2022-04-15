@@ -277,15 +277,15 @@ int ShaderTools::compileShaderHLSL(const string &file,
 
   string shaderModel = "";
   if (strstr(inFileName.c_str(), ".vert") || strstr(inFileName.c_str(), "_vertex"))
-      shaderModel = "vs_5_0";
+      shaderModel = "vs_6_0";
   else if (strstr(inFileName.c_str(), ".frag") || strstr(inFileName.c_str(), "_fragment"))
-      shaderModel = "ps_5_0";
+      shaderModel = "ps_6_0";
   else if (strstr(inFileName.c_str(), ".comp") || strstr(inFileName.c_str(), "_compute"))
-      shaderModel = "cs_5_0";
+      shaderModel = "cs_6_0";
   const char* dxc_path_env = getenv("DXC_PATH");
   string dxc_path = dxc_path_env ? std::string(dxc_path_env) : "dxc.exe";
   int result = cmd(dxc_path +" /T " + shaderModel + " /Fo " + outFileName + " - D DIRECT3D12 " +
-                   inFileName + " -Zi -Fc " + outFileName + ".info");
+                   inFileName + " -O3 -Fc " + outFileName + ".info");
   if (flags & PATCH_SHADER_LAYOUTS_HLSL) {
       fs::remove(inFileName);
   }
