@@ -30,7 +30,7 @@ D3DSamplerDesc::D3DSamplerDesc(const SamplerDesc* samplerDesc) {
         AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
     }
     MipLODBias = 0;
-    MaxAnisotropy = 0;
+    MaxAnisotropy = D3D12_MAX_MAXANISOTROPY;
     ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
     MinLOD = 0.0f;
     MaxLOD = D3D12_FLOAT32_MAX;
