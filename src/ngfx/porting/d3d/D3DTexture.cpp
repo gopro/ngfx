@@ -414,7 +414,7 @@ void D3DTexture::generateMipmapsFn(D3DCommandList* cmdList) {
 void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
     uint32_t z, int32_t w, int32_t h, int32_t d,
     int32_t arrayLayers, int32_t numPlanes, int32_t dataPitch) {
-    auto& copyCommandList = ctx->d3dCopyCommandList;
+    auto commandList = d3d(ctx->drawCommandBuffer());
     std::unique_ptr<D3DBuffer> stagingBuffer;
     if (w == -1)
         w = this->w;
@@ -434,31 +434,19 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
         stagingBuffer->create(ctx, nullptr, uint32_t(stagingBufferSize),
             D3D12_HEAP_TYPE_UPLOAD);
     }
-    copyCommandList.begin();
-    uploadFn(&copyCommandList, data, size, stagingBuffer.get(), x, y, z, w, h, d,
+    uploadFn(commandList, data, size, stagingBuffer.get(), x, y, z, w, h, d,
         arrayLayers, numPlanes, dataPitch);
     D3D12_RESOURCE_STATES resourceState =
         (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
         ? D3D12_RESOURCE_STATE_DEPTH_WRITE
-        : /*D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | */ //TODO: FIX
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+        : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE; //TODO: optimize
 
-    resourceBarrierTransition(&copyCommandList, resourceState);
-
-    copyCommandList.end();
-    ctx->d3dCommandQueue.submit(copyCommandList.v.Get(), nullptr);
-    ctx->d3dCommandQueue.waitIdle();
+    resourceBarrierTransition(commandList, resourceState);
 
     if (data && mipLevels != 1) {
-        D3DCommandList cmdList;
-        ComPtr<ID3D12CommandAllocator> cmdAllocator;
         auto d3dDevice = ctx->d3dDevice.v.Get();
-        cmdList.create(d3dDevice);
-        cmdList.begin();
-        generateMipmapsFn(&cmdList);
-        cmdList.end();
-        ctx->d3dCommandQueue.submit(cmdList.v.Get(), nullptr);
-        ctx->d3dCommandQueue.waitIdle();
+        generateMipmapsFn(commandList);
     }
 }
 
