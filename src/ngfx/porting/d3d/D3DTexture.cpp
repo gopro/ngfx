@@ -586,7 +586,6 @@ void D3DTexture::resourceBarrierTransition(D3DCommandList* cmdList,
         j0 = subresource;
         j1 = j0 + 1;
     }
-#if 0
     for (uint32_t j = j0; j < j1; j++) {
         if (currentResourceState[j] == newState)
             continue;
@@ -594,16 +593,6 @@ void D3DTexture::resourceBarrierTransition(D3DCommandList* cmdList,
             CD3DX12_RESOURCE_BARRIER::Transition(v.Get(), currentResourceState[j],
                 newState, j);
         D3D_TRACE(cmdList->v->ResourceBarrier(1, &resourceBarrier));
-        currentResourceState[j] = newState;
-    }
-#endif
-    if (currentResourceState[0] == newState)
-        return;
-    CD3DX12_RESOURCE_BARRIER resourceBarrier =
-        CD3DX12_RESOURCE_BARRIER::Transition(v.Get(), currentResourceState[0],
-            newState, subresource);
-    D3D_TRACE(cmdList->v->ResourceBarrier(1, &resourceBarrier));
-    for (uint32_t j = j0; j < j1; j++) {
         currentResourceState[j] = newState;
     }
 }
