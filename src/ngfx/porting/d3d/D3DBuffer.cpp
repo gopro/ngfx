@@ -37,8 +37,8 @@ void D3DBuffer::create(D3DGraphicsContext *ctx, const void *data, uint32_t size,
   if (bufferUsageFlags & BUFFER_USAGE_STORAGE_BUFFER_BIT)
     resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
   D3D12_RESOURCE_STATES initialResourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
-  if (bufferUsageFlags & BUFFER_USAGE_VERTEX_BUFFER_BIT || bufferUsageFlags & BUFFER_USAGE_UNIFORM_BUFFER_BIT)
-      initialResourceState = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+  //if (bufferUsageFlags & BUFFER_USAGE_VERTEX_BUFFER_BIT || bufferUsageFlags & BUFFER_USAGE_UNIFORM_BUFFER_BIT)
+  //    initialResourceState = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
   create(ctx, data, size, heapType, resourceFlags, initialResourceState);
 }
 
