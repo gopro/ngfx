@@ -23,6 +23,7 @@
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
 #include "ngfx/porting/d3d/D3DReadbackBuffer.h"
 #include "ngfx/core/StringUtil.h"
+#include "ngfx/core/Timer.h"
 #include <cassert>
 #include <d3dx12.h>
 using namespace ngfx;
@@ -65,7 +66,7 @@ void D3DBuffer::create(D3DGraphicsContext *ctx, const void *data, uint32_t size,
 
 D3DBuffer::~D3DBuffer() {
     if (uploadCommandList)
-        delete uploadCommandList;
+        deleteUploadCommandList();
     delete uploadFence;
     if (stagingBuffer)
         delete stagingBuffer;
@@ -119,8 +120,12 @@ void D3DBuffer::unmap() {
 }
 
 void D3DBuffer::deleteUploadCommandList() { //TODO: queue for delete
-    if (uploadFence)
+    if (uploadFence) {
+        Timer timer;
         uploadFence->wait();
+        timer.update();
+        //NGFX_LOG_TRACE("uploadFence->wait elapsed: %f", timer.elapsed);
+    }
     delete uploadCommandList;
 }
 

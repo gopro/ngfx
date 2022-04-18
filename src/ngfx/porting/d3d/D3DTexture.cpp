@@ -5,6 +5,7 @@
 #include "D3DFence.h"
 #include "D3DGraphicsContext.h"
 #include "ngfx/core/StringUtil.h"
+#include "ngfx/core/Timer.h"
 using namespace ngfx;
 using namespace std;
 
@@ -420,8 +421,12 @@ void D3DTexture::generateMipmapsFn(D3DCommandList* cmdList) {
 }
 
 void D3DTexture::deleteUploadCommandList() { //TODO: queue for delete
-    if (uploadFence)
+    if (uploadFence) {
+        Timer timer;
         uploadFence->wait();
+        timer.update();
+        //NGFX_LOG_TRACE("uploadFence->wait elapsed: %f", timer.elapsed);
+    }
     delete uploadCommandList;
 }
 
@@ -593,6 +598,8 @@ void D3DTexture::changeLayout(CommandBuffer *commandBuffer,
     case IMAGE_LAYOUT_UNORDERED_ACCESS:
         resourceState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
         break;
+    default:
+        NGFX_ERR("imageLayout: %d", imageLayout);
     };
     resourceBarrierTransition(d3d(commandBuffer), resourceState);
 }
