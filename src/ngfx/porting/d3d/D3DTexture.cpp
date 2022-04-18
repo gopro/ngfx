@@ -2,11 +2,19 @@
 #include "D3DBlitOp.h"
 #include "D3DBuffer.h"
 #include "D3DDebugUtil.h"
+#include "D3DFence.h"
 #include "D3DGraphicsContext.h"
 #include "ngfx/core/StringUtil.h"
 using namespace ngfx;
 using namespace std;
 
+D3DTexture::~D3DTexture() {
+    if (uploadCommandList)
+        deleteUploadCommandList();
+    delete uploadFence;
+    if (stagingBuffer)
+        delete stagingBuffer;
+}
 DXGI_FORMAT D3DTexture::getViewFormat(DXGI_FORMAT resourceFormat, uint32_t planeIndex) {
     DXGI_FORMAT format;
     switch (resourceFormat) {
@@ -411,11 +419,25 @@ void D3DTexture::generateMipmapsFn(D3DCommandList* cmdList) {
     }
 }
 
+void D3DTexture::deleteUploadCommandList() { //TODO: queue for delete
+    if (uploadFence)
+        uploadFence->wait();
+    delete uploadCommandList;
+}
+
 void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
     uint32_t z, int32_t w, int32_t h, int32_t d,
     int32_t arrayLayers, int32_t numPlanes, int32_t dataPitch) {
-    auto commandList = d3d(ctx->drawCommandBuffer());
-    std::unique_ptr<D3DBuffer> stagingBuffer;
+    if (uploadCommandList)
+        deleteUploadCommandList(); //TODO: queue for delete
+    uploadCommandList = new D3DCommandList();
+    if (uploadFence)
+        delete uploadFence;
+    uploadFence = new D3DFence();
+    uploadFence->create(ctx->d3dDevice.v.Get());
+    uploadCommandList->create(ctx->d3dDevice.v.Get());
+    auto commandList = uploadCommandList;
+    commandList->begin();
     if (w == -1)
         w = this->w;
     if (h == -1)
@@ -430,24 +452,28 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
         uint64_t stagingBufferSize;
         D3D_TRACE(stagingBufferSize =
             GetRequiredIntermediateSize(v.Get(), 0, arrayLayers * numPlanes));
-        stagingBuffer.reset(new D3DBuffer());
+        if (stagingBuffer) {
+            delete stagingBuffer;
+        }
+        stagingBuffer = new D3DBuffer(); //TODO: queue for delete
         stagingBuffer->create(ctx, nullptr, uint32_t(stagingBufferSize),
             D3D12_HEAP_TYPE_UPLOAD);
+        uploadFn(commandList, data, size, stagingBuffer, x, y, z, w, h, d,
+            arrayLayers, numPlanes, dataPitch);
     }
-    uploadFn(commandList, data, size, stagingBuffer.get(), x, y, z, w, h, d,
-        arrayLayers, numPlanes, dataPitch);
     D3D12_RESOURCE_STATES resourceState =
         (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
         ? D3D12_RESOURCE_STATE_DEPTH_WRITE
         : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE; //TODO: optimize
-
     resourceBarrierTransition(commandList, resourceState);
-
     if (data && mipLevels != 1) {
         auto d3dDevice = ctx->d3dDevice.v.Get();
         generateMipmapsFn(commandList);
     }
+    commandList->end();
+
+    ctx->d3dCommandQueue.submit(commandList->v.Get(), uploadFence->v.Get());
 }
 
 void D3DTexture::generateMipmaps(CommandBuffer* commandBuffer) {

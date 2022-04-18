@@ -26,6 +26,8 @@
 namespace ngfx {
 class D3DGraphicsContext;
 class D3DReadbackBuffer;
+class D3DCommandList;
+class D3DFence;
 
 class D3DBuffer : public Buffer {
 public:
@@ -52,6 +54,11 @@ protected:
   D3D12_RESOURCE_STATES initialResourceState, currentResourceState;
   D3DReadbackBuffer *d3dReadbackBuffer = nullptr;
   void *d3dReadBackBufferPtr = nullptr;
+  D3DBuffer *stagingBuffer = nullptr;
+  D3DCommandList *uploadCommandList = nullptr;
+  D3DFence* uploadFence = nullptr;
+private:
+  void deleteUploadCommandList();
 };
 D3D_CAST(Buffer);
 } // namespace ngfx

@@ -46,6 +46,7 @@ public:
               ImageUsageFlags usageFlags, TextureType textureType,
               uint32_t numSamples,
               const D3DSamplerDesc* samplerDesc = nullptr);
+  virtual ~D3DTexture();
   void upload(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
               uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
               int32_t arrayLayers = -1, int32_t numPlanes = -1,
@@ -116,6 +117,7 @@ private:
   D3D12_RENDER_TARGET_VIEW_DESC
       getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples,
           uint32_t level, uint32_t baseLayer, uint32_t layerCount, uint32_t plane);
+  void deleteUploadCommandList();
   D3DGraphicsContext *ctx = nullptr;
   D3DGraphics *graphics = nullptr;
   ID3D12Device* d3dDevice = nullptr;
@@ -123,6 +125,9 @@ private:
       std::vector<D3DBlitOp> ops;
   };
   std::unique_ptr<GenMipmapData> genMipmapData;
+  D3DBuffer* stagingBuffer = nullptr;
+  D3DCommandList* uploadCommandList = nullptr;
+  D3DFence *uploadFence = nullptr;
 };
 D3D_CAST(Texture);
 } // namespace ngfx
