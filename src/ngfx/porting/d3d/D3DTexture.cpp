@@ -455,8 +455,7 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
     D3D12_RESOURCE_STATES resourceState =
         (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
         ? D3D12_RESOURCE_STATE_DEPTH_WRITE
-        : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE; //TODO: optimize
+        : D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE; //TODO: optimize
     resourceBarrierTransition(commandList, resourceState);
     if (data && mipLevels != 1) {
         auto d3dDevice = ctx->d3dDevice.v.Get();
@@ -556,8 +555,7 @@ void D3DTexture::downloadFn(D3DCommandList* cmdList,
     D3D12_RESOURCE_STATES resourceState =
         (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
         ? D3D12_RESOURCE_STATE_DEPTH_WRITE
-        : D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE | 
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+        : D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
     resourceBarrierTransition(cmdList, resourceState);
     for (auto& s : currentResourceState)
         s = resourceState;
@@ -574,8 +572,7 @@ void D3DTexture::changeLayout(CommandBuffer *commandBuffer,
         resourceState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
         break;
     case IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
-        resourceState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
-            D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+        resourceState = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
         break;
     case IMAGE_LAYOUT_GENERAL:
         resourceState = D3D12_RESOURCE_STATE_COMMON;
