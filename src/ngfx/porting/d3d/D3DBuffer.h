@@ -55,10 +55,6 @@ protected:
   D3DReadbackBuffer *d3dReadbackBuffer = nullptr;
   void *d3dReadBackBufferPtr = nullptr;
   D3DBuffer *stagingBuffer = nullptr;
-  D3DCommandList *uploadCommandList = nullptr;
-  D3DFence* uploadFence = nullptr;
-private:
-  void deleteUploadCommandList();
 };
 D3D_CAST(Buffer);
 } // namespace ngfx

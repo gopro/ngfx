@@ -35,9 +35,11 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   depthFormat = PIXELFORMAT_D16_UNORM;
   UINT dxgiFactoryFlags = 0;
   if (debug) {
-    ComPtr<ID3D12Debug> debugController;
+    ComPtr<ID3D12Debug1> debugController;
     V(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
     debugController->EnableDebugLayer();
+    //debugController->SetEnableGPUBasedValidation(true);
+
     // Enable additional debug layers.
     dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
   }
@@ -154,10 +156,11 @@ void D3DGraphicsContext::createRenderPass(const RenderPassConfig &config,
 }
 
 void D3DGraphicsContext::createFences(ID3D12Device *device) {
-  d3dWaitFences.resize(numDrawCommandBuffers);
-  for (auto &fence : d3dWaitFences) {
+  d3dDrawWaitFences.resize(numDrawCommandBuffers);
+  for (auto &fence : d3dDrawWaitFences) {
     fence.create(device, D3DFence::SIGNALED);
   }
+  d3dCopyFence.create(device, D3DFence::SIGNALED);
   d3dComputeFence.create(device);
 }
 
@@ -196,9 +199,9 @@ void D3DGraphicsContext::createBindings() {
       offscreen ? d3dDefaultOffscreenRenderPass : d3dDefaultRenderPass;
   defaultOffscreenRenderPass = d3dDefaultOffscreenRenderPass;
   swapchain = d3dSwapchain.get();
-  frameFences.resize(d3dWaitFences.size());
-  for (int j = 0; j < d3dWaitFences.size(); j++)
-    frameFences[j] = &d3dWaitFences[j];
+  frameFences.resize(d3dDrawWaitFences.size());
+  for (int j = 0; j < d3dDrawWaitFences.size(); j++)
+    frameFences[j] = &d3dDrawWaitFences[j];
   swapchainFramebuffers.resize(d3dSwapchainFramebuffers.size());
   for (int j = 0; j < d3dSwapchainFramebuffers.size(); j++)
     swapchainFramebuffers[j] = &d3dSwapchainFramebuffers[j];

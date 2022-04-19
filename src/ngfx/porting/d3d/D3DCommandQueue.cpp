@@ -39,8 +39,9 @@ void D3DCommandQueue::submit(CommandBuffer *commandBuffer) {
   ID3D12Fence *fence = nullptr;
   if (d3dCommandList == ctx->d3dCopyCommandList.v.Get()) {
   } else if (d3dCommandList == ctx->d3dComputeCommandList.v.Get()) {
+      fence = ctx->d3dCopyFence.v.Get();
   } else {
-    fence = ctx->d3dWaitFences[std::max(ctx->currentImageIndex, 0)].v.Get();
+    fence = ctx->d3dDrawWaitFences[std::max(ctx->currentImageIndex, 0)].v.Get();
   }
   submit(d3dCommandList, fence);
 }

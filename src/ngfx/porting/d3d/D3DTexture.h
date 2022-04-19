@@ -117,7 +117,6 @@ private:
   D3D12_RENDER_TARGET_VIEW_DESC
       getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t numSamples,
           uint32_t level, uint32_t baseLayer, uint32_t layerCount, uint32_t plane);
-  void deleteUploadCommandList();
   D3DGraphicsContext *ctx = nullptr;
   D3DGraphics *graphics = nullptr;
   ID3D12Device* d3dDevice = nullptr;
@@ -126,8 +125,6 @@ private:
   };
   std::unique_ptr<GenMipmapData> genMipmapData;
   D3DBuffer* stagingBuffer = nullptr;
-  D3DCommandList* uploadCommandList = nullptr;
-  D3DFence *uploadFence = nullptr;
 };
 D3D_CAST(Texture);
 } // namespace ngfx

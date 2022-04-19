@@ -111,7 +111,7 @@ void D3DBuffer::unmap() {
     assert(d3dReadbackBuffer);
     upload(d3dReadBackBufferPtr, size, 0);
     d3dReadbackBuffer->unmap();
-    delete d3dReadbackBuffer;
+    delete d3dReadbackBuffer; //TODO: queue for delete
     d3dReadbackBuffer = nullptr;
     d3dReadBackBufferPtr = nullptr;
   } else {
@@ -119,27 +119,10 @@ void D3DBuffer::unmap() {
   }
 }
 
-void D3DBuffer::deleteUploadCommandList() { //TODO: queue for delete
-    if (uploadFence) {
-        Timer timer;
-        uploadFence->wait();
-        timer.update();
-        //NGFX_LOG_TRACE("uploadFence->wait elapsed: %f", timer.elapsed);
-    }
-    delete uploadCommandList;
-}
-
 void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
   if (heapType == D3D12_HEAP_TYPE_DEFAULT) {
-    if (uploadCommandList)
-        deleteUploadCommandList(); //TODO: queue for delete
-    uploadCommandList = new D3DCommandList();
-    if (uploadFence)
-        delete uploadFence;
-    uploadFence = new D3DFence();
-    uploadFence->create(ctx->d3dDevice.v.Get());
-    uploadCommandList->create(ctx->d3dDevice.v.Get());
-    auto commandList = uploadCommandList;
+    auto commandList = &ctx->d3dCopyCommandList;
+    ctx->d3dCopyFence.wait();
     commandList->begin();
     if (data) {
         if (stagingBuffer) {
@@ -163,7 +146,7 @@ void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
                                              initialResourceState);
     D3D_TRACE(commandList->v.Get()->ResourceBarrier(1, &resourceBarrier));
     commandList->end();
-    ctx->d3dCommandQueue.submit(commandList->v.Get(), uploadFence->v.Get());
+    ctx->submit(commandList);
     currentResourceState = initialResourceState;
   } else {
     uint8_t *dst = (uint8_t *)map();
