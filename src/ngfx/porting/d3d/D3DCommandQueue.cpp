@@ -38,10 +38,10 @@ void D3DCommandQueue::submit(CommandBuffer *commandBuffer) {
   ID3D12CommandList *d3dCommandList = d3d(commandBuffer)->v.Get();
   ID3D12Fence *fence = nullptr;
   if (d3dCommandList == ctx->d3dCopyCommandList.v.Get()) {
-  } else if (d3dCommandList == ctx->d3dComputeCommandList.v.Get()) {
       fence = ctx->d3dCopyFence.v.Get();
+  } else if (d3dCommandList == ctx->d3dComputeCommandList.v.Get()) {
   } else {
-    fence = ctx->d3dDrawWaitFences[std::max(ctx->currentImageIndex, 0)].v.Get();
+    fence = ctx->d3dDrawFences[std::max(ctx->currentImageIndex, 0)].v.Get();
   }
   submit(d3dCommandList, fence);
 }
@@ -63,4 +63,5 @@ void D3DCommandQueue::waitIdle() {
   // Schedule a Signal command in the queue.
   V(v->Signal(fence.v.Get(), D3DFence::SIGNALED));
   fence.wait();
+  fence.reset();
 }

@@ -10,11 +10,9 @@ using namespace ngfx;
 using namespace std;
 
 D3DTexture::~D3DTexture() {
-    if (uploadCommandList)
-        deleteUploadCommandList();
-    delete uploadFence;
     if (stagingBuffer)
         delete stagingBuffer;
+    //NGFX_LOG_TRACE("Resource: %p deleteMap size: %d", v.Get(), deleteMap.size());
 }
 DXGI_FORMAT D3DTexture::getViewFormat(DXGI_FORMAT resourceFormat, uint32_t planeIndex) {
     DXGI_FORMAT format;
@@ -69,6 +67,7 @@ void D3DTexture::createResource() {
         &heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc,
         D3D12_RESOURCE_STATE_COPY_DEST, isRenderTarget ? &clearValue : nullptr,
         IID_PPV_ARGS(&v)));
+    //NGFX_LOG_TRACE("Resource: %p", v.Get());
 }
 
 void D3DTexture::createDepthStencilView() {
@@ -424,7 +423,11 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
     uint32_t z, int32_t w, int32_t h, int32_t d,
     int32_t arrayLayers, int32_t numPlanes, int32_t dataPitch) {
     auto commandList = &ctx->d3dCopyCommandList;
+    Timer timer;
     ctx->d3dCopyFence.wait();
+    ctx->d3dCopyFence.reset();
+    timer.update();
+    //NGFX_LOG_TRACE("elapsed: %f ms", timer.elapsed * 1000.0f);
     commandList->begin();
     if (w == -1)
         w = this->w;
@@ -460,7 +463,6 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
         generateMipmapsFn(commandList);
     }
     commandList->end();
-
     ctx->submit(commandList);
 }
 

@@ -64,7 +64,7 @@ public:
   D3DRenderPass *d3dDefaultRenderPass = nullptr,
                 *d3dDefaultOffscreenRenderPass = nullptr;
   std::vector<D3DFramebuffer> d3dSwapchainFramebuffers;
-  std::vector<D3DFence> d3dDrawWaitFences;
+  std::vector<D3DFence> d3dDrawFences;
   D3DFence d3dCopyFence;
   D3DFence d3dComputeFence;
   D3DComputePass d3dComputePass;

@@ -24,6 +24,7 @@
 #include "ngfx/graphics/Config.h"
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
+#include "ngfx/core/Timer.h"
 using namespace ngfx;
 #define DEFAULT_SURFACE_FORMAT PIXELFORMAT_RGBA8_UNORM
 

@@ -28,7 +28,7 @@ bool File::read(const std::string &filename) {
   std::ifstream in(filename.c_str(),
                    std::ios::binary | std::ios::in | std::ios::ate);
   if (!in.is_open()) {
-      NGFX_LOG("cannot open file: %s", filename.c_str());
+      //NGFX_LOG("cannot open file: %s", filename.c_str());
       return false;
   }
   size = int(in.tellg());

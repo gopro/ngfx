@@ -156,8 +156,8 @@ void D3DGraphicsContext::createRenderPass(const RenderPassConfig &config,
 }
 
 void D3DGraphicsContext::createFences(ID3D12Device *device) {
-  d3dDrawWaitFences.resize(numDrawCommandBuffers);
-  for (auto &fence : d3dDrawWaitFences) {
+  d3dDrawFences.resize(numDrawCommandBuffers);
+  for (auto &fence : d3dDrawFences) {
     fence.create(device, D3DFence::SIGNALED);
   }
   d3dCopyFence.create(device, D3DFence::SIGNALED);
@@ -199,9 +199,9 @@ void D3DGraphicsContext::createBindings() {
       offscreen ? d3dDefaultOffscreenRenderPass : d3dDefaultRenderPass;
   defaultOffscreenRenderPass = d3dDefaultOffscreenRenderPass;
   swapchain = d3dSwapchain.get();
-  frameFences.resize(d3dDrawWaitFences.size());
-  for (int j = 0; j < d3dDrawWaitFences.size(); j++)
-    frameFences[j] = &d3dDrawWaitFences[j];
+  frameFences.resize(d3dDrawFences.size());
+  for (int j = 0; j < d3dDrawFences.size(); j++)
+    frameFences[j] = &d3dDrawFences[j];
   swapchainFramebuffers.resize(d3dSwapchainFramebuffers.size());
   for (int j = 0; j < d3dSwapchainFramebuffers.size(); j++)
     swapchainFramebuffers[j] = &d3dSwapchainFramebuffers[j];

@@ -27,6 +27,7 @@
 #include <cassert>
 #include <d3dx12.h>
 using namespace ngfx;
+using namespace std;
 
 void D3DBuffer::create(D3DGraphicsContext *ctx, const void *data, uint32_t size,
                        BufferUsageFlags bufferUsageFlags) {
@@ -62,14 +63,13 @@ void D3DBuffer::create(D3DGraphicsContext *ctx, const void *data, uint32_t size,
   currentResourceState = initialResourceState;
   if (data)
     upload(data, size, 0);
+  //NGFX_LOG_TRACE("Resource: %p", v.Get());
 }
 
 D3DBuffer::~D3DBuffer() {
-    if (uploadCommandList)
-        deleteUploadCommandList();
-    delete uploadFence;
     if (stagingBuffer)
-        delete stagingBuffer;
+        delete stagingBuffer; //TODO: delete via fence
+    //NGFX_LOG_TRACE("Resource: %p deleteMap size: %d", v.Get(), deleteMap.size());
 }
 
 // TODO: add read/write flags for map
@@ -122,7 +122,11 @@ void D3DBuffer::unmap() {
 void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
   if (heapType == D3D12_HEAP_TYPE_DEFAULT) {
     auto commandList = &ctx->d3dCopyCommandList;
+    Timer timer;
     ctx->d3dCopyFence.wait();
+    ctx->d3dCopyFence.reset();
+    timer.update();
+    //NGFX_LOG_TRACE("elapsed: %f ms", timer.elapsed * 1000.0f);
     commandList->begin();
     if (data) {
         if (stagingBuffer) {
