@@ -60,7 +60,8 @@ public:
   D3DPipelineCache d3dPipelineCache;
   std::unique_ptr<D3DSwapchain> d3dSwapchain;
   std::vector<D3DCommandList> d3dDrawCommandLists;
-  D3DCommandList d3dCopyCommandList, d3dComputeCommandList;
+  D3DCommandList d3dCopyCommandList;
+  D3DCommandList d3dComputeCommandList;
   D3DRenderPass *d3dDefaultRenderPass = nullptr,
                 *d3dDefaultOffscreenRenderPass = nullptr;
   std::vector<D3DFramebuffer> d3dSwapchainFramebuffers;
