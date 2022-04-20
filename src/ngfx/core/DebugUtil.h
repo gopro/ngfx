@@ -46,9 +46,9 @@ inline void debugMessage(FILE* filenum, const char* fmt, ...) {
 #define NGFX_LOG(fmt, ...) LOG_FN(stderr, fmt "\n", ##__VA_ARGS__)
 #define NGFX_ERR(fmt, ...)                                                     \
   {                                                                            \
-    LOG_FN(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                 \
+    LOG_FN(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                  \
             __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
-    ::DebugUtil::Exit(1);                                                      \
+    /*::DebugUtil::Exit(1); */                                                 \
   }
 #define NGFX_LOG_TRACE(fmt, ...)                                               \
   NGFX_LOG("[%s][%s][%d] " fmt, __FILE__, __PRETTY_FUNCTION__, __LINE__,       \
