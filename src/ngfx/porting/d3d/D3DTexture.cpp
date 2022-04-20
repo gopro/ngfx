@@ -40,6 +40,7 @@ void D3DTexture::getResourceDesc() {
         resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
     if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT)
         resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+    resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_SIMULTANEOUS_ACCESS;
     auto d3dDevice = ctx->d3dDevice.v.Get();
     if (textureType == TEXTURE_TYPE_3D) {
         resourceDesc =
@@ -64,7 +65,7 @@ void D3DTexture::createResource() {
     D3D12_CLEAR_VALUE clearValue = { DXGI_FORMAT(format), {0.0f, 0.0f, 0.0f, 0.0f} };
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
     V(d3dDevice->CreateCommittedResource(
-        &heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc,
+        &heapProperties, D3D12_HEAP_FLAG_SHARED, &resourceDesc,
         D3D12_RESOURCE_STATE_COPY_DEST, isRenderTarget ? &clearValue : nullptr,
         IID_PPV_ARGS(&v)));
     //NGFX_LOG_TRACE("Resource: %p", v.Get());
