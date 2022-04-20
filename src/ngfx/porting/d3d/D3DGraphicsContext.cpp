@@ -48,7 +48,7 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   if (debug) {
       ID3D12InfoQueue* infoQueue = nullptr;
       d3dDevice.v->QueryInterface(&infoQueue);
-      infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
+      infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, FALSE); // TRUE);
   }
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
