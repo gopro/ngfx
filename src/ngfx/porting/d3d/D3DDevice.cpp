@@ -55,4 +55,6 @@ void D3DDevice::create(D3DGraphicsContext *ctx) {
                       IID_PPV_ARGS(&v)));
 }
 
-void D3DDevice::waitIdle() { ctx->d3dCommandQueue.waitIdle(); }
+void D3DDevice::waitIdle() {
+    ctx->d3dCommandQueue.waitIdle();
+}
