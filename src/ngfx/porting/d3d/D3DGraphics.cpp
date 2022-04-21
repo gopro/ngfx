@@ -177,14 +177,14 @@ void D3DGraphics::bindTextureAsImage(CommandBuffer* commandBuffer, Texture* text
         dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
         for (uint32_t j = 0; j < numPlanes; j++) {
             D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
-                set, d3dTexture->defaultUavDescriptor[j].gpuHandle));
+                set + j, d3dTexture->defaultUavDescriptor[j].gpuHandle));
         }
     }
     else if (D3DComputePipeline* computePipeline =
         dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
         for (uint32_t j = 0; j < numPlanes; j++) {
             D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
-                set, d3dTexture->defaultUavDescriptor[j].gpuHandle));
+                set + j, d3dTexture->defaultUavDescriptor[j].gpuHandle));
         }
     }
 }
