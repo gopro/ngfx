@@ -116,7 +116,10 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     planeHeight.resize(numPlanes);
     planeSize.resize(numPlanes);
     for (uint32_t j = 0; j < numPlanes; j++) {
-        planeWidth[j] = w;
+        //in the case of NV12:
+        // the first plane is width w , height h, and each pixel is a Y value
+        // the second plane is width w / 2, height h / 2, and each pixel is a UV value
+        planeWidth[j] = (format == DXGI_FORMAT_NV12 && j == 1) ? w / 2 : w;
         planeHeight[j] = (format == DXGI_FORMAT_NV12 && j == 1) ? h / 2 : h;
         planeSize[j] = (format == DXGI_FORMAT_NV12) ? planeWidth[j] * planeHeight[j] : size;
     }
@@ -497,7 +500,7 @@ void D3DTexture::uploadFn(D3DCommandList* cmdList, void* data, uint32_t size,
 
 void D3DTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y,
     uint32_t z, int32_t w, int32_t h, int32_t d,
-    int32_t arrayLayers) {
+    int32_t arrayLayers, int32_t numPlanes) {
     auto& copyCommandList = ctx->d3dCopyCommandList;
     const bool flipY = true; //TODO:move to param
     if (w == -1)
@@ -506,50 +509,66 @@ void D3DTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y,
         h = this->h;
     if (d == -1)
         d = this->d;
-
-    D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint;
-    uint32_t numRows;
-    uint64_t srcSize, rowSizeBytes;
+    if (arrayLayers == -1)
+        arrayLayers = this->arrayLayers;
+    if (numPlanes == -1)
+        numPlanes = this->numPlanes;
     D3D12_RESOURCE_DESC desc = v->GetDesc();
-    D3D_TRACE(ctx->d3dDevice.v->GetCopyableFootprints(
-        &desc, 0, 1, 0, &footprint, &numRows, &rowSizeBytes, &srcSize));
-
-    D3DReadbackBuffer readbackBuffer;
-    readbackBuffer.create(ctx, uint32_t(srcSize));
-
-    D3D12_BOX srcRegion = { 0, 0, 0, UINT(w), UINT(h), 1 };
-
+    struct SubresourceData {
+        D3DReadbackBuffer readbackBuffer;
+        D3D12_PLACED_SUBRESOURCE_FOOTPRINT footprint;
+        uint32_t numRows = 0;
+        uint64_t srcSize = 0;
+        uint64_t rowSizeBytes = 0;
+        int w = 0, h = 0;
+    };
+    std::vector<SubresourceData> subresourceData(numPlanes);
     copyCommandList.begin();
-    downloadFn(&copyCommandList, readbackBuffer, srcRegion, footprint);
+    for (int j = 0; j < subresourceData.size(); j++) {
+        auto& s = subresourceData[j];
+        s.w = (w * planeWidth[j]) / planeWidth[0];
+        s.h = (h * planeHeight[j]) / planeHeight[0];
+        D3D_TRACE(ctx->d3dDevice.v->GetCopyableFootprints(
+            &desc, j, 1, 0, &s.footprint, &s.numRows, &s.rowSizeBytes, &s.srcSize));
+        s.readbackBuffer.create(ctx, uint32_t(s.srcSize));
+        D3D12_BOX srcRegion = { 0, 0, 0, UINT(s.w), UINT(s.h), 1 };
+        downloadFn(&copyCommandList, s.readbackBuffer, srcRegion, s.footprint, j);
+    }
     copyCommandList.end();
     ctx->d3dCommandQueue.submit(&copyCommandList);
     ctx->d3dCommandQueue.waitIdle();
 
-    void* readbackBufferPtr = readbackBuffer.map();
-    uint8_t* srcPtr = (uint8_t*)readbackBufferPtr,
-        * dstPtr =
-        &((uint8_t*)data)[flipY ? (uint64_t(h) - 1) * rowSizeBytes : 0];
-    int64_t dstInc = flipY ? -rowSizeBytes : rowSizeBytes;
-    for (uint32_t j = 0; j < uint32_t(h); j++) {
-        memcpy(dstPtr, srcPtr, rowSizeBytes);
-        srcPtr += footprint.Footprint.RowPitch;
-        dstPtr += dstInc;
+    uint8_t* dataPtr = (uint8_t*)data;
+    for (int i = 0; i < numPlanes; i++) {
+        auto& s = subresourceData[i];
+        void* readbackBufferPtr = s.readbackBuffer.map();
+        uint8_t* srcPtr = (uint8_t*)readbackBufferPtr,
+            * dstPtr =
+            &((uint8_t*)dataPtr)[flipY ? (uint64_t(s.h) - 1) * s.rowSizeBytes : 0];
+        int64_t dstInc = flipY ? -s.rowSizeBytes : s.rowSizeBytes;
+        for (uint32_t j = 0; j < s.h; j++) {
+            memcpy(dstPtr, srcPtr, s.rowSizeBytes);
+            srcPtr += s.footprint.Footprint.RowPitch;
+            dstPtr += dstInc;
+        }
+        s.readbackBuffer.unmap();
+        dataPtr += s.numRows * s.rowSizeBytes;
     }
-    readbackBuffer.unmap();
 }
 
 void D3DTexture::downloadFn(D3DCommandList* cmdList,
     D3DReadbackBuffer& readbackBuffer,
     D3D12_BOX& srcRegion,
-    D3D12_PLACED_SUBRESOURCE_FOOTPRINT& dstFootprint) {
-    resourceBarrierTransition(cmdList, D3D12_RESOURCE_STATE_COPY_SOURCE);
+    D3D12_PLACED_SUBRESOURCE_FOOTPRINT& dstFootprint,
+    int subresourceIndex) {
+    resourceBarrierTransition(cmdList, D3D12_RESOURCE_STATE_COPY_SOURCE, subresourceIndex);
 
     D3D12_TEXTURE_COPY_LOCATION dstLocation = {
         readbackBuffer.v.Get(),
         D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT,
         {dstFootprint} };
     D3D12_TEXTURE_COPY_LOCATION srcLocation = {
-        v.Get(), D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX, 0 };
+        v.Get(), D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX, subresourceIndex };
 
     D3D_TRACE(cmdList->v->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation,
         &srcRegion));
@@ -557,7 +576,7 @@ void D3DTexture::downloadFn(D3DCommandList* cmdList,
         (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
         ? D3D12_RESOURCE_STATE_DEPTH_WRITE
         : D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
-    resourceBarrierTransition(cmdList, resourceState);
+    resourceBarrierTransition(cmdList, resourceState, subresourceIndex);
     for (auto& s : currentResourceState)
         s = resourceState;
 }

@@ -53,7 +53,7 @@ public:
               int32_t dataPitch = -1) override;
    void download(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
                 uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
-                int32_t arrayLayers = -1) override;
+                int32_t arrayLayers = -1, int32_t numPlanes = -1) override;
   void changeLayout(CommandBuffer *commandBuffer,
                     ImageLayout imageLayout) override;
   void
@@ -106,7 +106,8 @@ private:
   void createDepthStencilView();
   void downloadFn(D3DCommandList *cmdList, D3DReadbackBuffer &readbackBuffer,
                   D3D12_BOX &srcRegion,
-                  D3D12_PLACED_SUBRESOURCE_FOOTPRINT &dstFootprint);
+                  D3D12_PLACED_SUBRESOURCE_FOOTPRINT &dstFootprint,
+                  int subresourceIndex = 0);
   void uploadFn(D3DCommandList *cmdList, void *data, uint32_t size,
                 D3DBuffer *stagingBuffer, uint32_t x = 0, uint32_t y = 0,
                 uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
