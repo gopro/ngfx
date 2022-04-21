@@ -299,7 +299,8 @@ D3DDescriptorHandle D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
 D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel, uint32_t plane) {
     for (auto& uavData : uavDescriptorCache) {
         if (textureType == TEXTURE_TYPE_2D &&
-            uavData.desc.Texture2D.MipSlice == mipLevel)
+            uavData.desc.Texture2D.MipSlice == mipLevel
+            && uavData.desc.Texture2D.PlaneSlice == plane)
             return uavData.handle;
     }
     // Create an unordered access view
@@ -310,12 +311,12 @@ D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel, uint32_t pla
         uavDesc.Texture2DArray.ArraySize = 6;
         uavDesc.Texture2DArray.FirstArraySlice = 0;
         uavDesc.Texture2DArray.MipSlice = 0;
-        uavDesc.Texture2DArray.PlaneSlice = 0;
+        uavDesc.Texture2DArray.PlaneSlice = plane;
     }
     else {
         uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
         uavDesc.Texture2D.MipSlice = mipLevel;
-        uavDesc.Texture2D.PlaneSlice = 0;
+        uavDesc.Texture2D.PlaneSlice = plane;
     }
     auto& cbvSrvUavDescriptorHeap = ctx->d3dCbvSrvUavDescriptorHeap;
     auto d3dDevice = ctx->d3dDevice.v.Get();
