@@ -73,6 +73,6 @@ build .shaderc-${{SHADERC_VERSION}}-installed: SHELL_COMMAND
     popd
 build shaderc-${{SHADERC_VERSION}}: phony .shaderc-${{SHADERC_VERSION}}-installed
 
-build all: phony nlohmann-json stb glm d3dx12 glfw VulkanSDK-${{VULKAN_SDK_VERSION}} spirv-cross shaderc-${{SHADERC_VERSION}} pkgconf
+build all: phony nlohmann-json stb glm d3dx12 glfw spirv-cross shaderc-${{SHADERC_VERSION}} pkgconf
 
 default all
