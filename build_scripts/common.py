@@ -59,7 +59,7 @@ NGFX_GRAPHICS_BACKEND = env('NGFX_GRAPHICS_BACKEND', { 'Windows': 'Direct3D12', 
 CMAKE = 'cmake.exe' if OS == 'Windows' else 'cmake'
 if OS == 'Windows':
     env('CMAKE_GENERATOR', 'Visual Studio 16 2019')
-    CMAKE_SYSTEM_VERSION = env('CMAKE_SYSTEM_VERSION', '10.0.18362.0')
+    CMAKE_SYSTEM_VERSION = env('CMAKE_SYSTEM_VERSION', '10.0.22000.0')
     env('SHADERC_VERSION', '2020.3')
     VCPKG_DIR = env('VCPKG_DIR', 'C:\\vcpkg')
     if not op.isdir(VCPKG_DIR):
