@@ -38,6 +38,14 @@ inline void debugMessage(FILE* filenum, const char* fmt, ...) {
     va_end(args);
     OutputDebugStringA((buffer));
 }
+inline void debugErrMessage(FILE* filenum, const char* fmt, ...) {
+    char buffer[1024];
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(buffer, fmt, args);
+    va_end(args);
+    OutputDebugStringA((buffer));
+}
 #define LOG_FN debugMessage
 #else
 #define LOG_FUNCTION fprintf
@@ -46,7 +54,7 @@ inline void debugMessage(FILE* filenum, const char* fmt, ...) {
 #define NGFX_LOG(fmt, ...) LOG_FN(stderr, fmt "\n", ##__VA_ARGS__)
 #define NGFX_ERR(fmt, ...)                                                     \
   {                                                                            \
-    LOG_FN(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                  \
+    debugErrMessage(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                  \
             __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
     /*::DebugUtil::Exit(1); */                                                 \
   }

@@ -121,19 +121,13 @@ void D3DBuffer::unmap() {
 
 void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
   if (heapType == D3D12_HEAP_TYPE_DEFAULT) {
-    auto commandList = &ctx->d3dCopyCommandList;
-    Timer timer;
-    ctx->d3dCopyFence.wait();
-    ctx->d3dCopyFence.reset();
-    timer.update();
-    //NGFX_LOG_TRACE("elapsed: %f ms", timer.elapsed * 1000.0f);
-    commandList->begin();
+    auto commandList = d3d(ctx->drawCommandBuffer(ctx->currentImageIndex));
     if (data) {
-        if (stagingBuffer) {
-            delete stagingBuffer;
+        if (!stagingBuffer) {
+            stagingBuffer = new D3DBuffer(); //TODO: queue for delete
+            stagingBuffer->create(ctx, data, size, D3D12_HEAP_TYPE_UPLOAD);
+            stagingBuffer->v->SetName(L"StagingBuffer");
         }
-        stagingBuffer = new D3DBuffer(); //TODO: queue for delete
-        stagingBuffer->create(ctx, data, size, D3D12_HEAP_TYPE_UPLOAD);
         if (currentResourceState != D3D12_RESOURCE_STATE_COPY_DEST) {
         CD3DX12_RESOURCE_BARRIER resourceBarrier =
             CD3DX12_RESOURCE_BARRIER::Transition(
@@ -149,8 +143,6 @@ void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
                                              D3D12_RESOURCE_STATE_COPY_DEST,
                                              initialResourceState);
     D3D_TRACE(commandList->v.Get()->ResourceBarrier(1, &resourceBarrier));
-    commandList->end();
-    ctx->submit(commandList);
     currentResourceState = initialResourceState;
   } else {
     uint8_t *dst = (uint8_t *)map();

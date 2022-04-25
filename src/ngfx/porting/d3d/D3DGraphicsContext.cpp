@@ -48,7 +48,7 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   if (debug) {
       ID3D12InfoQueue* infoQueue = nullptr;
       d3dDevice.v->QueryInterface(&infoQueue);
-      infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, FALSE); // TRUE);
+      infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE); // FALSE); // TRUE);
   }
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
@@ -88,6 +88,7 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
   for (auto &cmdList : d3dDrawCommandLists) {
     cmdList.create(d3dDevice.v.Get());
   }
+  d3dOffscreenDrawCommandList.create(d3dDevice.v.Get());
   if (surface && numSamples != 1) {
     NGFX_TODO("");
   }
@@ -180,8 +181,10 @@ void D3DGraphicsContext::createSwapchainFramebuffers(int w, int h) {
 
 CommandBuffer *D3DGraphicsContext::drawCommandBuffer(int32_t index) {
   if (index == -1)
-    index = std::max(currentImageIndex, 0);
-  return &d3dDrawCommandLists[index];
+    index = currentImageIndex;
+  return index == -1 ? 
+    &d3dOffscreenDrawCommandList : 
+    &d3dDrawCommandLists[index];
 }
 
 CommandBuffer *D3DGraphicsContext::copyCommandBuffer() {

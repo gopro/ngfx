@@ -88,6 +88,7 @@ void D3DSwapchain::acquireNextImage() {
 void D3DSwapchain::present() {
   HRESULT hResult;
   V(v->Present(1, 0));
+  ctx->currentImageIndex = -1;
 }
 
 void D3DSwapchain::setName(const std::string& name) {

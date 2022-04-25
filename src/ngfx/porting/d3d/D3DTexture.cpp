@@ -427,13 +427,7 @@ void D3DTexture::generateMipmapsFn(D3DCommandList* cmdList) {
 void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
     uint32_t z, int32_t w, int32_t h, int32_t d,
     int32_t arrayLayers, int32_t numPlanes, int32_t dataPitch) {
-    auto commandList = &ctx->d3dCopyCommandList;
-    Timer timer;
-    ctx->d3dCopyFence.wait();
-    ctx->d3dCopyFence.reset();
-    timer.update();
-    //NGFX_LOG_TRACE("elapsed: %f ms", timer.elapsed * 1000.0f);
-    commandList->begin();
+    auto commandList = d3d(ctx->drawCommandBuffer(ctx->currentImageIndex));
     if (w == -1)
         w = this->w;
     if (h == -1)
@@ -448,12 +442,12 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
         uint64_t stagingBufferSize;
         D3D_TRACE(stagingBufferSize =
             GetRequiredIntermediateSize(v.Get(), 0, arrayLayers * numPlanes));
-        if (stagingBuffer) {
-            delete stagingBuffer;
+        if (!stagingBuffer) {
+            stagingBuffer = new D3DBuffer(); //TODO: delete via fence
+            stagingBuffer->create(ctx, nullptr, uint32_t(stagingBufferSize),
+                D3D12_HEAP_TYPE_UPLOAD);
+            stagingBuffer->v->SetName(L"StagingBuffer");
         }
-        stagingBuffer = new D3DBuffer(); //TODO: delete via fence
-        stagingBuffer->create(ctx, nullptr, uint32_t(stagingBufferSize),
-            D3D12_HEAP_TYPE_UPLOAD);
         uploadFn(commandList, data, size, stagingBuffer, x, y, z, w, h, d,
             arrayLayers, numPlanes, dataPitch);
     }
@@ -466,8 +460,6 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
         auto d3dDevice = ctx->d3dDevice.v.Get();
         generateMipmapsFn(commandList);
     }
-    commandList->end();
-    ctx->submit(commandList);
 }
 
 void D3DTexture::generateMipmaps(CommandBuffer* commandBuffer) {
