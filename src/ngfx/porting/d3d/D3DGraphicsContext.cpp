@@ -161,6 +161,7 @@ void D3DGraphicsContext::createFences(ID3D12Device *device) {
   for (auto &fence : d3dDrawFences) {
     fence.create(device, D3DFence::SIGNALED);
   }
+  d3dOffscreenFence.create(device, D3DFence::SIGNALED);
   d3dCopyFence.create(device, D3DFence::SIGNALED);
   d3dComputeFence.create(device);
 }
@@ -205,6 +206,7 @@ void D3DGraphicsContext::createBindings() {
   frameFences.resize(d3dDrawFences.size());
   for (int j = 0; j < d3dDrawFences.size(); j++)
     frameFences[j] = &d3dDrawFences[j];
+  offscreenFence = &d3dOffscreenFence;
   swapchainFramebuffers.resize(d3dSwapchainFramebuffers.size());
   for (int j = 0; j < d3dSwapchainFramebuffers.size(); j++)
     swapchainFramebuffers[j] = &d3dSwapchainFramebuffers[j];

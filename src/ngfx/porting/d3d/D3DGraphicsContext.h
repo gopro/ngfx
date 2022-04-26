@@ -69,6 +69,7 @@ public:
   std::vector<D3DFence> d3dDrawFences;
   D3DFence d3dCopyFence;
   D3DFence d3dComputeFence;
+  D3DFence d3dOffscreenFence;
   D3DComputePass d3dComputePass;
   std::unique_ptr<D3DTexture> d3dDepthStencilView;
   D3DQueryHeap d3dQueryTimestampHeap;

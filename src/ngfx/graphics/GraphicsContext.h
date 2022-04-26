@@ -111,6 +111,7 @@ public:
   int32_t currentImageIndex = -1;
   std::vector<Fence *> frameFences;
   Fence *computeFence = nullptr;
+  Fence* offscreenFence = nullptr;
   Semaphore *presentCompleteSemaphore = nullptr,
             *renderCompleteSemaphore = nullptr;
   PipelineCache *pipelineCache = nullptr;
