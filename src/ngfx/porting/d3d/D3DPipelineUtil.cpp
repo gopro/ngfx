@@ -54,7 +54,7 @@ void D3DPipelineUtil::parseDescriptors(
         }
         else if (descriptor.type == DESCRIPTOR_TYPE_UNIFORM_BUFFER) {
             CD3DX12_ROOT_PARAMETER1 d3dDescriptor;
-            d3dDescriptor.InitAsConstantBufferView(0, registerSpace);
+            d3dDescriptor.InitAsConstantBufferView(0, registerSpace, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE);
             d3dRootParams.emplace_back(std::move(d3dDescriptor));
         }
         else if (descriptor.type == DESCRIPTOR_TYPE_STORAGE_BUFFER) {
