@@ -24,5 +24,6 @@
 using namespace ngfx;
 
 D3DDescriptorHandle::~D3DDescriptorHandle() {
-    parent->freeHandle(this);
+    if (parent)
+        parent->freeHandle(this);
 }

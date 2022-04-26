@@ -26,6 +26,7 @@ class D3DDescriptorHeap {
 public:
   void create(ID3D12Device *d3dDevice, D3D12_DESCRIPTOR_HEAP_TYPE type,
               UINT maxDescriptors, D3D12_DESCRIPTOR_HEAP_FLAGS flags);
+  ~D3DDescriptorHeap();
   bool getHandle(D3DDescriptorHandle &handle);
   void freeHandle(D3DDescriptorHandle *handle);
   UINT maxDescriptors;

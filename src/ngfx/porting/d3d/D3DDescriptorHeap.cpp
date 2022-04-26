@@ -41,8 +41,8 @@ void D3DDescriptorHeap::create(ID3D12Device *d3dDevice,
   std::fill(state.begin(), state.end(), 0);
 }
 
-static int findFreeBlock() {
-
+D3DDescriptorHeap::~D3DDescriptorHeap() {
+    head.parent = nullptr;
 }
 
 bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
