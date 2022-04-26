@@ -45,7 +45,7 @@ void D3DCommandQueue::submit(CommandBuffer *commandBuffer) {
       fence = ctx->d3dOffscreenFence.v.Get();
   }
   else {
-    fence = ctx->d3dDrawFences[std::max(ctx->currentImageIndex, 0)].v.Get();
+    fence = ctx->d3dDrawFences[ctx->currentImageIndex].v.Get();
   }
   submit(d3dCommandList, fence);
 }
