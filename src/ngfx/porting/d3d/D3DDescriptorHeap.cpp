@@ -31,8 +31,46 @@ void D3DDescriptorHeap::create(ID3D12Device *d3dDevice,
   this->maxDescriptors = maxDescriptors;
   D3D12_DESCRIPTOR_HEAP_DESC desc = {type, maxDescriptors, flags, 0};
   V(d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&v)));
-  D3D_TRACE(handle.cpuHandle = v->GetCPUDescriptorHandleForHeapStart());
-  D3D_TRACE(handle.descriptorSize =
+  D3D_TRACE(head.cpuHandle = v->GetCPUDescriptorHandleForHeapStart());
+  D3D_TRACE(descriptorSize =
                 d3dDevice->GetDescriptorHandleIncrementSize(type));
-  D3D_TRACE(handle.gpuHandle = v->GetGPUDescriptorHandleForHeapStart());
+  D3D_TRACE(head.gpuHandle = v->GetGPUDescriptorHandleForHeapStart());
+  head.parent = this;
+  index = 0;
+  state.resize(maxDescriptors);
+  std::fill(state.begin(), state.end(), 0);
+}
+
+static int findFreeBlock() {
+
+}
+
+bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
+    if (state[index]) {
+        index = 0;
+        while (state[index]) {
+            index++;
+            if (index == state.size()) {
+                goto err;
+            }
+        }
+    }
+    handle.cpuHandle.ptr = head.cpuHandle.ptr + descriptorSize * index;
+    handle.gpuHandle.ptr = head.gpuHandle.ptr + descriptorSize * index;
+    handle.parent = this;
+    state[index] = 1;
+    index++;
+    if (index == state.size())
+        index = 0;
+    return true;
+err:
+    NGFX_ERR("descriptor heap full");
+    return false;
+}
+
+void D3DDescriptorHeap::freeHandle(D3DDescriptorHandle *handle) {
+    if (handle->parent == nullptr)
+        return;
+    int handleIndex = (handle->cpuHandle.ptr - head.cpuHandle.ptr) / descriptorSize;
+    state[handleIndex] = 0;
 }

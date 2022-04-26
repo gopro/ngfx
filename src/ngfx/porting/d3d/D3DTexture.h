@@ -81,6 +81,8 @@ public:
   std::vector<D3DDescriptorHandle> defaultRtvDescriptor;
   std::vector<D3DDescriptorHandle> defaultUavDescriptor;
   D3DDescriptorHandle dsvDescriptor{};
+  std::vector<D3DDescriptorHandle> cbvSrvUavDescriptors;
+  std::vector<D3DDescriptorHandle> rtvDescriptors;
   D3DSampler *defaultSampler = nullptr;
   
   struct SrvData {

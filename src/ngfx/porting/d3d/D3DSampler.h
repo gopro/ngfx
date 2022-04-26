@@ -29,9 +29,10 @@ class D3DGraphicsContext;
 class D3DSampler : public Sampler {
 public:
 	void create(D3DGraphicsContext* ctx, const D3DSamplerDesc & samplerDesc);
-	virtual ~D3DSampler() {}
 	D3DDescriptorHandle handle;
 	D3DSamplerDesc desc;
+private:
+	D3DGraphicsContext* ctx = nullptr;
 };
 D3D_CAST(Sampler);
 }

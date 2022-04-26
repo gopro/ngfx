@@ -71,10 +71,11 @@ void D3DSwapchain::createSwapchainRenderTargetViews(uint32_t w, uint32_t h) {
   renderTargetDescriptors.resize(numImages);
   for (UINT n = 0; n < numImages; n++) {
     V(v->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n])));
+    D3DDescriptorHandle handle;
+    rtvDescriptorHeap->getHandle(handle);
     D3D_TRACE(d3dDevice->CreateRenderTargetView(
-        renderTargets[n].Get(), nullptr, rtvDescriptorHeap->handle.cpuHandle));
-    renderTargetDescriptors[n] = rtvDescriptorHeap->handle;
-    ++rtvDescriptorHeap->handle;
+        renderTargets[n].Get(), nullptr, handle.cpuHandle));
+    renderTargetDescriptors[n] = std::move(handle);
   }
 }
 

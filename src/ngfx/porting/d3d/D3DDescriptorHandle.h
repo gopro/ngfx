@@ -22,13 +22,13 @@
 #include <d3dx12.h>
 
 namespace ngfx {
+class D3DDescriptorHeap;
 class D3DDescriptorHandle {
 public:
   D3DDescriptorHandle() {}
-  D3DDescriptorHandle(uint32_t descriptorSize);
-  D3DDescriptorHandle &operator++();
+  ~D3DDescriptorHandle();
   D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle{};
   D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle{};
-  uint32_t descriptorSize = 0;
+  D3DDescriptorHeap* parent = nullptr;
 };
 } // namespace ngfx

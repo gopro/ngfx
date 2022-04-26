@@ -18,13 +18,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#include "ngfx/porting/d3d/D3DDescriptorHandle.h"
+
+#include "D3DDescriptorHandle.h"
+#include "D3DDescriptorHeap.h"
 using namespace ngfx;
 
-D3DDescriptorHandle::D3DDescriptorHandle(uint32_t descriptorSize)
-    : descriptorSize(descriptorSize) {}
-D3DDescriptorHandle &D3DDescriptorHandle::operator++() {
-  cpuHandle.ptr += descriptorSize;
-  gpuHandle.ptr += descriptorSize;
-  return *this;
+D3DDescriptorHandle::~D3DDescriptorHandle() {
+    parent->freeHandle(this);
 }

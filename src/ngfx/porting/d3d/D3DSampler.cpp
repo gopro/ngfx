@@ -26,10 +26,10 @@ using namespace ngfx;
 using namespace std;
 
 void D3DSampler::create(D3DGraphicsContext* ctx, const D3DSamplerDesc &samplerDesc) {
+	this->ctx = ctx;
 	desc = samplerDesc;
-	D3D_TRACE(ctx->d3dDevice.v->CreateSampler(&samplerDesc, ctx->d3dSamplerDescriptorHeap.handle.cpuHandle));
-	handle = ctx->d3dSamplerDescriptorHeap.handle;
-	++ctx->d3dSamplerDescriptorHeap.handle;
+	ctx->d3dSamplerDescriptorHeap.getHandle(handle);
+	D3D_TRACE(ctx->d3dDevice.v->CreateSampler(&samplerDesc, handle.cpuHandle));
 }
 
 Sampler* Sampler::create(GraphicsContext *ctx, const SamplerDesc &samplerDesc) {
