@@ -8,5 +8,10 @@
       "win",
       "linux"
     ]
-  }
+  },
+  "deps": [
+    { "url": "git@github.com:G-P-S/shaderc.git@gp" },
+    { "url": "git@github.com:G-P-S/SPIRV-Cross.git@gp" },
+    { "url": "git@github.com:G-P-S/glm.git@master" }
+  ]
 }
