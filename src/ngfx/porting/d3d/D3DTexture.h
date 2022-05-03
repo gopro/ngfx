@@ -46,6 +46,7 @@ public:
               ImageUsageFlags usageFlags, TextureType textureType,
               uint32_t numSamples,
               const D3DSamplerDesc* samplerDesc = nullptr);
+  void updateFromHandle(void* handle);
   virtual ~D3DTexture();
   void upload(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
               uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,

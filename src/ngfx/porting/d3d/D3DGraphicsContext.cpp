@@ -151,8 +151,7 @@ void D3DGraphicsContext::createRenderPass(const RenderPassConfig &config,
           (config.colorAttachmentDescriptions[0].finalLayout ==
            IMAGE_LAYOUT_PRESENT_SRC)
               ? D3D12_RESOURCE_STATE_PRESENT
-              : D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
-                    D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+              : D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
   renderPass.create(this, initialResourceState, finalResourceState);
 }
 

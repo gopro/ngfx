@@ -190,33 +190,30 @@ void D3DTexture::createFromHandle(D3DGraphicsContext* ctx, D3DGraphics* graphics
     getResourceDesc();
     isRenderTarget =
         (resourceFlags & D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+
+    if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+        if (samplerDesc)
+            defaultSampler = getSampler(samplerDesc->Filter);
+    }
+
+    updateFromHandle(handle);
+}
+
+void D3DTexture::updateFromHandle(void* handle) {
     v = (ID3D12Resource*)handle;
 
     for (auto& s : currentResourceState)
-        s = D3D12_RESOURCE_STATE_COPY_DEST;
+        s = D3D12_RESOURCE_STATE_COMMON;
+
+    auto commandList = d3d(ctx->drawCommandBuffer(ctx->currentImageIndex));
+
+    resourceBarrierTransition(commandList, D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE);
 
     if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
         for (uint32_t j = 0; j < numPlanes; j++) {
             defaultSrvDescriptor[j] = getSrvDescriptor(0, mipLevels, j);
         }
-        if (samplerDesc)
-            defaultSampler = getSampler(samplerDesc->Filter);
     }
-    if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT) {
-        for (uint32_t j = 0; j < numPlanes; j++) {
-            defaultUavDescriptor[j] = getUavDescriptor(0, j);
-        }
-    }
-
-    if (isRenderTarget) {
-        for (uint32_t j = 0; j < numPlanes; j++)
-            defaultRtvDescriptor[j] = getRtvDescriptor(0, 0, 1, j);
-    }
-
-    if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
-        createDepthStencilView();
-    }
-
 }
 
 D3DSampler* D3DTexture::getSampler(D3D12_FILTER filter) {
@@ -448,7 +445,7 @@ void D3DTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y,
         D3D_TRACE(stagingBufferSize =
             GetRequiredIntermediateSize(v.Get(), 0, arrayLayers * numPlanes));
         if (!stagingBuffer) {
-            stagingBuffer = new D3DBuffer(); //TODO: delete via fence
+            stagingBuffer = new D3DBuffer();
             stagingBuffer->create(ctx, nullptr, uint32_t(stagingBufferSize),
                 D3D12_HEAP_TYPE_UPLOAD);
             stagingBuffer->v->SetName(L"StagingBuffer");
