@@ -129,21 +129,22 @@ void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
             stagingBuffer->v->SetName(L"StagingBuffer");
         }
         if (currentResourceState != D3D12_RESOURCE_STATE_COPY_DEST) {
-        CD3DX12_RESOURCE_BARRIER resourceBarrier =
+            CD3DX12_RESOURCE_BARRIER resourceBarrier =
             CD3DX12_RESOURCE_BARRIER::Transition(
                 v.Get(), currentResourceState, D3D12_RESOURCE_STATE_COPY_DEST);
-        D3D_TRACE(
-            commandList->v.Get()->ResourceBarrier(1, &resourceBarrier));
+            D3D_TRACE(commandList->v.Get()->ResourceBarrier(1, &resourceBarrier));
+            currentResourceState = D3D12_RESOURCE_STATE_COPY_DEST;
         }
         D3D_TRACE(commandList->v.Get()->CopyBufferRegion(
             v.Get(), 0, stagingBuffer->v.Get(), 0, size));
     }
-    CD3DX12_RESOURCE_BARRIER resourceBarrier =
-        CD3DX12_RESOURCE_BARRIER::Transition(v.Get(),
-                                             D3D12_RESOURCE_STATE_COPY_DEST,
-                                             initialResourceState);
-    D3D_TRACE(commandList->v.Get()->ResourceBarrier(1, &resourceBarrier));
-    currentResourceState = initialResourceState;
+    if (currentResourceState != initialResourceState) {
+        CD3DX12_RESOURCE_BARRIER resourceBarrier =
+            CD3DX12_RESOURCE_BARRIER::Transition(v.Get(),
+                currentResourceState, initialResourceState);
+        D3D_TRACE(commandList->v.Get()->ResourceBarrier(1, &resourceBarrier));
+        currentResourceState = initialResourceState;
+    }
   } else {
     uint8_t *dst = (uint8_t *)map();
     memcpy(dst + offset, data, size);
