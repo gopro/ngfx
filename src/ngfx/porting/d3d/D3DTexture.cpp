@@ -600,11 +600,29 @@ void D3DTexture::changeLayout(CommandBuffer *commandBuffer,
     };
     resourceBarrierTransition(d3d(commandBuffer), resourceState);
 }
+
+template<typename T>
+static bool allEqual(const std::vector<T>& v) {
+    if (v.empty())
+        return false;
+    auto v0 = v[0];
+    for (int j = 1; j < v.size(); j++)
+        if (v[j] != v0)
+            return false;
+    return true;
+}
 void D3DTexture::resourceBarrierTransition(D3DCommandList* cmdList,
     D3D12_RESOURCE_STATES newState,
     UINT subresource) {
     uint32_t j0, j1;
     if (subresource == D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES) {
+        if (currentResourceState[0] != newState && allEqual(currentResourceState)) {
+            auto resourceBarrier = CD3DX12_RESOURCE_BARRIER::Transition(v.Get(), currentResourceState[0],
+                newState, D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
+            D3D_TRACE(cmdList->v->ResourceBarrier(1, &resourceBarrier));
+            std::fill(currentResourceState.begin(), currentResourceState.end(), newState);
+            return;
+        }
         j0 = 0;
         j1 = numSubresources;
     }
@@ -612,15 +630,19 @@ void D3DTexture::resourceBarrierTransition(D3DCommandList* cmdList,
         j0 = subresource;
         j1 = j0 + 1;
     }
+    std::vector<CD3DX12_RESOURCE_BARRIER> resourceBarriers;
     for (uint32_t j = j0; j < j1; j++) {
-        if (currentResourceState[j] == newState)
+        if (currentResourceState[j] == newState) {
             continue;
-        CD3DX12_RESOURCE_BARRIER resourceBarrier =
+        }
+        resourceBarriers.push_back(
             CD3DX12_RESOURCE_BARRIER::Transition(v.Get(), currentResourceState[j],
-                newState, j);
-        D3D_TRACE(cmdList->v->ResourceBarrier(1, &resourceBarrier));
+                newState, j)
+        );
         currentResourceState[j] = newState;
     }
+    if (!resourceBarriers.empty())
+        D3D_TRACE(cmdList->v->ResourceBarrier(resourceBarriers.size(), resourceBarriers.data()));
 }
 
 void D3DTexture::setName(const std::string& name) {
