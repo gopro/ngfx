@@ -62,39 +62,39 @@ public:
                   UINT subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES);
   void generateMipmaps(CommandBuffer *commandBuffer) override;
   ComPtr<ID3D12Resource> v;
-  D3DDescriptorHandle getRtvDescriptor(uint32_t level = 0,
+  D3DDescriptorHandle* getRtvDescriptor(uint32_t level = 0,
                                        uint32_t baseLayer = 0,
                                        uint32_t layerCount = 1,
                                        uint32_t plane = 0);
   D3DSampler* getSampler(D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_MIP_POINT);
-  D3DDescriptorHandle getSrvDescriptor(uint32_t baseMipLevel,
+  D3DDescriptorHandle* getSrvDescriptor(uint32_t baseMipLevel,
                                        uint32_t numMipLevels, uint32_t plane = 0);
-  D3DDescriptorHandle getUavDescriptor(uint32_t mipLevel, uint32_t plane = 0);
+  D3DDescriptorHandle* getUavDescriptor(uint32_t mipLevel, uint32_t plane = 0);
   void setName(const std::string& name) override;
   struct RtvData {
     D3D12_RENDER_TARGET_VIEW_DESC desc;
-    D3DDescriptorHandle handle;
+    D3DDescriptorHandle* handle = nullptr;
   };
   std::vector<RtvData> rtvDescriptorCache;
   std::vector<std::unique_ptr<D3DSampler>> samplerCache;
-  std::vector<D3DDescriptorHandle> defaultSrvDescriptor;
+  std::vector<D3DDescriptorHandle*> defaultSrvDescriptor;
   uint32_t numPlanes = 1;
-  std::vector<D3DDescriptorHandle> defaultRtvDescriptor;
-  std::vector<D3DDescriptorHandle> defaultUavDescriptor;
-  D3DDescriptorHandle dsvDescriptor{};
-  std::vector<D3DDescriptorHandle> cbvSrvUavDescriptors;
-  std::vector<D3DDescriptorHandle> rtvDescriptors;
+  std::vector<D3DDescriptorHandle*> defaultRtvDescriptor;
+  std::vector<D3DDescriptorHandle*> defaultUavDescriptor;
+  std::unique_ptr<D3DDescriptorHandle> dsvDescriptor;
+  std::vector<std::unique_ptr<D3DDescriptorHandle>> cbvSrvUavDescriptors;
+  std::vector<std::unique_ptr<D3DDescriptorHandle>> rtvDescriptors;
   D3DSampler *defaultSampler = nullptr;
   
   struct SrvData {
     D3D12_SHADER_RESOURCE_VIEW_DESC desc;
-    D3DDescriptorHandle handle;
+    D3DDescriptorHandle *handle = nullptr;
     uint32_t plane = 0;
   };
   std::vector<SrvData> srvDescriptorCache;
   struct UavData {
       D3D12_UNORDERED_ACCESS_VIEW_DESC desc;
-      D3DDescriptorHandle handle;
+      D3DDescriptorHandle *handle = nullptr;
   };
   std::vector<UavData> uavDescriptorCache;
   D3D12_RESOURCE_DESC resourceDesc;

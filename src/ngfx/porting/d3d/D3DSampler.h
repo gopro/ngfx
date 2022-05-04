@@ -29,7 +29,7 @@ class D3DGraphicsContext;
 class D3DSampler : public Sampler {
 public:
 	void create(D3DGraphicsContext* ctx, const D3DSamplerDesc & samplerDesc);
-	D3DDescriptorHandle handle;
+	std::unique_ptr<D3DDescriptorHandle> handle;
 	D3DSamplerDesc desc;
 private:
 	D3DGraphicsContext* ctx = nullptr;

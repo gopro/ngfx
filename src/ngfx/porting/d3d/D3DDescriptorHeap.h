@@ -33,7 +33,7 @@ public:
   D3D12_DESCRIPTOR_HEAP_TYPE type;
   ComPtr<ID3D12DescriptorHeap> v;
 private:
-    D3DDescriptorHandle head;
+    std::unique_ptr<D3DDescriptorHandle> head;
     int index = 0;
     uint32_t descriptorSize = 0;
     std::vector<uint8_t> state;

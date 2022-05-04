@@ -77,9 +77,9 @@ void D3DTexture::createDepthStencilView() {
     dsvDesc.Format = DXGI_FORMAT(format);
     dsvDesc.ViewDimension = (numSamples > 1) ? D3D12_DSV_DIMENSION_TEXTURE2DMS
         : D3D12_DSV_DIMENSION_TEXTURE2D;
-    dsvDescriptorHeap->getHandle(dsvDescriptor);
+    dsvDescriptorHeap->getHandle(*dsvDescriptor);
     D3D_TRACE(d3dDevice->CreateDepthStencilView(
-        v.Get(), &dsvDesc, dsvDescriptor.cpuHandle));
+        v.Get(), &dsvDesc, dsvDescriptor->cpuHandle));
 }
 
 void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
@@ -226,13 +226,12 @@ D3DSampler* D3DTexture::getSampler(D3D12_FILTER filter) {
     samplerDesc.Filter = filter;
     auto sampler = make_unique<D3DSampler>();
     sampler->create(ctx, samplerDesc);
-    D3DDescriptorHandle result = sampler->handle;
     D3DSampler* r = sampler.get();
     samplerCache.emplace_back(std::move(sampler));
     return r;
 }
 
-D3DDescriptorHandle D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
+D3DDescriptorHandle* D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
     uint32_t numMipLevels, uint32_t plane) {
     for (auto& srvData : srvDescriptorCache) {
         if (textureType == TEXTURE_TYPE_2D &&
@@ -280,13 +279,13 @@ D3DDescriptorHandle D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
     }
     auto& cbvSrvUavDescriptorHeap = ctx->d3dCbvSrvUavDescriptorHeap;
     auto d3dDevice = ctx->d3dDevice.v.Get();
-    D3DDescriptorHandle handle;
-    cbvSrvUavDescriptorHeap.getHandle(handle);
+    auto handle = make_unique<D3DDescriptorHandle>();
+    cbvSrvUavDescriptorHeap.getHandle(*handle);
     D3D_TRACE(d3dDevice->CreateShaderResourceView(
-        v.Get(), &srvDesc, handle.cpuHandle));
+        v.Get(), &srvDesc, handle->cpuHandle));
     SrvData srvData;
     srvData.desc = srvDesc;
-    srvData.handle = handle;
+    srvData.handle = handle.get();
     srvData.plane = plane;
     cbvSrvUavDescriptors.emplace_back(std::move(handle));
     auto result = srvData.handle;
@@ -294,7 +293,7 @@ D3DDescriptorHandle D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
     return result;
 }
 
-D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel, uint32_t plane) {
+D3DDescriptorHandle* D3DTexture::getUavDescriptor(uint32_t mipLevel, uint32_t plane) {
     for (auto& uavData : uavDescriptorCache) {
         if (textureType == TEXTURE_TYPE_2D &&
             uavData.desc.Texture2D.MipSlice == mipLevel
@@ -318,13 +317,13 @@ D3DDescriptorHandle D3DTexture::getUavDescriptor(uint32_t mipLevel, uint32_t pla
     }
     auto& cbvSrvUavDescriptorHeap = ctx->d3dCbvSrvUavDescriptorHeap;
     auto d3dDevice = ctx->d3dDevice.v.Get();
-    D3DDescriptorHandle handle;
-    cbvSrvUavDescriptorHeap.getHandle(handle);
+    auto handle = make_unique<D3DDescriptorHandle>();
+    cbvSrvUavDescriptorHeap.getHandle(*handle);
     D3D_TRACE(d3dDevice->CreateUnorderedAccessView(
-        v.Get(), nullptr, &uavDesc, handle.cpuHandle));
+        v.Get(), nullptr, &uavDesc, handle->cpuHandle));
     UavData uavData;
     uavData.desc = uavDesc;
-    uavData.handle = handle;
+    uavData.handle = handle.get();
     cbvSrvUavDescriptors.emplace_back(std::move(handle));
     auto result = uavData.handle;
     uavDescriptorCache.emplace_back(std::move(uavData));
@@ -365,7 +364,7 @@ D3DTexture::getRtvDesc(TextureType textureType, DXGI_FORMAT format, uint32_t num
     }
     return rtvDesc;
 }
-D3DDescriptorHandle D3DTexture::getRtvDescriptor(uint32_t level,
+D3DDescriptorHandle* D3DTexture::getRtvDescriptor(uint32_t level,
     uint32_t baseLayer,
     uint32_t layerCount,
     uint32_t planeIndex) {
@@ -397,13 +396,13 @@ D3DDescriptorHandle D3DTexture::getRtvDescriptor(uint32_t level,
     D3D12_RENDER_TARGET_VIEW_DESC rtvDesc =
         getRtvDesc(textureType, DXGI_FORMAT(format), numSamples, level, baseLayer,
             layerCount, planeIndex);
-    D3DDescriptorHandle handle;
-    rtvDescriptorHeap->getHandle(handle);
+    auto handle = make_unique<D3DDescriptorHandle>();
+    rtvDescriptorHeap->getHandle(*handle);
     D3D_TRACE(d3dDevice->CreateRenderTargetView(
-        v.Get(), &rtvDesc, handle.cpuHandle));
+        v.Get(), &rtvDesc, handle->cpuHandle));
     RtvData rtvData;
     rtvData.desc = rtvDesc;
-    rtvData.handle = handle;
+    rtvData.handle = handle.get();
     rtvDescriptors.emplace_back(std::move(handle));
     auto result = rtvData.handle;
     rtvDescriptorCache.emplace_back(std::move(rtvData));

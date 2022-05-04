@@ -26,6 +26,8 @@
 #include "ngfx/porting/d3d/D3DGraphicsContext.h"
 #include "ngfx/core/Timer.h"
 using namespace ngfx;
+using namespace std;
+
 #define DEFAULT_SURFACE_FORMAT PIXELFORMAT_RGBA8_UNORM
 
 void D3DSwapchain::create(D3DGraphicsContext *ctx, D3DSurface *surface) {
@@ -71,11 +73,11 @@ void D3DSwapchain::createSwapchainRenderTargetViews(uint32_t w, uint32_t h) {
   renderTargetDescriptors.resize(numImages);
   for (UINT n = 0; n < numImages; n++) {
     V(v->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n])));
-    D3DDescriptorHandle handle;
-    rtvDescriptorHeap->getHandle(handle);
+    auto& handle = renderTargetDescriptors[n];
+    handle = make_unique<D3DDescriptorHandle>();
+    rtvDescriptorHeap->getHandle(*handle);
     D3D_TRACE(d3dDevice->CreateRenderTargetView(
-        renderTargets[n].Get(), nullptr, handle.cpuHandle));
-    renderTargetDescriptors[n] = std::move(handle);
+        renderTargets[n].Get(), nullptr, handle->cpuHandle));
   }
 }
 

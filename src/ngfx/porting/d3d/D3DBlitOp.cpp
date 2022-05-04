@@ -80,10 +80,10 @@ void D3DBlitOp::draw(D3DCommandList *cmdList, D3DGraphics *graphics) {
   graphics->bindVertexBuffer(cmdList, bTexCoord.get(), B_TEXCOORD,
                              sizeof(vec2));
   D3D_TRACE(cmdList->v->SetGraphicsRootDescriptorTable(
-      U_TEXTURE, srcTexture->getSrvDescriptor(srcLevel, 1).gpuHandle));
+      U_TEXTURE, srcTexture->getSrvDescriptor(srcLevel, 1)->gpuHandle));
   D3D12_FILTER filter = D3D12_FILTER_MIN_MAG_LINEAR_MIP_POINT;
   D3D_TRACE(cmdList->v->SetGraphicsRootDescriptorTable(
-      U_TEXTURE + 1, srcTexture->getSampler(filter)->handle.gpuHandle));
+      U_TEXTURE + 1, srcTexture->getSampler(filter)->handle->gpuHandle));
   graphics->draw(cmdList, 4);
 }
 

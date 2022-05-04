@@ -28,8 +28,9 @@ using namespace std;
 void D3DSampler::create(D3DGraphicsContext* ctx, const D3DSamplerDesc &samplerDesc) {
 	this->ctx = ctx;
 	desc = samplerDesc;
-	ctx->d3dSamplerDescriptorHeap.getHandle(handle);
-	D3D_TRACE(ctx->d3dDevice.v->CreateSampler(&samplerDesc, handle.cpuHandle));
+	handle = make_unique<D3DDescriptorHandle>();
+	ctx->d3dSamplerDescriptorHeap.getHandle(*handle);
+	D3D_TRACE(ctx->d3dDevice.v->CreateSampler(&samplerDesc, handle->cpuHandle));
 }
 
 Sampler* Sampler::create(GraphicsContext *ctx, const SamplerDesc &samplerDesc) {

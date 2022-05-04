@@ -33,10 +33,10 @@ void D3DAttachment::create(D3DTexture* texture, uint32_t level, uint32_t baseLay
     bool depthStencilAttachment =
         texture->imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     cpuDescriptor = depthStencilAttachment
-        ? texture->dsvDescriptor.cpuHandle
+        ? texture->dsvDescriptor->cpuHandle
         : texture
         ->getRtvDescriptor(level, baseLayer, layerCount)
-        .cpuHandle;
+        ->cpuHandle;
     subresourceIndex = baseLayer * texture->mipLevels + level;
     imageUsageFlags = texture->imageUsageFlags;
     numSamples = texture->numSamples;
@@ -72,7 +72,7 @@ void D3DFramebuffer::create(std::vector<D3DAttachment> &d3dAttachments,
 
 void D3DAttachment::createFromSwapchainImage(D3DSwapchain *d3dSwapchain, uint32_t index) {
     resource = d3dSwapchain->renderTargets[index].Get();
-    cpuDescriptor = d3dSwapchain->renderTargetDescriptors[index].cpuHandle;
+    cpuDescriptor = d3dSwapchain->renderTargetDescriptors[index]->cpuHandle;
     subresourceIndex = 0;
     imageUsageFlags = IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     numSamples = 1;
@@ -81,7 +81,7 @@ void D3DAttachment::createFromSwapchainImage(D3DSwapchain *d3dSwapchain, uint32_
 
 void D3DAttachment::createFromDepthStencilAttachment(D3DTexture* d3dDepthStencilAttachment) {
     resource = d3dDepthStencilAttachment->v.Get();
-    cpuDescriptor = d3dDepthStencilAttachment->dsvDescriptor.cpuHandle;
+    cpuDescriptor = d3dDepthStencilAttachment->dsvDescriptor->cpuHandle;
     subresourceIndex = 0;
     imageUsageFlags = IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
     numSamples = 1;
@@ -104,10 +104,10 @@ Framebuffer *Framebuffer::create(Device *device, RenderPass *renderPass,
     d3dAttachment = {
         d3dTexture->v.Get(),
         depthStencilAttachment
-            ? d3dTexture->dsvDescriptor.cpuHandle
+            ? d3dTexture->dsvDescriptor->cpuHandle
             : d3dTexture
                   ->getRtvDescriptor(attachment.level, attachment.layer, layers)
-                  .cpuHandle,
+                  ->cpuHandle,
         attachment.layer * d3dTexture->mipLevels + attachment.level,
         d3dTexture->imageUsageFlags,
         d3dTexture->numSamples,

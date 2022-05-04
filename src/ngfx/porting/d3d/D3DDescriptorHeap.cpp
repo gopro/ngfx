@@ -21,6 +21,7 @@
 #include "ngfx/porting/d3d/D3DDescriptorHeap.h"
 #include "ngfx/porting/d3d/D3DDebugUtil.h"
 using namespace ngfx;
+using namespace std;
 
 void D3DDescriptorHeap::create(ID3D12Device *d3dDevice,
                                D3D12_DESCRIPTOR_HEAP_TYPE type,
@@ -31,18 +32,19 @@ void D3DDescriptorHeap::create(ID3D12Device *d3dDevice,
   this->maxDescriptors = maxDescriptors;
   D3D12_DESCRIPTOR_HEAP_DESC desc = {type, maxDescriptors, flags, 0};
   V(d3dDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&v)));
-  D3D_TRACE(head.cpuHandle = v->GetCPUDescriptorHandleForHeapStart());
+  head = make_unique<D3DDescriptorHandle>();
+  D3D_TRACE(head->cpuHandle = v->GetCPUDescriptorHandleForHeapStart());
   D3D_TRACE(descriptorSize =
                 d3dDevice->GetDescriptorHandleIncrementSize(type));
-  D3D_TRACE(head.gpuHandle = v->GetGPUDescriptorHandleForHeapStart());
-  head.parent = this;
+  D3D_TRACE(head->gpuHandle = v->GetGPUDescriptorHandleForHeapStart());
+  head->parent = this;
   index = 0;
   state.resize(maxDescriptors);
   std::fill(state.begin(), state.end(), 0);
 }
 
 D3DDescriptorHeap::~D3DDescriptorHeap() {
-    head.parent = nullptr;
+    head->parent = nullptr;
 }
 
 bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
@@ -55,8 +57,8 @@ bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
             }
         }
     }
-    handle.cpuHandle.ptr = head.cpuHandle.ptr + descriptorSize * index;
-    handle.gpuHandle.ptr = head.gpuHandle.ptr + descriptorSize * index;
+    handle.cpuHandle.ptr = head->cpuHandle.ptr + descriptorSize * index;
+    handle.gpuHandle.ptr = head->gpuHandle.ptr + descriptorSize * index;
     handle.parent = this;
     state[index] = 1;
     index++;
@@ -71,6 +73,6 @@ err:
 void D3DDescriptorHeap::freeHandle(D3DDescriptorHandle *handle) {
     if (handle->parent == nullptr)
         return;
-    int handleIndex = (handle->cpuHandle.ptr - head.cpuHandle.ptr) / descriptorSize;
+    int handleIndex = (handle->cpuHandle.ptr - head->cpuHandle.ptr) / descriptorSize;
     state[handleIndex] = 0;
 }
