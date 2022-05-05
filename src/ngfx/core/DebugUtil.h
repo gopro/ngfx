@@ -26,7 +26,7 @@
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
-#define LOG_TO_DEBUG_CONSOLE
+//#define LOG_TO_DEBUG_CONSOLE
 
 #if defined(WIN32) && defined(LOG_TO_DEBUG_CONSOLE)
 #include <Windows.h>
@@ -38,23 +38,15 @@ inline void debugMessage(FILE* filenum, const char* fmt, ...) {
     va_end(args);
     OutputDebugStringA((buffer));
 }
-inline void debugErrMessage(FILE* filenum, const char* fmt, ...) {
-    char buffer[1024];
-    va_list args;
-    va_start(args, fmt);
-    vsprintf(buffer, fmt, args);
-    va_end(args);
-    OutputDebugStringA((buffer));
-}
 #define LOG_FN debugMessage
 #else
-#define LOG_FUNCTION fprintf
+#define LOG_FN fprintf
 #endif
 
 #define NGFX_LOG(fmt, ...) LOG_FN(stderr, fmt "\n", ##__VA_ARGS__)
 #define NGFX_ERR(fmt, ...)                                                     \
   {                                                                            \
-    debugErrMessage(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                  \
+    LOG_FN(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                  \
             __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
     /*::DebugUtil::Exit(1); */                                                 \
   }
