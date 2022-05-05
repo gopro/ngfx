@@ -48,6 +48,7 @@ D3DDescriptorHeap::~D3DDescriptorHeap() {
 }
 
 bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
+    lock_guard lock(threadMutex);
     if (state[index]) {
         index = 0;
         while (state[index]) {
@@ -61,6 +62,7 @@ bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
     handle.gpuHandle.ptr = head->gpuHandle.ptr + descriptorSize * index;
     handle.parent = this;
     state[index] = 1;
+    numDescriptors++;
     index++;
     if (index == state.size())
         index = 0;
@@ -71,8 +73,10 @@ err:
 }
 
 void D3DDescriptorHeap::freeHandle(D3DDescriptorHandle *handle) {
+    lock_guard lock(threadMutex);
     if (handle->parent == nullptr)
         return;
     int handleIndex = (handle->cpuHandle.ptr - head->cpuHandle.ptr) / descriptorSize;
     state[handleIndex] = 0;
+    numDescriptors--;
 }

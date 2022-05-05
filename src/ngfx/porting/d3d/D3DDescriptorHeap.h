@@ -21,6 +21,8 @@
 #pragma once
 #include "ngfx/porting/d3d/D3DDescriptorHandle.h"
 #include "ngfx/porting/d3d/D3DUtil.h"
+#include <mutex>
+
 namespace ngfx {
 class D3DDescriptorHeap {
 public:
@@ -37,5 +39,7 @@ private:
     int index = 0;
     uint32_t descriptorSize = 0;
     std::vector<uint8_t> state;
+    std::mutex threadMutex;
+    int numDescriptors = 0;
 };
 } // namespace ngfx
