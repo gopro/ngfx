@@ -79,10 +79,12 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
     d3dSwapchain->create(this, d3d(surface));
     surfaceFormat = PixelFormat(DXGI_FORMAT_R8G8B8A8_UNORM);
     numDrawCommandBuffers = d3dSwapchain->numImages;
+    currentImageIndex = 0;
   } else {
     offscreen = true;
     numDrawCommandBuffers = 1;
     surfaceFormat = defaultOffscreenSurfaceFormat;
+    currentImageIndex = -1;
   }
   d3dDrawCommandLists.resize(numDrawCommandBuffers);
   for (auto &cmdList : d3dDrawCommandLists) {

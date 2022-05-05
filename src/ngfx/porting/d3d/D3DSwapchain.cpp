@@ -58,6 +58,10 @@ void D3DSwapchain::create(D3DGraphicsContext *ctx, D3DSurface *surface) {
   createSwapchainRenderTargetViews(w, h);
 }
 
+D3DSwapchain::~D3DSwapchain() {
+    ctx->queue->waitIdle();
+}
+
 void D3DSwapchain::getSwapchainRenderTargets() {
   HRESULT hResult;
   renderTargets.resize(numImages);

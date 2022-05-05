@@ -29,7 +29,7 @@ class D3DGraphicsContext;
 class D3DSwapchain : public Swapchain {
 public:
   void create(D3DGraphicsContext *ctx, D3DSurface *surface);
-  virtual ~D3DSwapchain() {}
+  virtual ~D3DSwapchain();
   void acquireNextImage() override;
   void present();
   void setName(const std::string& name) override;
