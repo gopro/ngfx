@@ -8,11 +8,12 @@
 #include "ngfx/core/Timer.h"
 using namespace ngfx;
 using namespace std;
-
+static int numTextures = 0;
 D3DTexture::~D3DTexture() {
     if (stagingBuffer)
         delete stagingBuffer;
-    //NGFX_LOG_TRACE("Resource: %p deleteMap size: %d", v.Get(), deleteMap.size());
+    numTextures--;
+    NGFX_LOG_TRACE("numTextures: %d", numTextures);
 }
 DXGI_FORMAT D3DTexture::getViewFormat(DXGI_FORMAT resourceFormat, uint32_t planeIndex) {
     DXGI_FORMAT format;
@@ -88,6 +89,7 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     ImageUsageFlags usageFlags, TextureType textureType,
     bool genMipmaps, uint32_t numSamples,
     const D3DSamplerDesc *samplerDesc, int32_t dataPitch) {
+    numTextures++;
     HRESULT hResult;
     this->ctx = ctx;
     this->graphics = graphics;
@@ -162,6 +164,7 @@ void D3DTexture::createFromHandle(D3DGraphicsContext* ctx, D3DGraphics* graphics
     ImageUsageFlags usageFlags, TextureType textureType,
     uint32_t numSamples,
     const D3DSamplerDesc* samplerDesc) {
+    numTextures++;
     HRESULT hResult;
     this->ctx = ctx;
     this->graphics = graphics;

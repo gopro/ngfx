@@ -63,6 +63,7 @@ bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
     handle.parent = this;
     state[index] = 1;
     numDescriptors++;
+    NGFX_LOG_TRACE("numDescriptors: %d", numDescriptors);
     index++;
     if (index == state.size())
         index = 0;
@@ -79,4 +80,5 @@ void D3DDescriptorHeap::freeHandle(D3DDescriptorHandle *handle) {
     int handleIndex = (handle->cpuHandle.ptr - head->cpuHandle.ptr) / descriptorSize;
     state[handleIndex] = 0;
     numDescriptors--;
+    NGFX_LOG_TRACE("numDescriptors: %d", numDescriptors);
 }
