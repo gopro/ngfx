@@ -48,7 +48,14 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   if (debug) {
       ID3D12InfoQueue* infoQueue = nullptr;
       d3dDevice.v->QueryInterface(&infoQueue);
-      infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE); // FALSE); // TRUE);
+      infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, TRUE);
+
+      //filter warnings
+      D3D12_INFO_QUEUE_FILTER filter{};
+      D3D12_MESSAGE_SEVERITY severityList[] = { D3D12_MESSAGE_SEVERITY_ERROR, D3D12_MESSAGE_SEVERITY_CORRUPTION };
+      filter.AllowList.NumSeverities = sizeof(severityList) / sizeof(severityList[0]);
+      filter.AllowList.pSeverityList = severityList;
+      infoQueue->PushStorageFilter(&filter);
   }
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
