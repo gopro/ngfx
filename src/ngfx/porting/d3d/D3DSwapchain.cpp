@@ -87,6 +87,7 @@ void D3DSwapchain::createSwapchainRenderTargetViews(uint32_t w, uint32_t h) {
 
 void D3DSwapchain::acquireNextImage() {
   ctx->currentImageIndex = v->GetCurrentBackBufferIndex();
+  //NGFX_LOG_TRACE("acquire image: %d", ctx->currentImageIndex);
   auto waitFence = ctx->frameFences[ctx->currentImageIndex];
   waitFence->wait();
   waitFence->reset();
