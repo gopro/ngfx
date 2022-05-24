@@ -250,13 +250,15 @@ int ShaderTools::compileShaderHLSL(const string &file,
 
   string shaderModel = "";
   if (strstr(inFileName.c_str(), ".vert"))
-    shaderModel = "vs_5_0";
+    shaderModel = "vs_6_0";
   else if (strstr(inFileName.c_str(), ".frag"))
-    shaderModel = "ps_5_0";
+    shaderModel = "ps_6_0";
   else if (strstr(inFileName.c_str(), ".comp"))
-    shaderModel = "cs_5_0";
-  int result = cmd("dxc.exe /T " + shaderModel + " /Fo " + outFileName + " " +
-                   inFileName);
+    shaderModel = "cs_6_0";
+  const char* dxc_path_env = getenv("DXC_PATH");
+  string dxc_path = dxc_path_env ? std::string(dxc_path_env) : "dxc.exe";
+  int result = cmd(dxc_path + " /T " + shaderModel + " /Fo " + outFileName + " - D DIRECT3D12 " +
+      inFileName + " -O3 -all-resources-bound -Fc " + outFileName + ".info");
   if (result == 0)
     NGFX_LOG("compiled file: %s", file.c_str());
   else
