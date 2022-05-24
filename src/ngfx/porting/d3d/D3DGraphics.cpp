@@ -349,12 +349,12 @@ void D3DGraphics::setViewport(CommandBuffer *cmdBuffer, Rect2D r) {
 void D3DGraphics::setScissor(CommandBuffer *cmdBuffer, Rect2D r) {
   scissorRect = r;
 #ifdef ORIGIN_BOTTOM_LEFT
-  auto &v = viewport;
-  D3D12_RECT d3dScissorRect = {long(r.x), long(v.h - r.y - r.h),
-                               long(r.x + r.w), long(v.h - r.y)};
+  D3D12_RECT d3dScissorRect = { long(r.x), long(r.y), long(r.x + r.w),
+                               long(r.y + r.h) };
 #else
-  D3D12_RECT d3dScissorRect = {long(r.x), long(r.y), long(r.x + r.w),
-                               long(r.y + r.h)};
+  auto& v = viewport;
+  D3D12_RECT d3dScissorRect = { long(r.x), long(v.h - r.y - r.h),
+                               long(r.x + r.w), long(v.h - r.y) };
 #endif
   D3D_TRACE(d3d(cmdBuffer)->v->RSSetScissorRects(1, &d3dScissorRect));
 }
