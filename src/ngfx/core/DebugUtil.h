@@ -44,12 +44,14 @@ inline void debugMessage(FILE* filenum, const char* fmt, ...) {
 #endif
 
 #define NGFX_LOG(fmt, ...) LOG_FN(stderr, fmt "\n", ##__VA_ARGS__)
-#define NGFX_ERR(fmt, ...)                                                     \
-  {                                                                            \
-    LOG_FN(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                  \
-            __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
-    /*::DebugUtil::Exit(1); */                                                 \
-  }
+#define NGFX_ERR(fmt, ...) \
+{ \
+    char buffer[1024]; \
+    snprintf(buffer, sizeof(buffer), "ERROR: [%s][%s][%d] " fmt "\n", __FILE__, \
+        __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__); \
+    LOG_FN(stderr, "%s", buffer); \
+    throw std::exception(buffer); \
+}
 #define NGFX_LOG_TRACE(fmt, ...)                                               \
   NGFX_LOG("[%s][%s][%d] " fmt, __FILE__, __PRETTY_FUNCTION__, __LINE__,       \
            ##__VA_ARGS__)
@@ -62,4 +64,3 @@ struct DebugUtil {
       exit(code);
   };
 };
-
