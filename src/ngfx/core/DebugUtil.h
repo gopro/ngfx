@@ -21,6 +21,7 @@
 #pragma once
 #include <cstdio>
 #include <cstdlib>
+#include <stdexcept>
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
@@ -35,9 +36,11 @@
 struct DebugUtil {
   static inline void Exit(uint32_t code) { exit(code); };
 };
-#define NGFX_ERR(fmt, ...)                                                     \
-  {                                                                            \
-    fprintf(stderr, "ERROR: [%s][%s][%d] " fmt "\n", __FILE__,                 \
-            __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);                     \
-    DebugUtil::Exit(1);                                                        \
-  }
+#define NGFX_ERR(fmt, ...) \
+{ \
+    char buffer[1024]; \
+    snprintf(buffer, sizeof(buffer), "ERROR: [%s][%s][%d] " fmt "\n", __FILE__, \
+        __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__); \
+    fputs(buffer, stderr); \
+    throw std::exception(buffer); \
+}
