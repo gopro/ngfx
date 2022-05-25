@@ -80,6 +80,7 @@ private:
                         D3DRenderPass &renderPass);
   void createFences(ID3D12Device *device);
   void createSwapchainFramebuffers(int w, int h);
+  DXGI_FORMAT findSupportedFormat(const std::vector<DXGI_FORMAT>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1);
 };
 D3D_CAST(GraphicsContext);
 } // namespace ngfx

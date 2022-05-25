@@ -27,26 +27,38 @@ using namespace std;
 using Microsoft::WRL::ComPtr;
 #define MAX_DESCRIPTORS 1024
 
-void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
-                                bool debug) {
-  HRESULT hResult;
-  this->debug = debug;
-  this->enableDepthStencil = enableDepthStencil;
-  depthFormat = PIXELFORMAT_D16_UNORM;
-  UINT dxgiFactoryFlags = 0;
-  if (debug) {
-    ComPtr<ID3D12Debug> debugController;
-    V(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
-    debugController->EnableDebugLayer();
-    // Enable additional debug layers.
-    dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
-  }
-  V(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&d3dFactory)));
-  d3dDevice.create(this);
-  d3dCommandQueue.create(this);
-  createDescriptorHeaps();
-  d3dQueryTimestampHeap.create(d3dDevice.v.Get(), D3D12_QUERY_HEAP_TYPE_TIMESTAMP, 2);
-  d3dTimestampResultBuffer.create(this, 2 * sizeof(uint64_t));
+void D3DGraphicsContext::create(const char* appName, bool enableDepthStencil,
+    bool debug) {
+    HRESULT hResult;
+    this->debug = debug;
+    this->enableDepthStencil = enableDepthStencil;
+    UINT dxgiFactoryFlags = 0;
+    if (debug) {
+        ComPtr<ID3D12Debug> debugController;
+        V(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
+        debugController->EnableDebugLayer();
+        // Enable additional debug layers.
+        dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+    }
+    V(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&d3dFactory)));
+    d3dDevice.create(this);
+    std::vector<DXGI_FORMAT> depthFormatCandidates = { DXGI_FORMAT_D32_FLOAT_S8X24_UINT, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D16_UNORM };
+    depthFormat = PixelFormat(findSupportedFormat(depthFormatCandidates, D3D12_FORMAT_SUPPORT1_DEPTH_STENCIL));
+    d3dCommandQueue.create(this);
+    createDescriptorHeaps();
+    d3dQueryTimestampHeap.create(d3dDevice.v.Get(), D3D12_QUERY_HEAP_TYPE_TIMESTAMP, 2);
+    d3dTimestampResultBuffer.create(this, 2 * sizeof(uint64_t));
+}
+
+DXGI_FORMAT D3DGraphicsContext::findSupportedFormat(const std::vector<DXGI_FORMAT>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1) {
+    HRESULT hResult;
+    for (const auto format : formats) {
+        D3D12_FEATURE_DATA_FORMAT_SUPPORT formatSupport = { format };
+        V(d3dDevice.v->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &formatSupport, sizeof(formatSupport)));
+        if (formatSupport.Support1 & formatSupport1)
+            return format;
+    }
+    return DXGI_FORMAT_UNKNOWN;
 }
 
 void D3DGraphicsContext::createDescriptorHeaps() {
