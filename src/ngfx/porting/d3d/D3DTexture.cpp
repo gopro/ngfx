@@ -58,17 +58,18 @@ void D3DTexture::create(D3DGraphicsContext *ctx, D3DGraphics *graphics,
   if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
     resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
   auto d3dDevice = ctx->d3dDevice.v.Get();
+  bool isSampled = (usageFlags & IMAGE_USAGE_SAMPLED_BIT);
   if (textureType == TEXTURE_TYPE_3D) {
     resourceDesc =
         CD3DX12_RESOURCE_DESC::Tex3D(format, w, h, d, 1, resourceFlags);
   } else {
     auto texFormat = format;
-    if (texFormat == DXGI_FORMAT_D16_UNORM &&
-        (usageFlags & IMAGE_USAGE_SAMPLED_BIT))
-      texFormat = DXGI_FORMAT_R16_TYPELESS;
-    else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT &&
-             (usageFlags & IMAGE_USAGE_SAMPLED_BIT))
-      texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+    if (texFormat == DXGI_FORMAT_D16_UNORM && isSampled)
+        texFormat = DXGI_FORMAT_R16_TYPELESS;
+    else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT && isSampled)
+        texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+    else if (texFormat == DXGI_FORMAT_D32_FLOAT_S8X24_UINT && isSampled)
+        texFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
     resourceDesc =
         CD3DX12_RESOURCE_DESC::Tex2D(texFormat, w, h, d * arrayLayers,
                                      mipLevels, numSamples, 0, resourceFlags);
@@ -85,7 +86,7 @@ void D3DTexture::create(D3DGraphicsContext *ctx, D3DGraphics *graphics,
   for (auto &s : currentResourceState)
     s = D3D12_RESOURCE_STATE_COPY_DEST;
 
-  if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+  if (isSampled) {
     defaultSrvDescriptor = getSrvDescriptor(0, mipLevels);
     defaultSamplerDescriptor = getSamplerDescriptor(samplerDesc.Filter);
   }
