@@ -170,6 +170,7 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
       state.lineWidth,
       state.depthTestEnable,
       state.depthWriteEnable,
+      D3D12_COMPARISON_FUNC(state.depthFunc),
       d3d(state.renderPass),
       state.numSamples,
       state.numColorAttachments};

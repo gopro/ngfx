@@ -47,6 +47,7 @@ public:
     FrontFace frontFace = FRONT_FACE_COUNTER_CLOCKWISE;
     float lineWidth = 1.0f;
     bool depthTestEnable = false, depthWriteEnable = false;
+    CompareOp depthFunc = COMPARE_OP_LESS;
     RenderPass *renderPass = nullptr;
     uint32_t numSamples = 1, numColorAttachments = 1;
   };
