@@ -91,6 +91,18 @@ void D3DGraphicsPipeline::create(
       D3D12_DEPTH_WRITE_MASK_ALL :
       D3D12_DEPTH_WRITE_MASK_ZERO;
   depthStencilDesc.DepthFunc = state.depthFunc;
+  depthStencilDesc.StencilEnable = state.stencilEnable;
+  depthStencilDesc.StencilReadMask = state.stencilReadMask;
+  depthStencilDesc.StencilWriteMask = state.stencilWriteMask;
+  depthStencilDesc.FrontFace.StencilDepthFailOp = state.frontStencilDepthFailOp;
+  depthStencilDesc.FrontFace.StencilFailOp = state.frontStencilFailOp;
+  depthStencilDesc.FrontFace.StencilFunc = state.frontStencilFunc;
+  depthStencilDesc.FrontFace.StencilPassOp = state.frontStencilPassOp;
+  depthStencilDesc.BackFace.StencilDepthFailOp = state.backStencilDepthFailOp;
+  depthStencilDesc.BackFace.StencilFailOp = state.backStencilFailOp;
+  depthStencilDesc.BackFace.StencilFunc = state.backStencilFunc;
+  depthStencilDesc.BackFace.StencilPassOp = state.backStencilPassOp;
+  d3dStencilRef = state.stencilRef;
 
   D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
   desc.InputLayout = {inputElements.data(), UINT(inputElements.size())};
@@ -176,6 +188,18 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
       state.depthTestEnable,
       state.depthWriteEnable,
       D3D12_COMPARISON_FUNC(state.depthFunc),
+      state.stencilEnable,
+      state.stencilReadMask,
+      state.stencilWriteMask,
+      D3D12_STENCIL_OP(state.frontStencilFailOp),
+      D3D12_STENCIL_OP(state.frontStencilDepthFailOp),
+      D3D12_STENCIL_OP(state.frontStencilPassOp),
+      D3D12_COMPARISON_FUNC(state.frontStencilFunc),
+      D3D12_STENCIL_OP(state.backStencilFailOp),
+      D3D12_STENCIL_OP(state.backStencilDepthFailOp),
+      D3D12_STENCIL_OP(state.backStencilPassOp),
+      D3D12_COMPARISON_FUNC(state.backStencilFunc),
+      state.stencilRef,
       d3d(state.renderPass),
       state.numSamples,
       state.numColorAttachments};

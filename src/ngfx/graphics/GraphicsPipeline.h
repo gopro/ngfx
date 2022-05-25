@@ -48,6 +48,18 @@ public:
     float lineWidth = 1.0f;
     bool depthTestEnable = false, depthWriteEnable = false;
     CompareOp depthFunc = COMPARE_OP_LESS;
+    bool stencilEnable = false;
+    uint8_t stencilReadMask = DEFAULT_STENCIL_READ_MASK;
+    uint8_t stencilWriteMask = DEFAULT_STENCIL_WRITE_MASK;
+    StencilOp frontStencilFailOp = STENCIL_OP_KEEP;
+    StencilOp frontStencilDepthFailOp = STENCIL_OP_KEEP;
+    StencilOp frontStencilPassOp = STENCIL_OP_KEEP;
+    CompareOp frontStencilFunc = COMPARE_OP_ALWAYS;
+    StencilOp backStencilFailOp = STENCIL_OP_KEEP;
+    StencilOp backStencilDepthFailOp = STENCIL_OP_KEEP;
+    StencilOp backStencilPassOp = STENCIL_OP_KEEP;
+    CompareOp backStencilFunc = COMPARE_OP_ALWAYS;
+    uint32_t stencilRef = 0;
     RenderPass *renderPass = nullptr;
     uint32_t numSamples = 1, numColorAttachments = 1;
   };
