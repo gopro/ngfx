@@ -208,6 +208,8 @@ void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {
   auto d3dFramebuffer = d3d(currentFramebuffer);
   auto &colorAttachments = d3dFramebuffer->colorAttachments;
   auto &resolveAttachments = d3dFramebuffer->resolveAttachments;
+  auto& depthStencilAttachment = d3dFramebuffer->depthStencilAttachment;
+  auto& depthResolve = d3dFramebuffer->depthResolve;
   auto d3dRenderPass = d3d(currentRenderPass);
   if (!resolveAttachments.empty()) {
     for (uint32_t j = 0; j < colorAttachments.size(); j++) {
@@ -234,6 +236,29 @@ void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {
           d3dCommandList, colorAttachment, d3dRenderPass->initialResourceState,
           d3dRenderPass->finalResourceState, colorAttachment->subresourceIndex);
     }
+  }
+  if (depthResolve) {
+      resourceBarrier(d3dCommandList, depthStencilAttachment,
+          D3D12_RESOURCE_STATE_DEPTH_WRITE,
+          D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
+      resourceBarrier(d3dCommandList, depthResolve,
+          D3D12_RESOURCE_STATE_DEPTH_READ,
+          D3D12_RESOURCE_STATE_RESOLVE_DEST);
+      DXGI_FORMAT texFormat = depthStencilAttachment->format;
+      if (texFormat == DXGI_FORMAT_D16_UNORM)
+          texFormat = DXGI_FORMAT_R16_TYPELESS;
+      else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT)
+          texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+      else if (texFormat == DXGI_FORMAT_D32_FLOAT_S8X24_UINT)
+          texFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+      D3D_TRACE(d3dCommandList->v->ResolveSubresource(
+          depthResolve->resource, depthResolve->subresourceIndex,
+          depthStencilAttachment->resource, depthStencilAttachment->subresourceIndex,
+          texFormat));
+      resourceBarrier(d3dCommandList, depthStencilAttachment,
+          D3D12_RESOURCE_STATE_RESOLVE_DEST,
+          d3dRenderPass->finalResourceState,
+          depthResolve->subresourceIndex);
   }
   currentRenderPass = nullptr;
   currentFramebuffer = nullptr;
