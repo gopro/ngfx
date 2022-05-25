@@ -87,6 +87,10 @@ void D3DGraphicsPipeline::create(
 
   CD3DX12_DEPTH_STENCIL_DESC depthStencilDesc(D3D12_DEFAULT);
   depthStencilDesc.DepthEnable = state.depthTestEnable;
+  depthStencilDesc.DepthWriteMask = state.depthWriteEnable ?
+      D3D12_DEPTH_WRITE_MASK_ALL :
+      D3D12_DEPTH_WRITE_MASK_ZERO;
+  depthStencilDesc.DepthFunc = state.depthFunc;
 
   D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
   desc.InputLayout = {inputElements.data(), UINT(inputElements.size())};
