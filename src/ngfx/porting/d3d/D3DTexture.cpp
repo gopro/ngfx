@@ -41,18 +41,19 @@ void D3DTexture::getResourceDesc() {
         resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
     resourceFlags |= D3D12_RESOURCE_FLAG_ALLOW_SIMULTANEOUS_ACCESS;
     auto d3dDevice = ctx->d3dDevice.v.Get();
+    bool isSampled = (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT);
     if (textureType == TEXTURE_TYPE_3D) {
         resourceDesc =
             CD3DX12_RESOURCE_DESC::Tex3D(DXGI_FORMAT(format), w, h, d, 1, resourceFlags);
     }
     else {
         DXGI_FORMAT texFormat = DXGI_FORMAT(format);
-        if (texFormat == DXGI_FORMAT_D16_UNORM &&
-            (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT))
+        if (texFormat == DXGI_FORMAT_D16_UNORM && isSampled)
             texFormat = DXGI_FORMAT_R16_TYPELESS;
-        else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT &&
-            (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT))
+        else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT && isSampled)
             texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+        else if (texFormat == DXGI_FORMAT_D32_FLOAT_S8X24_UINT && isSampled)
+            texFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
         resourceDesc =
             CD3DX12_RESOURCE_DESC::Tex2D(texFormat, w, h, d * arrayLayers,
                 mipLevels, numSamples, 0, resourceFlags);
@@ -130,7 +131,8 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
     for (auto& s : currentResourceState)
         s = D3D12_RESOURCE_STATE_COPY_DEST;
 
-    if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+    bool isSampled = (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT);
+    if (isSampled) {
         for (uint32_t j = 0; j < numPlanes; j++) {
             defaultSrvDescriptor[j] = getSrvDescriptor(0, mipLevels, j);
         }
