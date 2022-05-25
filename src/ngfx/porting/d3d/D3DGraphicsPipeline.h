@@ -44,6 +44,18 @@ public:
     float lineWidth = 1.0f;
     bool depthTestEnable = false, depthWriteEnable = false;
     D3D12_COMPARISON_FUNC depthFunc = D3D12_COMPARISON_FUNC_LESS;
+    bool stencilEnable = false;
+    UINT8 stencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+    UINT8 stencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+    D3D12_STENCIL_OP frontStencilFailOp = D3D12_STENCIL_OP_KEEP;
+    D3D12_STENCIL_OP frontStencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+    D3D12_STENCIL_OP frontStencilPassOp = D3D12_STENCIL_OP_KEEP;
+    D3D12_COMPARISON_FUNC frontStencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+    D3D12_STENCIL_OP backStencilFailOp = D3D12_STENCIL_OP_KEEP;
+    D3D12_STENCIL_OP backStencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+    D3D12_STENCIL_OP backStencilPassOp = D3D12_STENCIL_OP_KEEP;
+    D3D12_COMPARISON_FUNC backStencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+    uint32_t stencilRef = 0;
     D3DRenderPass *renderPass = nullptr;
     uint32_t numSamples = 1, numColorAttachments = 1;
   };
@@ -56,7 +68,7 @@ public:
               const Shaders &shaders, DXGI_FORMAT colorFormat,
               DXGI_FORMAT depthFormat);
   D3D_PRIMITIVE_TOPOLOGY d3dPrimitiveTopology;
-
+  uint32_t d3dStencilRef = 0;
 private:
   D3D12_PRIMITIVE_TOPOLOGY_TYPE
   getPrimitiveTopologyType(D3D_PRIMITIVE_TOPOLOGY topology);

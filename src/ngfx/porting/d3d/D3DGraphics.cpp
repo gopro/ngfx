@@ -53,6 +53,8 @@ void D3DGraphics::bindGraphicsPipeline(CommandBuffer *commandBuffer,
   auto d3dGraphicsPipeline = d3d(graphicsPipeline);
   D3D_TRACE(d3dCommandList->SetPipelineState(
       d3dGraphicsPipeline->d3dPipelineState.Get()));
+  D3D_TRACE(d3dCommandList->OMSetStencilRef(
+      d3dGraphicsPipeline->d3dStencilRef));
   D3D_TRACE(d3dCommandList->IASetPrimitiveTopology(
       d3dGraphicsPipeline->d3dPrimitiveTopology));
   D3D_TRACE(d3dCommandList->SetGraphicsRootSignature(
@@ -268,6 +270,7 @@ void D3DGraphics::draw(CommandBuffer *cmdBuffer, uint32_t vertexCount,
   D3D_TRACE(d3d(cmdBuffer)->v->DrawInstanced(vertexCount, instanceCount,
                                              firstVertex, firstInstance));
 }
+
 void D3DGraphics::drawIndexed(CommandBuffer *cmdBuffer, uint32_t indexCount,
                               uint32_t instanceCount, uint32_t firstIndex,
                               int32_t vertexOffset, uint32_t firstInstance) {
