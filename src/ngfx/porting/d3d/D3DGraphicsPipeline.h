@@ -43,6 +43,7 @@ public:
     bool frontFaceCounterClockwise = false;
     float lineWidth = 1.0f;
     bool depthTestEnable = false, depthWriteEnable = false;
+    D3D12_COMPARISON_FUNC depthFunc = D3D12_COMPARISON_FUNC_LESS;
     D3DRenderPass *renderPass = nullptr;
     uint32_t numSamples = 1, numColorAttachments = 1;
   };
