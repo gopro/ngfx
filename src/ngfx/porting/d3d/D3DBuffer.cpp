@@ -63,13 +63,11 @@ void D3DBuffer::create(D3DGraphicsContext *ctx, const void *data, uint32_t size,
   currentResourceState = initialResourceState;
   if (data)
     upload(data, size, 0);
-  //NGFX_LOG_TRACE("Resource: %p", v.Get());
 }
 
 D3DBuffer::~D3DBuffer() {
     if (stagingBuffer)
         delete stagingBuffer; //TODO: delete via fence
-    //NGFX_LOG_TRACE("Resource: %p deleteMap size: %d", v.Get(), deleteMap.size());
 }
 
 // TODO: add read/write flags for map

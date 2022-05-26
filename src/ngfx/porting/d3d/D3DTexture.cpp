@@ -67,7 +67,6 @@ void D3DTexture::createResource() {
         &heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc,
         D3D12_RESOURCE_STATE_COPY_DEST, isRenderTarget ? &clearValue : nullptr,
         IID_PPV_ARGS(&v)));
-    //NGFX_LOG_TRACE("Resource: %p", v.Get());
 }
 
 void D3DTexture::createDepthStencilView() {
