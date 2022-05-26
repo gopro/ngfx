@@ -478,7 +478,7 @@ void D3DTexture::generateMipmaps(CommandBuffer* commandBuffer) {
 }
 
 //TODO: support sub-region update (use CopySubResourceRegion)
-void D3DTexture::uploadFn(D3DCommandList* cmdList, void* data, uint32_t size,
+void D3DTexture::uploadFn(D3DCommandList* cmdList, void* data, uint32_t,
     D3DBuffer* stagingBuffer, uint32_t, uint32_t,
     uint32_t, int32_t, int32_t, int32_t,
     int32_t, int32_t, int32_t dataPitch) {
