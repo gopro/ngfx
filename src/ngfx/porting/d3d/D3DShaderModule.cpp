@@ -32,6 +32,7 @@ bool D3DShaderModule::initFromFile(const std::string &filename) {
   File file;
 #ifdef USE_PRECOMPILED_SHADERS
   if (!file.read(filename + ".dxc")) {
+      NGFX_ERR("cannot read file: %s.dxc", filename.c_str());
       return false;
   }
   initFromByteCode(file.data.get(), file.size);
