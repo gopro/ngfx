@@ -304,7 +304,6 @@ int ShaderTools::convertSPVToGLSL(const std::string &spv,
       (const uint32_t *)spv.data(), spv.size() / sizeof(uint32_t));
   if (flags & REMOVE_UNUSED_VARIABLES) {
     auto activeVariables = compilerGLSL->get_active_interface_variables();
-    compilerGLSL->get_shader_resources(activeVariables);
     compilerGLSL->set_enabled_interface_variables(move(activeVariables));
   }
   auto opts = compilerGLSL->get_common_options();
