@@ -101,8 +101,8 @@ void D3DTexture::create(D3DGraphicsContext* ctx, D3DGraphics* graphics,
         usageFlags |= IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
     this->imageUsageFlags = usageFlags;
     this->numSamples = numSamples;
-    numPlanes = (format == DXGI_FORMAT_NV12) ? 2 : 1;
     d3dDevice = ctx->d3dDevice.v.Get();
+    numPlanes = D3D12GetFormatPlaneCount(d3dDevice, format);
     numSubresources = numPlanes * arrayLayers * mipLevels;
     currentResourceState.resize(numSubresources);
     defaultSrvDescriptor.resize(numPlanes);
@@ -171,7 +171,7 @@ void D3DTexture::createFromHandle(D3DGraphicsContext* ctx, D3DGraphics* graphics
     this->textureType = textureType;
     this->imageUsageFlags = usageFlags;
     this->numSamples = numSamples;
-    numPlanes = (format == DXGI_FORMAT_NV12) ? 2 : 1;
+    numPlanes = D3D12GetFormatPlaneCount(d3dDevice, format);
     d3dDevice = ctx->d3dDevice.v.Get();
     numSubresources = numPlanes * arrayLayers * mipLevels;
     currentResourceState.resize(numSubresources);
@@ -257,6 +257,8 @@ D3DDescriptorHandle* D3DTexture::getSrvDescriptor(uint32_t baseMipLevel,
     D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
     srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
     srvDesc.Format = getViewFormat(resourceDesc.Format, plane);
+    if (srvDesc.Format == DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS && plane == 1)
+        return nullptr;
     srvDesc.ViewDimension = D3D12_SRV_DIMENSION(textureType);
     if (textureType == TEXTURE_TYPE_2D) {
         srvDesc.Texture2D.MostDetailedMip = baseMipLevel;

@@ -143,6 +143,8 @@ void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
     auto d3dCommandList = d3d(commandBuffer)->v.Get();
     auto d3dTexture = d3d(texture);
     uint32_t numPlanes = d3dTexture->numPlanes;
+    if (d3dTexture->format == PIXELFORMAT_D32_FLOAT_S8)
+        numPlanes = 1;
     if (D3DGraphicsPipeline* graphicsPipeline =
         dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
         for (uint32_t j = 0; j < numPlanes; j++) {
