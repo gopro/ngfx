@@ -38,7 +38,8 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
     ComPtr<ID3D12Debug1> debugController;
     V(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
     debugController->EnableDebugLayer();
-    //debugController->SetEnableGPUBasedValidation(true);
+    if (ENABLE_GPU_VALIDATION)
+        debugController->SetEnableGPUBasedValidation(true);
 
     // Enable additional debug layers.
     dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;

@@ -26,6 +26,8 @@
 /** Trace all Direct3D calls to log output */
 const bool D3D_ENABLE_TRACE = false;
 const bool DEBUG_SHADERS = true;
+// Enabling GPU validation slows down performance but it's useful for debugging
+const bool ENABLE_GPU_VALIDATION = false;
 
 #define D3D_TRACE(func)                                                        \
   {                                                                            \
