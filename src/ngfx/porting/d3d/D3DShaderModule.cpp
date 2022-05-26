@@ -89,7 +89,7 @@ static std::unique_ptr<T> createShaderModule(Device *device,
   if (!d3dShaderModule->initFromFile(filename)) {
       return nullptr;
   }
-  d3dShaderModule->initBindings(filename + ".map");
+  d3dShaderModule->initBindings(filename + ".hlsl.map");
   return d3dShaderModule;
 }
 
