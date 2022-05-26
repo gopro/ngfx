@@ -59,7 +59,7 @@ bool D3DShaderModule::compile(const std::string &filename) {
   hResult = D3DCompileFromFile(StringUtil::toWString(filename).c_str(), nullptr,
                                nullptr, "main", target.c_str(), compileFlags, 0,
                                &byteCode, &errorBlob);
-  if (errorBlob) {
+  if (FAILED(hResult)) {
     NGFX_LOG("%s %s", (char *)errorBlob->GetBufferPointer(), filename.c_str());
     return false;
   }
