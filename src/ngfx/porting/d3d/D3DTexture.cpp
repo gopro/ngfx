@@ -495,7 +495,7 @@ void D3DTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y,
     uint32_t z, int32_t w, int32_t h, int32_t d,
     int32_t arrayLayers, int32_t numPlanes) {
     auto& copyCommandList = ctx->d3dCopyCommandList;
-    const bool flipY = true; //TODO:move to param
+    const bool flipY = false; //TODO:move to param
     if (w == -1)
         w = this->w;
     if (h == -1)
