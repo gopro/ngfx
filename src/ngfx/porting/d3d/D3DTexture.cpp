@@ -76,6 +76,7 @@ void D3DTexture::createDepthStencilView() {
     dsvDesc.Format = DXGI_FORMAT(format);
     dsvDesc.ViewDimension = (numSamples > 1) ? D3D12_DSV_DIMENSION_TEXTURE2DMS
         : D3D12_DSV_DIMENSION_TEXTURE2D;
+    dsvDescriptor = make_unique<D3DDescriptorHandle>();
     dsvDescriptorHeap->getHandle(*dsvDescriptor);
     D3D_TRACE(d3dDevice->CreateDepthStencilView(
         v.Get(), &dsvDesc, dsvDescriptor->cpuHandle));
