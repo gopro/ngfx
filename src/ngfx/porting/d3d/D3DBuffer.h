@@ -54,7 +54,6 @@ protected:
   D3D12_RESOURCE_STATES initialResourceState, currentResourceState;
   D3DReadbackBuffer *d3dReadbackBuffer = nullptr;
   void *d3dReadBackBufferPtr = nullptr;
-  D3DBuffer *stagingBuffer = nullptr;
 };
 D3D_CAST(Buffer);
 } // namespace ngfx

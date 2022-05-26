@@ -128,7 +128,6 @@ private:
       std::vector<D3DBlitOp> ops;
   };
   std::unique_ptr<GenMipmapData> genMipmapData;
-  D3DBuffer* stagingBuffer = nullptr;
 };
 D3D_CAST(Texture);
 } // namespace ngfx
