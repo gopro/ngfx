@@ -65,8 +65,7 @@ public:
       */
       PATCH_SHADER_LAYOUTS_HLSL = 1<<1,
       REMOVE_UNUSED_VARIABLES = 1<<2, /*!< Remove unused input variables */
-      FLIP_VERT_Y = 1<<3, /*!< Flip vertex y output in NDC space */
-      USE_INTERNAL_REFLECTOR = 1<<4 /*!< Use internal reflector, not spirv-cross */
+      FLIP_VERT_Y = 1<<3 /*!< Flip vertex y output in NDC space */
   };
   enum Format { 
       FORMAT_GLSL, /*!< GLSL shading language input format */

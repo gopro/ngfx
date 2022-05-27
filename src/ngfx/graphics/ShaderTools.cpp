@@ -483,39 +483,6 @@ int ShaderTools::patchShaderReflectionDataHLSL(const std::string &glslReflect,
       input["semantic"] = hlslReflectData[0].s[1];
     }
   }
-
-  // get descriptors
-  json *textures = getEntry(glslReflectJson, "textures"),
-       *ubos = getEntry(glslReflectJson, "ubos"),
-       *ssbos = getEntry(glslReflectJson, "ssbos"),
-       *images = getEntry(glslReflectJson, "images");
-  map<int, json *> descriptors;
-  if (textures)
-    for (auto &desc : *textures)
-      descriptors[desc["set"].get<int>()] = &desc;
-  if (ubos)
-    for (auto &desc : *ubos)
-      descriptors[desc["set"].get<int>()] = &desc;
-  if (ssbos)
-    for (auto &desc : *ssbos)
-      descriptors[desc["set"].get<int>()] = &desc;
-  if (images)
-    for (auto &desc : *images)
-      descriptors[desc["set"].get<int>()] = &desc;
-
-  // patch descriptor bindings
-  set<int> sets;
-  set<string> samplerTypes = {"sampler2D", "sampler3D", "samplerCube"};
-  for (const auto &kv : descriptors) {
-    uint32_t set = kv.first;
-    json &desc = *kv.second;
-    while (sets.find(set) != sets.end())
-      set += 1;
-    desc["set"] = set;
-    sets.insert(set);
-    if (samplerTypes.find(desc["type"]) != samplerTypes.end())
-      sets.insert(set + 1);
-  }
   hlslReflect = glslReflectJson.dump(4);
   return 0;
 }
@@ -763,103 +730,8 @@ int ShaderTools::generateShaderMapMSL(const string &file, string outDir,
   return 0;
 }
 
-class HLSLReflector {
-public:
-    HLSLReflector(const string& file, string outDir, vector<string>& outFiles)
-        : file(file), outDir(outDir), outFiles(&outFiles) {}
-    int run();
-private:
-    string parse(const string& hlsl);
-    string parseDescriptorType(const string& type);
-    string file;
-    string outDir;
-    vector<string>* outFiles;
-};
-
-int HLSLReflector::run() {
-    string hlslFileName = fs::path(file).filename().string();
-    string hlslMapFile = fs::path(outDir + "/" + hlslFileName + ".map")
-        .make_preferred()
-        .string();
-    if (!FileUtil::srcFileNewerThanOutFile(file, hlslMapFile)) {
-        outFiles->push_back(hlslMapFile);
-        return 0;
-    }
-    string hlsl = readFile(file), hlslMap;
-    hlslMap = parse(hlsl);
-    writeFile(hlslMapFile, hlslMap);
-    outFiles->push_back(hlslMapFile);
-    return 0;
-}
-
-string HLSLReflector::parseDescriptorType(const string& type) {
-    if (type._Starts_with("Texture"))
-        return "DESCRIPTOR_TYPE_SAMPLED_IMAGE";
-    else if (type._Starts_with("SamplerState"))
-        return "DESCRIPTOR_TYPE_SAMPLER";
-    else if (type._Starts_with("RWTexture2D"))
-        return "DESCRIPTOR_TYPE_STORAGE_IMAGE";
-    else if (type._Starts_with("cbuffer"))
-        return "DESCRIPTOR_TYPE_UNIFORM_BUFFER";
-    else if (type._Starts_with("StructuredBuffer"))
-        return "DESCRIPTOR_TYPE_STORAGE_BUFFER";
-    else {
-        NGFX_ERR("unknown descriptor type: %s", type.c_str());
-        return "";
-    }
-}
-
-string HLSLReflector::parse(const string& src) {
-    string hlslFileName = fs::path(file).filename().string();
-    string contents = "";
-    struct DescriptorInfo {
-        string type, name;
-        int binding;
-    };
-    vector<DescriptorInfo> descriptors;
-    istringstream sstream(src);
-    string line;
-    int binding = 0;
-    while (std::getline(sstream, line)) {
-        smatch g;
-
-        bool matchDescriptor = regex_search(line, g,
-            regex(
-                "^\\s*"
-                "([^\\s]+)"
-                "\\s+"
-                "([^\\s]+)"
-                "\\s*"
-                ":"
-                "\\s*"
-                "register\\s*\\("
-                "([^)]*)"
-                "\\)"
-                ".*\r*$"));
-        if (matchDescriptor) {
-            descriptors.push_back({ g[1], g[2], binding++ });
-        }
-    }
-    if (strstr(hlslFileName.c_str(), "_vertex")) {
-        contents += "INPUT_ATTRIBUTES 0\n";
-    }
-    contents += "DESCRIPTORS " + to_string(descriptors.size()) + "\n";
-    for (auto& desc: descriptors) {
-        contents += "\t" + desc.name + " " + parseDescriptorType(desc.type) + " " + to_string(desc.binding) + "\n";
-    }
-    //TODO
-    contents += "UNIFORM_BUFFER_INFOS 0\n";
-    contents += "SHADER_STORAGE_BUFFER_INFOS 0\n";
-    return contents;
-}
-
-
 int ShaderTools::generateShaderMapHLSL(const string &file, string outDir,
                                        vector<string> &outFiles, int flags) {
-  if (flags & USE_INTERNAL_REFLECTOR) {
-    HLSLReflector hlslReflector(file, outDir, outFiles);
-    return hlslReflector.run();
-  }
   auto splitFilename = FileUtil::splitExt(fs::path(file).filename().string());
   string glslFilename = splitFilename[0];
   string ext = FileUtil::splitExt(splitFilename[0])[1];
