@@ -8,8 +8,8 @@ void D3DPipelineUtil::parseDescriptors(
     std::vector<std::unique_ptr<CD3DX12_DESCRIPTOR_RANGE1>>
     & d3dDescriptorRanges,
     PipelineType pipelineType) {
-    int registerSpace = 0;
     for (const auto& it : descriptors) {
+        int registerSpace = it.first;
         auto& descriptor = it.second;
         descriptorBindings[registerSpace] = uint32_t(d3dRootParams.size());
         if (descriptor.type == DESCRIPTOR_TYPE_SAMPLER) {
@@ -76,6 +76,5 @@ void D3DPipelineUtil::parseDescriptors(
             d3dDescriptorRanges.emplace_back(std::move(d3dUavDescriptorRange));
             d3dRootParams.emplace_back(std::move(d3dUavDescriptor));
         }
-        registerSpace++;
     }
 }

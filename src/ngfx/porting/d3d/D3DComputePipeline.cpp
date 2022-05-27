@@ -50,9 +50,12 @@ ComputePipeline *ComputePipeline::create(GraphicsContext *graphicsContext,
   auto &descriptorBindings = d3dComputePipeline->descriptorBindings;
   uint32_t numDescriptors = uint32_t(cs->descriptors.size());
   std::map<uint32_t, ShaderModule::DescriptorInfo> descriptors;
-  for (auto &csDescriptor : cs->descriptors)
-    descriptors[csDescriptor.set] = csDescriptor;
-  descriptorBindings.resize(numDescriptors);
+  uint32_t descriptorBindingsSize = 0;
+  for (auto& csDescriptor : cs->descriptors) {
+      descriptors[csDescriptor.set] = csDescriptor;
+      descriptorBindingsSize = std::max(descriptorBindingsSize, csDescriptor.set + 1);
+  }
+  descriptorBindings.resize(descriptorBindingsSize);
   D3DPipelineUtil::parseDescriptors(descriptors, descriptorBindings,
                                     d3dRootParams, d3dDescriptorRanges,
                                     D3DPipelineUtil::PIPELINE_TYPE_COMPUTE);

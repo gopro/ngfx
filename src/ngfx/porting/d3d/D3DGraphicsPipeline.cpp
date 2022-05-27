@@ -209,12 +209,17 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
   std::vector<std::unique_ptr<CD3DX12_DESCRIPTOR_RANGE1>> d3dDescriptorRanges;
 
   std::map<uint32_t, ShaderModule::DescriptorInfo> descriptors;
-  for (auto &descriptor : vs->descriptors)
-    descriptors[descriptor.set] = descriptor;
-  for (auto &descriptor : fs->descriptors)
-    descriptors[descriptor.set] = descriptor;
+  uint32_t descriptorBindingsSize = 0;
+  for (auto& descriptor : vs->descriptors) {
+      descriptors[descriptor.set] = descriptor;
+      descriptorBindingsSize = std::max(descriptorBindingsSize, descriptor.set + 1);
+  }
+  for (auto& descriptor : fs->descriptors) {
+      descriptors[descriptor.set] = descriptor;
+      descriptorBindingsSize = std::max(descriptorBindingsSize, descriptor.set + 1);
+  }
   uint32_t numDescriptors = uint32_t(descriptors.size());
-  descriptorBindings.resize(numDescriptors);
+  descriptorBindings.resize(descriptorBindingsSize);
 
   D3DPipelineUtil::parseDescriptors(descriptors, descriptorBindings,
                                     d3dRootParams, d3dDescriptorRanges,
