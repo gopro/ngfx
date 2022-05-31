@@ -17,6 +17,6 @@ int main(int argc, char** argv) {
     auto spvMapFiles = shaderTools.generateShaderMaps(glslFiles, outDir, ShaderTools::FORMAT_GLSL);
     auto hlslFiles = shaderTools.convertShaders(spvFiles, outDir, ShaderTools::FORMAT_HLSL);
     auto dxcFiles = shaderTools.compileShaders(hlslFiles, outDir, ShaderTools::FORMAT_HLSL);
-    auto hlslMapFiles = shaderTools.generateShaderMaps(dxcFiles, outDir, ShaderTools::FORMAT_HLSL);
+    auto hlslMapFiles = shaderTools.generateShaderMaps(hlslFiles, outDir, ShaderTools::FORMAT_HLSL);
     return 0;
 }

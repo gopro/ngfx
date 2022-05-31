@@ -732,10 +732,9 @@ int ShaderTools::generateShaderMapMSL(const string &file, string outDir,
 
 int ShaderTools::generateShaderMapHLSL(const string &file, string outDir,
                                        vector<string> &outFiles, int flags) {
-  auto splitFilename0 = FileUtil::splitExt(fs::path(file).filename().string());
-  auto splitFilename1 = FileUtil::splitExt(splitFilename0[0]);
-  string glslFilename = splitFilename1[0];
-  string ext = FileUtil::splitExt(splitFilename1[0])[1];
+  auto splitFilename = FileUtil::splitExt(fs::path(file).filename().string());
+  string glslFilename = splitFilename[0];
+  string ext = FileUtil::splitExt(splitFilename[0])[1];
 
   string hlslFileName =
       fs::path(outDir + "/" + glslFilename + ".hlsl").make_preferred().string();
