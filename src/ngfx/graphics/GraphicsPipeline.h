@@ -67,10 +67,15 @@ public:
     DescriptorType type;
     ShaderStageFlags stageFlags = SHADER_STAGE_ALL;
   };
+  struct VertexInputAttributeDescription {
+      VertexShaderModule::AttributeDescription* v = nullptr;
+      int offset = 0;
+  };
   static GraphicsPipeline *
   create(GraphicsContext *graphicsContext, const State &state,
          VertexShaderModule *vs, FragmentShaderModule *fs,
          PixelFormat colorFormat, PixelFormat depthFormat,
+         std::vector<VertexInputAttributeDescription> vertexAttributes = {},
          std::set<std::string> instanceAttributes = {});
   virtual ~GraphicsPipeline() {}
   void getBindings(std::vector<uint32_t *> pDescriptorBindings,

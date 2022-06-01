@@ -65,6 +65,8 @@ ComputePipeline *ComputePipeline::create(GraphicsContext *graphicsContext,
           auto bufferInfo = cs->findStorageBufferInfo(descriptorInfo.name);
           return bufferInfo->readonly;
       }
+      else
+        return false;
   };
   D3DPipelineUtil::parseDescriptors(descriptors, descriptorBindings,
                                     d3dRootParams, d3dDescriptorRanges,

@@ -130,6 +130,7 @@ GraphicsPipeline *
 GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
                          VertexShaderModule *vs, FragmentShaderModule *fs,
                          PixelFormat colorFormat, PixelFormat depthFormat,
+                         std::vector<VertexInputAttributeDescription> vertexAttributes,
                          std::set<std::string> instanceAttributes) {
   D3DGraphicsPipeline *d3dGraphicsPipeline = new D3DGraphicsPipeline();
 
@@ -233,6 +234,8 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
               bufferInfo = fs->findStorageBufferInfo(descriptorInfo.name);
           return bufferInfo->readonly;
       }
+      else
+          return false;
   };
   D3DPipelineUtil::parseDescriptors(descriptors, descriptorBindings,
                                     d3dRootParams, d3dDescriptorRanges,
@@ -249,7 +252,8 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
   std::vector<SemanticData> semanticData(vs->attributes.size());
   for (int j = 0; j < vs->attributes.size(); j++) {
     const auto &va = vs->attributes[j];
-    uint32_t binding = va.location, offset = 0; // TODO: va.count
+    uint32_t binding = va.location,  // TODO: va.count
+        offset = vertexAttributes.empty() ? 0 : vertexAttributes[j].offset;
     D3D12_INPUT_CLASSIFICATION inputRate =
         D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
     if (instanceAttributes.find(va.name) != instanceAttributes.end())
