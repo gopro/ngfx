@@ -107,18 +107,29 @@ void D3DGraphics::bindVertexBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
 
 void D3DGraphics::bindStorageBuffer(CommandBuffer *commandBuffer,
                                     Buffer *buffer, uint32_t binding,
-                                    ShaderStageFlags shaderStageFlags) {
+                                    ShaderStageFlags shaderStageFlags, bool readonly) {
   auto d3dCommandList = d3d(commandBuffer)->v.Get();
   auto d3dBuffer = d3d(buffer);
-  // TODO encode access flags as read-only or read-write
   if (D3DGraphicsPipeline *graphicsPipeline =
           dynamic_cast<D3DGraphicsPipeline *>(currentPipeline)) {
-    D3D_TRACE(d3dCommandList->SetGraphicsRootShaderResourceView(
-        binding, d3dBuffer->v->GetGPUVirtualAddress()));
+      if (!readonly) {
+          D3D_TRACE(d3dCommandList->SetGraphicsRootUnorderedAccessView(
+              binding, d3dBuffer->v->GetGPUVirtualAddress()));
+      }
+      else {
+          D3D_TRACE(d3dCommandList->SetGraphicsRootShaderResourceView(
+              binding, d3dBuffer->v->GetGPUVirtualAddress()));
+      }
   } else if (D3DComputePipeline *computePipeline =
                  dynamic_cast<D3DComputePipeline *>(currentPipeline)) {
-    D3D_TRACE(d3dCommandList->SetComputeRootUnorderedAccessView(
-        binding, d3dBuffer->v->GetGPUVirtualAddress()));
+      if (!readonly) {
+          D3D_TRACE(d3dCommandList->SetComputeRootUnorderedAccessView(
+              binding, d3dBuffer->v->GetGPUVirtualAddress()));
+      }
+      else {
+          D3D_TRACE(d3dCommandList->SetComputeRootShaderResourceView(
+              binding, d3dBuffer->v->GetGPUVirtualAddress()));
+      }
   }
 }
 

@@ -220,10 +220,23 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
   }
   uint32_t numDescriptors = uint32_t(descriptors.size());
   descriptorBindings.resize(descriptorBindingsSize);
-
+  D3DPipelineUtil::IsReadOnly isReadOnly = [&](const ShaderModule::DescriptorInfo &descriptorInfo) -> bool {
+      if (descriptorInfo.type == DESCRIPTOR_TYPE_UNIFORM_BUFFER) {
+          auto bufferInfo = vs->findUniformBufferInfo(descriptorInfo.name);
+          if (!bufferInfo)
+              bufferInfo = fs->findUniformBufferInfo(descriptorInfo.name);
+          return bufferInfo->readonly;
+      }
+      else if (descriptorInfo.type == DESCRIPTOR_TYPE_STORAGE_BUFFER) {
+          auto bufferInfo = vs->findStorageBufferInfo(descriptorInfo.name);
+          if (!bufferInfo)
+              bufferInfo = fs->findStorageBufferInfo(descriptorInfo.name);
+          return bufferInfo->readonly;
+      }
+  };
   D3DPipelineUtil::parseDescriptors(descriptors, descriptorBindings,
                                     d3dRootParams, d3dDescriptorRanges,
-                                    D3DPipelineUtil::PIPELINE_TYPE_GRAPHICS);
+                                    D3DPipelineUtil::PIPELINE_TYPE_GRAPHICS, isReadOnly);
 
   std::vector<D3D12_INPUT_ELEMENT_DESC> d3dVertexInputAttributes(
       vs->attributes.size());

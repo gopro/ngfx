@@ -50,7 +50,7 @@ public:
                          ShaderStageFlags shaderStageFlags) override;
   void bindStorageBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
                          uint32_t binding,
-                         ShaderStageFlags shaderStageFlags) override;
+                         ShaderStageFlags shaderStageFlags, bool readonly) override;
   void bindComputePipeline(CommandBuffer *cmdBuffer,
                            ComputePipeline *computePipeline) override;
   void bindGraphicsPipeline(CommandBuffer *cmdBuffer,

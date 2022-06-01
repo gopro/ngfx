@@ -115,10 +115,12 @@ public:
   *   @param buffer The input buffer
   *   @param binding The target binding
   *   @param shaderStageFlags The target shader module(s)
+  *   @param readonly The buffer is readonly
   */
   virtual void bindStorageBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
                                  uint32_t binding,
-                                 ShaderStageFlags shaderStageFlags) = 0;
+                                 ShaderStageFlags shaderStageFlags,
+                                 bool readonly) = 0;
   /** Bind compute pipeline.
   *   The compute pipeline defines the GPU pipeline parameters to perform compute operations.
   *   @param cmdBuffer The command buffer

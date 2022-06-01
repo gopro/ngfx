@@ -39,11 +39,11 @@ void MatrixMultiplyGPUOp::apply(CommandBuffer *commandBuffer,
   graphics->bindUniformBuffer(commandBuffer, bUbo.get(), U_UBO,
                               SHADER_STAGE_COMPUTE_BIT);
   graphics->bindStorageBuffer(commandBuffer, bSrc0.get(), SSBO_SRC0,
-                              SHADER_STAGE_COMPUTE_BIT);
+                              SHADER_STAGE_COMPUTE_BIT, true);
   graphics->bindStorageBuffer(commandBuffer, bSrc1.get(), SSBO_SRC1,
-                              SHADER_STAGE_COMPUTE_BIT);
+                              SHADER_STAGE_COMPUTE_BIT, true);
   graphics->bindStorageBuffer(commandBuffer, bDst.get(), SSBO_DST,
-                              SHADER_STAGE_COMPUTE_BIT);
+                              SHADER_STAGE_COMPUTE_BIT, false);
   graphics->dispatch(commandBuffer, dst.w, dst.h, 1, 1, 1, 1);
 }
 

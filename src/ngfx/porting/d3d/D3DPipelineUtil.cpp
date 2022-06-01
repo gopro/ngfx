@@ -7,7 +7,8 @@ void D3DPipelineUtil::parseDescriptors(
     std::vector<CD3DX12_ROOT_PARAMETER1>& d3dRootParams,
     std::vector<std::unique_ptr<CD3DX12_DESCRIPTOR_RANGE1>>
     & d3dDescriptorRanges,
-    PipelineType pipelineType) {
+    PipelineType pipelineType, 
+    IsReadOnly isReadOnly) {
     for (const auto& it : descriptors) {
         int registerSpace = it.first;
         auto& descriptor = it.second;
@@ -59,8 +60,7 @@ void D3DPipelineUtil::parseDescriptors(
         }
         else if (descriptor.type == DESCRIPTOR_TYPE_STORAGE_BUFFER) {
             CD3DX12_ROOT_PARAMETER1 d3dDescriptor;
-            // TODO encode access flags as read-only or read-write
-            if (pipelineType == PIPELINE_TYPE_GRAPHICS)
+            if (isReadOnly(descriptor))
                 d3dDescriptor.InitAsShaderResourceView(0, registerSpace);
             else
                 d3dDescriptor.InitAsUnorderedAccessView(0, registerSpace);

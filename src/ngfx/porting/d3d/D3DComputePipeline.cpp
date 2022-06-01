@@ -56,9 +56,19 @@ ComputePipeline *ComputePipeline::create(GraphicsContext *graphicsContext,
       descriptorBindingsSize = std::max(descriptorBindingsSize, csDescriptor.set + 1);
   }
   descriptorBindings.resize(descriptorBindingsSize);
+  D3DPipelineUtil::IsReadOnly isReadOnly = [&](const ShaderModule::DescriptorInfo& descriptorInfo) -> bool {
+      if (descriptorInfo.type == DESCRIPTOR_TYPE_UNIFORM_BUFFER) {
+          auto bufferInfo = cs->findUniformBufferInfo(descriptorInfo.name);
+          return bufferInfo->readonly;
+      }
+      else if (descriptorInfo.type == DESCRIPTOR_TYPE_STORAGE_BUFFER) {
+          auto bufferInfo = cs->findStorageBufferInfo(descriptorInfo.name);
+          return bufferInfo->readonly;
+      }
+  };
   D3DPipelineUtil::parseDescriptors(descriptors, descriptorBindings,
                                     d3dRootParams, d3dDescriptorRanges,
-                                    D3DPipelineUtil::PIPELINE_TYPE_COMPUTE);
+                                    D3DPipelineUtil::PIPELINE_TYPE_COMPUTE, isReadOnly);
 
   d3dComputePipeline->create(d3d(graphicsContext), d3dRootParams,
                              d3d(cs)->d3dShaderByteCode);
