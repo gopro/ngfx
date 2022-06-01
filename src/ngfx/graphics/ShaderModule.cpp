@@ -114,7 +114,7 @@ static void parseBufferInfos(ifstream &in, string key,
   in >> numUniformBufferInfos;
   for (uint32_t j = 0; j < numUniformBufferInfos; j++) {
     ShaderModule::BufferInfo bufferInfo;
-    in >> bufferInfo.name >> bufferInfo.set;
+    in >> bufferInfo.name >> bufferInfo.set >> bufferInfo.readonly;
     bufferInfo.shaderStages = shaderStages;
     parseBufferMemberInfos(in, bufferInfo.memberInfos);
     bufferInfos[bufferInfo.name] = std::move(bufferInfo);

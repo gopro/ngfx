@@ -574,23 +574,27 @@ string ShaderTools::parseReflectionData(const json &reflectData, string ext) {
             NGFX_ERR("unrecognized type: {memberType}");
         }
       };
-
-  auto parseBuffers = [&](const json &buffers, json &bufferInfos) {
+  enum BufferType { UBO, SSBO };
+  auto parseBuffers = [&](const json &buffers, json &bufferInfos, BufferType type) {
     for (const json &buffer : buffers) {
       const json &bufferType = (*types)[buffer["type"].get<string>()];
       json bufferMembers = {};
       parseMembers(bufferType["members"], bufferMembers, 0, "");
-      json bufferInfo = {{"name", buffer["name"].get<string>()},
+      json bufferInfo = { {"name", buffer["name"].get<string>()},
                          {"set", buffer["set"].get<int>()},
                          {"binding", buffer["binding"].get<int>()},
-                         {"members", bufferMembers}};
+                         {"members", bufferMembers} };
+      auto it = buffer.find("readonly");
+      if (it != buffer.end())
+          bufferInfo["readonly"] = it->get<bool>();
+      else bufferInfo["readonly"] = type == UBO ? true : false;
       bufferInfos.push_back(bufferInfo);
     }
   };
   if (ubos)
-    parseBuffers(*ubos, uniformBufferInfos);
+    parseBuffers(*ubos, uniformBufferInfos, UBO);
   if (ssbos)
-    parseBuffers(*ssbos, shaderStorageBufferInfos);
+    parseBuffers(*ssbos, shaderStorageBufferInfos, SSBO);
 
   json textureDescriptors = {};
   json bufferDescriptors = {};
@@ -616,7 +620,7 @@ string ShaderTools::parseReflectionData(const json &reflectData, string ext) {
           {"type", "uniformBuffer"},
           {"name", ubo["name"]},
           {"set", ubo["set"]},
-          {"binding", ubo["binding"]}};
+          {"binding", ubo["binding"]} };
     }
   if (ssbos)
     for (const json &ssbo : *ssbos) {
@@ -624,7 +628,7 @@ string ShaderTools::parseReflectionData(const json &reflectData, string ext) {
           {"type", "shaderStorageBuffer"},
           {"name", ssbo["name"]},
           {"set", ssbo["set"]},
-          {"binding", ssbo["binding"]}};
+          {"binding", ssbo["binding"]} };
     }
   contents += "DESCRIPTORS " +
               to_string(textureDescriptors.size() + bufferDescriptors.size()) +
@@ -651,6 +655,7 @@ string ShaderTools::parseReflectionData(const json &reflectData, string ext) {
     const json &memberInfos = bufferInfo["members"];
     contents += bufferInfo["name"].get<string>() + " " +
                 to_string(bufferInfo["set"].get<int>()) + " " +
+                to_string(bufferInfo["readonly"].get<bool>()) + " " +
                 to_string(memberInfos.size()) + "\n";
     for (const json &m : memberInfos) {
       contents += m["name"].get<string>() + " " +

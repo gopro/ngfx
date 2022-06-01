@@ -53,6 +53,7 @@ public:
   struct BufferInfo {
     std::string name;
     uint32_t set;
+    bool readonly;
     ShaderStageFlags shaderStages;
     BufferMemberInfos memberInfos;
   };
