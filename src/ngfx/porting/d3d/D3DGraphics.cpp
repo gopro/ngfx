@@ -156,29 +156,42 @@ void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
     uint32_t numPlanes = d3dTexture->numPlanes;
     if (d3dTexture->format == PIXELFORMAT_D32_FLOAT_S8)
         numPlanes = 1;
+    //TODO: pass current image usage as param
+    //imageUsageFlags defines all the possible usage scenarios, not the current usage scenario
+    int imageUsageFlags = d3dTexture->imageUsageFlags;
+    if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT)
+        imageUsageFlags &= ~IMAGE_USAGE_SAMPLED_BIT;
     if (D3DGraphicsPipeline* graphicsPipeline =
         dynamic_cast<D3DGraphicsPipeline*>(currentPipeline)) {
-        for (uint32_t j = 0; j < numPlanes; j++) {
-            D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
-                set + j, d3dTexture->defaultSrvDescriptor[j]->gpuHandle));
+        if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT) {
+            for (uint32_t j = 0; j < numPlanes; j++) {
+                D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+                    set + j, d3dTexture->defaultUavDescriptor[j]->gpuHandle));
+            }
+        }
+        else if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+            for (uint32_t j = 0; j < numPlanes; j++) {
+                D3D_TRACE(d3dCommandList->SetGraphicsRootDescriptorTable(
+                    set + j, d3dTexture->defaultSrvDescriptor[j]->gpuHandle));
+            }
         }
     }
     else if (D3DComputePipeline* computePipeline =
         dynamic_cast<D3DComputePipeline*>(currentPipeline)) {
-        if (d3dTexture->imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
-            for (uint32_t j = 0; j < numPlanes; j++) {
-                D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
-                    set + j, d3dTexture->defaultSrvDescriptor[j]->gpuHandle));
-            }
-        }
-        else {
+        if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT) {
             for (uint32_t j = 0; j < numPlanes; j++) {
                 D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
                     set + j, d3dTexture->defaultUavDescriptor[j]->gpuHandle));
             }
         }
+        else if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+            for (uint32_t j = 0; j < numPlanes; j++) {
+                D3D_TRACE(d3dCommandList->SetComputeRootDescriptorTable(
+                    set + j, d3dTexture->defaultSrvDescriptor[j]->gpuHandle));
+            }
+        }
     }
-    if (d3dTexture->defaultSampler) {
+    if ((imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) && d3dTexture->defaultSampler) {
         bindSampler(commandBuffer, d3dTexture->defaultSampler, set + numPlanes);
     }
 }
