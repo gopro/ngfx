@@ -54,8 +54,8 @@ INSTALL_PREFIX = env('INSTALL_PREFIX', op.join(os.getcwd(), 'install'))
 INSTALL_INCLUDEDIR = env('INSTALL_INCLUDEDIR', 'include')
 INSTALL_LIBDIR = env('INSTALL_LIBDIR', 'lib')
 
-CMAKE_GENERATOR = env('CMAKE_GENERATOR', { 'Windows': 'Visual Studio 16 2019', 'Linux': 'Ninja', 'Darwin': 'Xcode' })[OS]
-NGFX_GRAPHICS_BACKEND = env('NGFX_GRAPHICS_BACKEND', { 'Windows': 'Direct3D12', 'Linux': 'Vulkan', 'Darwin': 'Metal' })[OS].upper()
+CMAKE_GENERATOR = env('CMAKE_GENERATOR', { 'Windows': 'Visual Studio 16 2019', 'Linux': 'Ninja', 'Darwin': 'Xcode' }[OS])
+NGFX_GRAPHICS_BACKEND = env('NGFX_GRAPHICS_BACKEND', { 'Windows': 'Direct3D12', 'Linux': 'Vulkan', 'Darwin': 'Metal' }[OS].upper())
 CMAKE = 'cmake.exe' if OS == 'Windows' else 'cmake'
 if OS == 'Windows':
     env('CMAKE_GENERATOR', 'Visual Studio 16 2019')
