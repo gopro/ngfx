@@ -65,7 +65,6 @@ void DrawMeshOp::createPipeline() {
   if (graphicsPipeline)
     return;
   GraphicsPipeline::State state;
-  state.renderPass = ctx->defaultRenderPass;
   state.primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
   state.depthTestEnable = true;
   state.depthWriteEnable = true;

@@ -60,7 +60,6 @@ void D3DBlitOp::createPipeline() {
   if (graphicsPipeline)
     return;
   GraphicsPipeline::State state;
-  state.renderPass = ctx->defaultOffscreenRenderPass;
   state.primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
   auto device = ctx->device;
   graphicsPipeline = (D3DGraphicsPipeline *)GraphicsPipeline::create(

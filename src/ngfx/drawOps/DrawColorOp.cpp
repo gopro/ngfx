@@ -49,7 +49,6 @@ void DrawColorOp::createPipeline() {
   if (graphicsPipeline)
     return;
   GraphicsPipeline::State state;
-  state.renderPass = ctx->defaultRenderPass;
   state.primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
   auto device = ctx->device;
   graphicsPipeline = GraphicsPipeline::create(

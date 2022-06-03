@@ -201,7 +201,6 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
       D3D12_STENCIL_OP(state.backStencilPassOp),
       D3D12_COMPARISON_FUNC(state.backStencilFunc),
       state.stencilRef,
-      d3d(state.renderPass),
       state.numSamples,
       state.numColorAttachments};
   auto &descriptorBindings = d3dGraphicsPipeline->descriptorBindings;

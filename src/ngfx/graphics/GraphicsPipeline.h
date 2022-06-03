@@ -60,7 +60,6 @@ public:
     StencilOp backStencilPassOp = STENCIL_OP_KEEP;
     CompareOp backStencilFunc = COMPARE_OP_ALWAYS;
     uint32_t stencilRef = 0;
-    RenderPass *renderPass = nullptr;
     uint32_t numSamples = 1, numColorAttachments = 1;
   };
   struct Descriptor {

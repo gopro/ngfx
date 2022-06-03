@@ -56,7 +56,6 @@ public:
     D3D12_STENCIL_OP backStencilPassOp = D3D12_STENCIL_OP_KEEP;
     D3D12_COMPARISON_FUNC backStencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
     uint32_t stencilRef = 0;
-    D3DRenderPass *renderPass = nullptr;
     uint32_t numSamples = 1, numColorAttachments = 1;
   };
   struct Shaders {
