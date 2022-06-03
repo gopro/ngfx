@@ -126,12 +126,12 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
   }
   std::optional<AttachmentDescription> depthAttachmentDescription;
   if (enableDepthStencil)
-    depthAttachmentDescription = {depthFormat};
+    depthAttachmentDescription = {depthFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
   else
     depthAttachmentDescription = nullopt;
   if (surface && !surface->offscreen) {
     RenderPassConfig onscreenRenderPassConfig = {
-        {{surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC}},
+        {{surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE }},
         depthAttachmentDescription,
         false,
         numSamples};
@@ -140,7 +140,7 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
   }
   defaultOffscreenSurfaceFormat = PIXELFORMAT_RGBA8_UNORM;
   RenderPassConfig offscreenRenderPassConfig = {
-      {{defaultOffscreenSurfaceFormat}},
+      {{defaultOffscreenSurfaceFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE }},
       depthAttachmentDescription,
       false,
       numSamples};
@@ -175,7 +175,14 @@ void D3DGraphicsContext::createRenderPass(const RenderPassConfig &config,
            IMAGE_LAYOUT_PRESENT_SRC)
               ? D3D12_RESOURCE_STATE_PRESENT
               : D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
-  renderPass.create(this, initialResourceState, finalResourceState);
+  const AttachmentDescription *colorAttachment = &config.colorAttachmentDescriptions[0];
+  const AttachmentDescription* depthAttachment = config.depthStencilAttachmentDescription.has_value() ?
+      &config.depthStencilAttachmentDescription.value() :
+      nullptr;
+  renderPass.create(this, initialResourceState, finalResourceState,
+      colorAttachment->loadOp, colorAttachment->storeOp,
+      depthAttachment ? depthAttachment->loadOp : ATTACHMENT_LOAD_OP_CLEAR,
+      depthAttachment ? depthAttachment->storeOp : ATTACHMENT_STORE_OP_DONT_CARE);
 }
 
 void D3DGraphicsContext::createFences(ID3D12Device *device) {

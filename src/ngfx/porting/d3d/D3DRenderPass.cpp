@@ -29,8 +29,16 @@ using namespace ngfx;
 
 void D3DRenderPass::create(D3DGraphicsContext *ctx,
                            D3D12_RESOURCE_STATES initialResourceState,
-                           D3D12_RESOURCE_STATES finalResourceState) {
+                           D3D12_RESOURCE_STATES finalResourceState,
+                           AttachmentLoadOp colorLoadOp,
+                           AttachmentStoreOp colorStoreOp,
+                           AttachmentLoadOp depthLoadOp,
+                           AttachmentStoreOp depthStoreOp) {
   this->ctx = ctx;
   this->initialResourceState = initialResourceState;
   this->finalResourceState = finalResourceState;
+  this->colorLoadOp = colorLoadOp;
+  this->colorStoreOp = colorStoreOp;
+  this->depthLoadOp = depthLoadOp;
+  this->depthStoreOp = depthStoreOp;
 }

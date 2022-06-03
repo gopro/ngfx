@@ -75,15 +75,6 @@ public:
   virtual CommandBuffer *copyCommandBuffer() = 0;
   virtual CommandBuffer *computeCommandBuffer() = 0;
 
-  enum AttachmentLoadOp {
-      ATTACHMENT_LOAD_OP_LOAD,
-      ATTACHMENT_LOAD_OP_CLEAR,
-      ATTACHMENT_LOAD_OP_DONT_CARE
-  };
-  enum AttachmentStoreOp {
-      ATTACHMENT_STORE_OP_STORE,
-      ATTACHMENT_STORE_OP_DONT_CARE
-  };
   struct AttachmentDescription {
       bool operator==(const AttachmentDescription& rhs) const {
           return rhs.format == format && rhs.initialLayout == initialLayout &&

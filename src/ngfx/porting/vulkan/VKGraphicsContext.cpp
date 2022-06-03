@@ -278,12 +278,12 @@ void VKGraphicsContext::setSurface(Surface *surface) {
   }
   std::optional<AttachmentDescription> depthAttachmentDescription;
   if (enableDepthStencil)
-    depthAttachmentDescription = { depthFormat, nullopt, nullopt };
+    depthAttachmentDescription = { depthFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
   else
     depthAttachmentDescription = nullopt;
   if (surface && !surface->offscreen) {
     RenderPassConfig onscreenRenderPassConfig = {
-        {{surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC}},
+        {{surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE }},
         depthAttachmentDescription,
         false,
         numSamples};
@@ -292,7 +292,7 @@ void VKGraphicsContext::setSurface(Surface *surface) {
   }
   defaultOffscreenSurfaceFormat = PixelFormat(VK_FORMAT_R8G8B8A8_UNORM);
   RenderPassConfig offscreenRenderPassConfig = {
-      { { defaultOffscreenSurfaceFormat, nullopt, nullopt } },
+      { { defaultOffscreenSurfaceFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE } },
       depthAttachmentDescription,
       false,
       numSamples};

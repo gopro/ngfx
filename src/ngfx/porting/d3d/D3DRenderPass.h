@@ -21,6 +21,7 @@
 #pragma once
 #include "ngfx/graphics/RenderPass.h"
 #include "ngfx/porting/d3d/D3DUtil.h"
+#include "ngfx/porting/d3d/D3DGraphicsCore.h"
 
 namespace ngfx {
 class D3DGraphicsContext;
@@ -28,9 +29,15 @@ class D3DRenderPass : public RenderPass {
 public:
   void create(D3DGraphicsContext *ctx,
               D3D12_RESOURCE_STATES initialResourceState,
-              D3D12_RESOURCE_STATES finalResourceState);
+              D3D12_RESOURCE_STATES finalResourceState,
+              AttachmentLoadOp colorLoadOp = ATTACHMENT_LOAD_OP_CLEAR,
+              AttachmentStoreOp colorStoreOp = ATTACHMENT_STORE_OP_STORE,
+              AttachmentLoadOp depthLoadOp = ATTACHMENT_LOAD_OP_CLEAR,
+              AttachmentStoreOp depthStoreOp = ATTACHMENT_STORE_OP_DONT_CARE);
   virtual ~D3DRenderPass() {}
   D3D12_RESOURCE_STATES initialResourceState, finalResourceState;
+  AttachmentLoadOp colorLoadOp, depthLoadOp;
+  AttachmentStoreOp colorStoreOp, depthStoreOp;
 
 private:
   D3DGraphicsContext *ctx;

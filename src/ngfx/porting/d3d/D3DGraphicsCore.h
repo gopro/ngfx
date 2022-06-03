@@ -200,4 +200,15 @@ enum ImageLayout {
   IMAGE_LAYOUT_PRESENT_SRC,
   IMAGE_LAYOUT_UNORDERED_ACCESS
 };
+
+enum AttachmentLoadOp {
+    ATTACHMENT_LOAD_OP_LOAD,
+    ATTACHMENT_LOAD_OP_CLEAR,
+    ATTACHMENT_LOAD_OP_DONT_CARE
+};
+enum AttachmentStoreOp {
+    ATTACHMENT_STORE_OP_STORE,
+    ATTACHMENT_STORE_OP_DONT_CARE
+};
+
 } // namespace ngfx

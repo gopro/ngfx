@@ -268,12 +268,14 @@ void D3DGraphics::beginRenderPass(CommandBuffer *commandBuffer,
       colorAttachments.size());
   setRenderTargets(d3dCommandList, d3dFramebuffer->colorAttachments, 
       d3dFramebuffer->depthStencilAttachment);
-  for (auto &colorAttachment : colorAttachments) {
-    D3D_TRACE(d3dCommandList->v->ClearRenderTargetView(
-        colorAttachment->cpuDescriptor, glm::value_ptr(clearColor), 0,
-        nullptr));
+  if (d3dRenderPass->colorLoadOp == ATTACHMENT_LOAD_OP_CLEAR) {
+      for (auto& colorAttachment : colorAttachments) {
+          D3D_TRACE(d3dCommandList->v->ClearRenderTargetView(
+              colorAttachment->cpuDescriptor, glm::value_ptr(clearColor), 0,
+              nullptr));
+      }
   }
-  if (depthStencilAttachment) {
+  if (depthStencilAttachment && d3dRenderPass->depthLoadOp == ATTACHMENT_LOAD_OP_CLEAR) {
     D3D_TRACE(d3dCommandList->v->ClearDepthStencilView(
         depthStencilAttachment->cpuDescriptor,
         D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, clearDepth,
