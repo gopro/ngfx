@@ -572,7 +572,7 @@ void D3DTexture::downloadFn(D3DCommandList* cmdList,
         D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT,
         {dstFootprint} };
     D3D12_TEXTURE_COPY_LOCATION srcLocation = {
-        v.Get(), D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX, subresourceIndex };
+        v.Get(), D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX, UINT64(subresourceIndex) };
 
     D3D_TRACE(cmdList->v->CopyTextureRegion(&dstLocation, 0, 0, 0, &srcLocation,
         &srcRegion));
