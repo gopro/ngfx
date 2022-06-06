@@ -107,6 +107,7 @@ endif()
 if(WINDOW_BACKEND_GLFW)
     file(GLOB_RECURSE WINDOW_BACKEND_SOURCE_FILES src/ngfx/porting/glfw/*.cpp src/ngfx/porting/glfw/*.h)
     set(WINDOW_BACKEND_LIBS ${GLFW_LIBRARIES})
+    set(WINDOW_BACKEND_LIBRARY_DIRS ${GLFW_LIBRARY_DIRS})
     set(WINDOW_BACKEND_CFLAGS ${WINDOW_BACKEND_CFLAGS} -DNGFX_WINDOW_BACKEND_GLFW)
 elseif(WINDOW_BACKEND_WINDOWS)
     file(GLOB_RECURSE WINDOW_BACKEND_SOURCE_FILES src/ngfx/porting/windows/*.cpp src/ngfx/porting/windows/*.h)
@@ -146,6 +147,7 @@ target_include_directories(ngfx PUBLIC . src
     ${SPIRV_CROSS_INCLUDE_DIRS}
 )
 target_link_directories(ngfx PUBLIC
+	${WINDOW_BACKEND_LIBRARY_DIRS}
     ${SHADERC_LIBRARY_DIRS}
     ${SPIRV_CROSS_LIBRARY_DIRS}
 )
