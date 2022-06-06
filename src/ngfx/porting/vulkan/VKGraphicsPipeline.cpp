@@ -192,7 +192,7 @@ GraphicsPipeline::create(GraphicsContext* graphicsContext, const State& state,
       state.lineWidth,
       state.depthTestEnable,
       state.depthWriteEnable,
-      nullptr, /* TODO vk(state.renderPass)->v , */
+      vk(state.renderPass)->v,
       state.numSamples,
       state.numColorAttachments};
   auto &descriptorBindings = vkGraphicsPipeline->descriptorBindings;
