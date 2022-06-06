@@ -57,6 +57,7 @@ protected:
                          VkDescriptorSet &descriptorSet);
   VKGraphicsContext *ctx;
   VkMemoryRequirements memReqs;
+  void* data = nullptr;
 };
 VK_CAST(Buffer);
 } // namespace ngfx

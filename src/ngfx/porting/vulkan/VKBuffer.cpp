@@ -141,16 +141,20 @@ void VKBuffer::createMemory(VkMemoryPropertyFlags memoryPropertyFlags) {
 }
 
 void *VKBuffer::map() {
+  if (data)
+    return data;
   VkResult vkResult;
-  void *data;
   auto device = ctx->vkDevice.v;
   V(vkMapMemory(device, memory, 0, size, 0, &data));
   return data;
 }
 
 void VKBuffer::unmap() {
+  if (!data)
+    return;
   auto device = ctx->vkDevice.v;
   VK_TRACE(vkUnmapMemory(device, memory));
+  data = nullptr;
 }
 
 Buffer *Buffer::create(GraphicsContext *ctx, const void *data, uint32_t size,
