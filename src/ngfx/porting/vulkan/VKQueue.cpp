@@ -52,14 +52,13 @@ void VKQueue::present() {
 }
 
 void VKQueue::submit(CommandBuffer *commandBuffer) {
-  if (commandBuffer == &ctx->vkComputeCommandBuffer) {
+  if (commandBuffer == &ctx->vkCopyCommandBuffer) {
+    submit(commandBuffer, 0, {}, {}, nullptr);
+  } else if (commandBuffer == &ctx->vkComputeCommandBuffer) {
     submit(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, {},
            ctx->computeFence);
-  } else if (commandBuffer == &ctx->vkCopyCommandBuffer) {
-    submit(commandBuffer, 0, {}, {}, nullptr);
-  } else if (ctx->offscreen && commandBuffer == &ctx->vkDrawCommandBuffers[0]) {
-    submit(commandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, {}, {},
-           nullptr);
+  } else if (commandBuffer == &ctx->vkOffscreenDrawCommandBuffer) {
+      submit(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, {}, {}, nullptr);
   } else {
     submit(commandBuffer, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
            {ctx->presentCompleteSemaphore}, {ctx->renderCompleteSemaphore},
