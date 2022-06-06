@@ -154,7 +154,7 @@ void D3DGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
     auto d3dCommandList = d3d(commandBuffer)->v.Get();
     auto d3dTexture = d3d(texture);
     uint32_t numPlanes = d3dTexture->numPlanes;
-    if (d3dTexture->format == PIXELFORMAT_D32_FLOAT_S8)
+    if (d3dTexture->format == PIXELFORMAT_D32_SFLOAT_S8_UINT)
         numPlanes = 1;
     //TODO: pass current image usage as param
     //imageUsageFlags defines all the possible usage scenarios, not the current usage scenario
