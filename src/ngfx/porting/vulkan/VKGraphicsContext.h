@@ -57,7 +57,9 @@ public:
   VKQueue vkQueue;
   std::unique_ptr<VKSwapchain> vkSwapchain;
   std::vector<VKCommandBuffer> vkDrawCommandBuffers;
-  VKCommandBuffer vkCopyCommandBuffer, vkComputeCommandBuffer;
+  VKCommandBuffer vkOffscreenDrawCommandBuffer;
+  VKCommandBuffer vkCopyCommandBuffer;
+  VKCommandBuffer vkComputeCommandBuffer;
   VKImage vkDepthStencilImage, vkMultisampleColorImage, vkMultisampleDepthImage;
   VKImageView vkDepthStencilImageView, vkMultisampleColorImageView,
       vkMultisampleDepthImageView;

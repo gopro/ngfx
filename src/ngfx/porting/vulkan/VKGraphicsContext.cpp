@@ -235,6 +235,7 @@ void VKGraphicsContext::setSurface(Surface *surface) {
   for (auto &cmdBuffer : vkDrawCommandBuffers) {
     cmdBuffer.create(vkDevice.v, vkCommandPool.v);
   }
+  vkOffscreenDrawCommandBuffer.create(vkDevice.v, vkCommandPool.v);
   vkCopyCommandBuffer.create(vkDevice.v, vkCommandPool.v);
   vkComputeCommandBuffer.create(vkDevice.v, vkCommandPool.v);
   if (surface && numSamples != 1) {
@@ -310,7 +311,9 @@ void VKGraphicsContext::setSurface(Surface *surface) {
 CommandBuffer *VKGraphicsContext::drawCommandBuffer(int32_t index) {
   if (index == -1)
     index = currentImageIndex;
-  return &vkDrawCommandBuffers[index];
+  return index == -1 ?
+      &vkOffscreenDrawCommandBuffer :
+      &vkDrawCommandBuffers[index];
 }
 CommandBuffer *VKGraphicsContext::copyCommandBuffer() {
   return &vkCopyCommandBuffer;
