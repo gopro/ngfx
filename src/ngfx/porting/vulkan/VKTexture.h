@@ -37,10 +37,14 @@ public:
   virtual ~VKTexture();
   void upload(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
               uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
-              int32_t arrayLayers = -1) override;
+              int32_t arrayLayers = -1, int32_t numPlanes = -1,
+              int32_t dataPitch = -1) override;
   void download(void *data, uint32_t size, uint32_t x = 0, uint32_t y = 0,
                 uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
-                int32_t arrayLayers = -1) override;
+                int32_t arrayLayers = -1, int32_t numPlanes = -1) override;
+  void updateFromHandle(void* handle) override {
+      NGFX_TODO();
+  }
   void changeLayout(CommandBuffer *commandBuffer,
                     ImageLayout imageLayout) override;
   void generateMipmaps(CommandBuffer *commandBuffer) override;

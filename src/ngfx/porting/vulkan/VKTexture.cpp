@@ -146,7 +146,8 @@ void VKTexture::generateMipmapsFn(VkCommandBuffer cmdBuffer) {
 
 void VKTexture::upload(void *data, uint32_t size, uint32_t x, uint32_t y,
                        uint32_t z, int32_t w, int32_t h, int32_t d,
-                       int32_t arrayLayers) {
+                       int32_t arrayLayers, int32_t numPlanes /* TODO */,
+                       int32_t dataPitch /* TODO */) {
   auto &copyCommandBuffer = ctx->vkCopyCommandBuffer;
   std::unique_ptr<VKBuffer> stagingBuffer;
   if (data) {
@@ -211,7 +212,7 @@ void VKTexture::uploadFn(VkCommandBuffer cmdBuffer, void *data, uint32_t size,
 
 void VKTexture::download(void *data, uint32_t size, uint32_t x, uint32_t y,
                          uint32_t z, int32_t w, int32_t h, int32_t d,
-                         int32_t arrayLayers) {
+                         int32_t arrayLayers, int32_t numPlanes /* TODO */) {
   auto &copyCommandBuffer = ctx->vkCopyCommandBuffer;
   std::unique_ptr<VKBuffer> stagingBuffer;
   stagingBuffer.reset(new VKBuffer());
@@ -377,24 +378,23 @@ VKImageView *VKTexture::getImageView(VkImageViewType imageViewType,
   return result;
 }
 
-Texture *Texture::create(GraphicsContext *ctx, Graphics *graphics, void *data,
-                         PixelFormat format, uint32_t size, uint32_t w,
-                         uint32_t h, uint32_t d, uint32_t arrayLayers,
-                         ImageUsageFlags imageUsageFlags,
-                         TextureType textureType, bool genMipmaps,
-                         FilterMode minFilter, FilterMode magFilter,
-                         FilterMode mipFilter, uint32_t numSamples) {
+Texture *Texture::create(GraphicsContext* graphicsContext, Graphics* graphics, void* data,
+    PixelFormat format, uint32_t size, uint32_t w, uint32_t h, uint32_t d,
+    uint32_t arrayLayers,
+    ImageUsageFlags imageUsageFlags,
+    TextureType textureType, bool genMipmaps,
+    uint32_t numSamples, SamplerDesc* samplerDesc, int32_t dataPitch) {
   VKTexture *vkTexture = new VKTexture();
   VKSamplerCreateInfo *samplerCreateInfo = nullptr;
-  if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+  if (samplerDesc && (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT)) {
     samplerCreateInfo = new VKSamplerCreateInfo;
-    samplerCreateInfo->minFilter = VkFilter(minFilter);
-    samplerCreateInfo->magFilter = VkFilter(magFilter);
-    samplerCreateInfo->mipmapMode = (mipFilter == FILTER_LINEAR)
+    samplerCreateInfo->minFilter = VkFilter(samplerDesc->minFilter);
+    samplerCreateInfo->magFilter = VkFilter(samplerDesc->magFilter);
+    samplerCreateInfo->mipmapMode = (samplerDesc->mipFilter == FILTER_LINEAR)
                                         ? VK_SAMPLER_MIPMAP_MODE_LINEAR
                                         : VK_SAMPLER_MIPMAP_MODE_NEAREST;
   }
-  vkTexture->create(vk(ctx), data, size, {w, h, d}, arrayLayers,
+  vkTexture->create(vk(graphicsContext), data, size, {w, h, d}, arrayLayers,
                     VkFormat(format), imageUsageFlags,
                     VkImageViewType(textureType), genMipmaps, samplerCreateInfo,
                     numSamples);

@@ -47,11 +47,16 @@ public:
                          ShaderStageFlags shaderStageFlags) override;
   void bindStorageBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
                          uint32_t binding,
-                         ShaderStageFlags shaderStageFlags) override;
+                         ShaderStageFlags shaderStageFlags,
+                         bool readonly) override;
   void bindComputePipeline(CommandBuffer *cmdBuffer,
                            ComputePipeline *computePipeline) override;
   void bindGraphicsPipeline(CommandBuffer *cmdBuffer,
                             GraphicsPipeline *graphicsPipeline) override;
+  void bindSampler(CommandBuffer* cmdBuffer, Sampler* sampler,
+      uint32_t set) override {
+      NGFX_TODO();
+  }
   void bindTexture(CommandBuffer *commandBuffer, Texture *texture,
                    uint32_t set) override;
   void bindTextureAsImage(CommandBuffer* commandBuffer, Texture* texture,

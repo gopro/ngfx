@@ -43,3 +43,7 @@ void VKFence::reset() {
   VkResult vkResult;
   V(vkResetFences(device, 1, &v));
 }
+
+bool VKFence::isSignaled() {
+    return vkGetFenceStatus(device, v) == VK_SUCCESS;
+}

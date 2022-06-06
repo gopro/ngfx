@@ -28,8 +28,9 @@ class VKFence : public Fence {
 public:
   void create(VkDevice device, VkFenceCreateFlags flags = 0);
   virtual ~VKFence();
-  virtual void wait();
-  virtual void reset();
+  void wait() override;
+  void reset() override;
+  bool isSignaled() override;
   VkFence v = VK_NULL_HANDLE;
   VkFenceCreateInfo createInfo;
 

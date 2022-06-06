@@ -29,13 +29,13 @@ class VKQueue : public Queue {
 public:
   void create(VKGraphicsContext *ctx, int queueFamilyIndex, int queueIndex);
   virtual ~VKQueue();
-  virtual void present();
-  virtual void submit(CommandBuffer *commandBuffer);
+  void present() override;
+  void submit(CommandBuffer *commandBuffer) override;
   void submit(CommandBuffer *commandBuffer, VkPipelineStageFlags waitStageMask,
               const std::vector<Semaphore *> &waitSemaphores,
               const std::vector<Semaphore *> &signalSemaphores,
               Fence *waitFence);
-  virtual void waitIdle();
+  void waitIdle() override;
   VkQueue v = VK_NULL_HANDLE;
 
 private:

@@ -191,7 +191,7 @@ VKSwapchain::VKSwapchain(VKGraphicsContext *ctx, VKSurface *surface) {
   assert(queueFamilyProperties[vkDevice.queueFamilyIndices.graphics]
              .supportsPresent);
   chooseSurfaceFormat();
-  this->format = PixelFormat(surfaceFormat);
+  this->format = PixelFormat(surfaceFormat.format);
   choosePresentMode();
   chooseCompositeAlphaMode();
   choosePreTransform();
@@ -209,9 +209,10 @@ VKSwapchain::~VKSwapchain() {
 void VKSwapchain::acquireNextImage() {
   VkResult vkResult;
   Semaphore *semaphore = ctx->presentCompleteSemaphore;
-  uint32_t *imageIndex = &ctx->currentImageIndex;
+  uint32_t imageIndex = 0;
   V(vkAcquireNextImageKHR(device, v, UINT64_MAX, vk(semaphore)->v,
-                          VK_NULL_HANDLE, imageIndex));
+                          VK_NULL_HANDLE, &imageIndex));
+  ctx->currentImageIndex = imageIndex;
   auto waitFence = ctx->frameFences[ctx->currentImageIndex];
   waitFence->wait();
   waitFence->reset();

@@ -170,10 +170,11 @@ static std::map<VertexFormat, uint32_t> strideMap = {{VERTEXFORMAT_FLOAT, 4},
                                                      {VERTEXFORMAT_FLOAT3, 12},
                                                      {VERTEXFORMAT_FLOAT4, 16}};
 GraphicsPipeline *
-GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
-                         VertexShaderModule *vs, FragmentShaderModule *fs,
-                         PixelFormat colorFormat, PixelFormat depthFormat,
-                         std::set<std::string> instanceAttributes) {
+GraphicsPipeline::create(GraphicsContext* graphicsContext, const State& state,
+    VertexShaderModule* vs, FragmentShaderModule* fs,
+    PixelFormat colorFormat, PixelFormat depthFormat,
+    std::vector<VertexInputAttributeDescription> vertexAttributes /* TODO */,
+    std::set<std::string> instanceAttributes) {
   VKGraphicsPipeline *vkGraphicsPipeline = new VKGraphicsPipeline();
   VKGraphicsPipeline::State vkState = {
       VkPrimitiveTopology(state.primitiveTopology),
@@ -191,7 +192,7 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
       state.lineWidth,
       state.depthTestEnable,
       state.depthWriteEnable,
-      vk(state.renderPass)->v,
+      nullptr, /* TODO vk(state.renderPass)->v , */
       state.numSamples,
       state.numColorAttachments};
   auto &descriptorBindings = vkGraphicsPipeline->descriptorBindings;

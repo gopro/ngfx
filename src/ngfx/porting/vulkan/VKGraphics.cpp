@@ -193,7 +193,7 @@ void VKGraphics::bindUniformBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
 
 void VKGraphics::bindStorageBuffer(CommandBuffer *commandBuffer, Buffer *buffer,
                                    uint32_t set,
-                                   ShaderStageFlags shaderStageFlags) {
+                                   ShaderStageFlags shaderStageFlags, bool) {
   bindBufferFN0(commandBuffer, buffer, set, currentPipeline,
                 &vk(buffer)->getSsboDescriptorSet(shaderStageFlags));
 }
