@@ -61,7 +61,7 @@ public:
   bool depthTexture = false;
   bool genMipmaps = false;
   std::unique_ptr<VKSamplerCreateInfo> samplerCreateInfo;
-
+  uint32_t numPlanes = 1;
 private:
   void initSamplerDescriptorSet(VkCommandBuffer cmdBuffer);
   void initStorageImageDescriptorSet(VkCommandBuffer cmdBuffer);
@@ -69,7 +69,7 @@ private:
   void uploadFn(VkCommandBuffer cmdBuffer, void *data, uint32_t size,
                 VKBuffer *stagingBuffer, uint32_t x = 0, uint32_t y = 0,
                 uint32_t z = 0, int32_t w = -1, int32_t h = -1, int32_t d = -1,
-                int32_t arrayLayers = -1);
+                int32_t arrayLayers = -1, int32_t numPlanes = -1, int32_t dataPitch = -1);
   void downloadFn(VkCommandBuffer cmdBuffer, void *data, uint32_t size,
                   VKBuffer *stagingBuffer, uint32_t x = 0, uint32_t y = 0,
                   uint32_t z = 0, int32_t w = -1, int32_t h = -1,

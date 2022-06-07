@@ -44,6 +44,7 @@ void VKTexture::create(VKGraphicsContext *ctx, void *data, uint32_t size,
   this->imageUsageFlags = imageUsageFlags;
   this->genMipmaps = genMipmaps;
   this->samplerCreateInfo.reset(pSamplerCreateInfo);
+  numPlanes = 1; //TODO
   const std::vector<VkFormat> depthFormats = {
       VK_FORMAT_D16_UNORM, VK_FORMAT_X8_D24_UNORM_PACK32, VK_FORMAT_D32_SFLOAT};
   depthTexture = std::find(depthFormats.begin(), depthFormats.end(), format) !=
@@ -156,7 +157,7 @@ void VKTexture::upload(void *data, uint32_t size, uint32_t x, uint32_t y,
   }
   copyCommandBuffer.begin();
   uploadFn(copyCommandBuffer.v, data, size, stagingBuffer.get(), x, y, z, w, h,
-           d, arrayLayers);
+           d, arrayLayers, numPlanes, dataPitch);
   if (imageUsageFlags & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
     vkImage.changeLayout(
         copyCommandBuffer.v, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -181,7 +182,7 @@ void VKTexture::upload(void *data, uint32_t size, uint32_t x, uint32_t y,
 void VKTexture::uploadFn(VkCommandBuffer cmdBuffer, void *data, uint32_t size,
                          VKBuffer *stagingBuffer, uint32_t x, uint32_t y,
                          uint32_t z, int32_t w, int32_t h, int32_t d,
-                         int32_t arrayLayers) {
+                         int32_t arrayLayers, int32_t numPlanes, int32_t dataPitch) {
   if (data) {
     if (w == -1)
       w = this->w;
@@ -191,13 +192,15 @@ void VKTexture::uploadFn(VkCommandBuffer cmdBuffer, void *data, uint32_t size,
       d = this->d;
     if (arrayLayers == -1)
       arrayLayers = this->arrayLayers;
+    if (numPlanes == -1)
+      numPlanes = this->numPlanes;
     vkImage.changeLayout(cmdBuffer, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                          VK_ACCESS_TRANSFER_WRITE_BIT,
                          VK_PIPELINE_STAGE_TRANSFER_BIT, aspectFlags, 0, 1, 0,
                          arrayLayers);
     std::vector<VkBufferImageCopy> bufferCopyRegions = {
         {0,
-         0,
+         dataPitch == -1 ? 0 : uint32_t(dataPitch),
          0,
          {aspectFlags, 0, 0, uint32_t(arrayLayers)},
          {int32_t(x), int32_t(y), int32_t(z)},
