@@ -25,6 +25,7 @@
 #include "ngfx/porting/vulkan/VKComputePipeline.h"
 #include "ngfx/porting/vulkan/VKGraphicsPipeline.h"
 #include "ngfx/porting/vulkan/VKQueue.h"
+#include "ngfx/graphics/FormatUtil.h"
 #include <algorithm>
 using namespace ngfx;
 
@@ -194,13 +195,14 @@ void VKTexture::uploadFn(VkCommandBuffer cmdBuffer, void *data, uint32_t size,
       arrayLayers = this->arrayLayers;
     if (numPlanes == -1)
       numPlanes = this->numPlanes;
+    uint32_t bpp = FormatUtil::getBytesPerPixel(format);
     vkImage.changeLayout(cmdBuffer, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                          VK_ACCESS_TRANSFER_WRITE_BIT,
                          VK_PIPELINE_STAGE_TRANSFER_BIT, aspectFlags, 0, 1, 0,
                          arrayLayers);
     std::vector<VkBufferImageCopy> bufferCopyRegions = {
         {0,
-         dataPitch == -1 ? 0 : uint32_t(dataPitch),
+         dataPitch == -1 ? 0 : uint32_t(dataPitch / bpp),
          0,
          {aspectFlags, 0, 0, uint32_t(arrayLayers)},
          {int32_t(x), int32_t(y), int32_t(z)},
