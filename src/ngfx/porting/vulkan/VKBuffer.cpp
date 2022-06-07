@@ -91,6 +91,8 @@ void VKBuffer::initDescriptorSet(VkDescriptorPool descriptorPool,
 }
 
 void VKBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
+  if (!data)
+    return;
   uint8_t *dst = (uint8_t *)map();
   memcpy(dst + offset, data, size);
   unmap();
