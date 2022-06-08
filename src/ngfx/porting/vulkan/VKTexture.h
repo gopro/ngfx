@@ -55,13 +55,13 @@ public:
   VKImage vkImage;
   std::vector<std::unique_ptr<VKImageView>> vkImageViewCache;
   VKImageView *vkDefaultImageView = nullptr;
-  VkDescriptorSet samplerDescriptorSet = 0, storageImageDescriptorSet = 0;
   VkSampler sampler = 0;
   VkImageAspectFlags aspectFlags;
-  bool depthTexture = false;
   bool genMipmaps = false;
   std::unique_ptr<VKSamplerCreateInfo> samplerCreateInfo;
   uint32_t numPlanes = 1;
+  VkDescriptorSet getSamplerDescriptorSet(VkCommandBuffer cmdBuffer);
+  VkDescriptorSet getStorageImageDescriptorSet(VkCommandBuffer cmdBuffer);
 private:
   void initSamplerDescriptorSet(VkCommandBuffer cmdBuffer);
   void initStorageImageDescriptorSet(VkCommandBuffer cmdBuffer);
@@ -75,6 +75,8 @@ private:
                   uint32_t z = 0, int32_t w = -1, int32_t h = -1,
                   int32_t d = -1, int32_t arrayLayers = -1);
   void generateMipmapsFn(VkCommandBuffer cmdBuffer);
+  VkImageAspectFlags getImageAspectFlags(VkFormat format);
+  VkDescriptorSet samplerDescriptorSet = 0, storageImageDescriptorSet = 0;
   VKGraphicsContext *ctx;
 };
 VK_CAST(Texture);

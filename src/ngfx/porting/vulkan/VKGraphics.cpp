@@ -128,7 +128,8 @@ void VKGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
   auto vkTexture = vk(texture);
   VkPipelineLayout pipelineLayout;
   VkPipelineBindPoint pipelineBindPoint;
-  VkDescriptorSet *descriptorSet = nullptr;
+  VkDescriptorSet descriptorSet;
+  VkCommandBuffer vkCmdBuf = vk(commandBuffer)->v;
   if (VKGraphicsPipeline *graphicsPipeline =
           dynamic_cast<VKGraphicsPipeline *>(currentPipeline)) {
     if (!(vkTexture->imageUsageFlags & VK_IMAGE_USAGE_SAMPLED_BIT)) {
@@ -136,7 +137,7 @@ void VKGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
     }
     pipelineLayout = graphicsPipeline->pipelineLayout;
     pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-    descriptorSet = &vkTexture->samplerDescriptorSet;
+    descriptorSet = vkTexture->getSamplerDescriptorSet(vkCmdBuf);
   } else if (VKComputePipeline *computePipeline =
                  dynamic_cast<VKComputePipeline *>(currentPipeline)) {
     if (!(vkTexture->imageUsageFlags & VK_IMAGE_USAGE_STORAGE_BIT)) {
@@ -144,11 +145,11 @@ void VKGraphics::bindTexture(CommandBuffer *commandBuffer, Texture *texture,
     }
     pipelineLayout = computePipeline->pipelineLayout;
     pipelineBindPoint = VK_PIPELINE_BIND_POINT_COMPUTE;
-    descriptorSet = &vkTexture->storageImageDescriptorSet;
+    descriptorSet = vkTexture->getStorageImageDescriptorSet(vkCmdBuf);
   } else
     NGFX_ERR();
   VK_TRACE(vkCmdBindDescriptorSets(vk(commandBuffer)->v, pipelineBindPoint,
-                                   pipelineLayout, set, 1, descriptorSet, 0,
+                                   pipelineLayout, set, 1, &descriptorSet, 0,
                                    nullptr));
 }
 

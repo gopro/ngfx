@@ -84,15 +84,9 @@ void VKTexture::create(VKGraphicsContext *ctx, void *data, uint32_t size,
     if (genMipmaps)
       samplerCreateInfo->maxLod = mipLevels;
     if (!sampler)
-      initSampler();
-    if (!samplerDescriptorSet)
-      initSamplerDescriptorSet(copyCommandBuffer.v);
+        initSampler();
   }
 
-  if (imageUsageFlags & IMAGE_USAGE_STORAGE_BIT) {
-    if (!storageImageDescriptorSet)
-      initStorageImageDescriptorSet(copyCommandBuffer.v);
-  }
   if (imageUsageFlags & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) {
     vkImage.changeLayout(
         copyCommandBuffer.v, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
@@ -113,6 +107,19 @@ void VKTexture::create(VKGraphicsContext *ctx, void *data, uint32_t size,
   vk(ctx->queue)->submit(&copyCommandBuffer, 0, {}, {}, nullptr);
   ctx->queue->waitIdle();
 }
+
+VkDescriptorSet VKTexture::getSamplerDescriptorSet(VkCommandBuffer cmdBuffer) {
+    if (!samplerDescriptorSet)
+        initSamplerDescriptorSet(cmdBuffer);
+    return samplerDescriptorSet;
+}
+
+VkDescriptorSet VKTexture::getStorageImageDescriptorSet(VkCommandBuffer cmdBuffer) {
+    if (!storageImageDescriptorSet)
+        initStorageImageDescriptorSet(cmdBuffer);
+    return storageImageDescriptorSet;
+}
+
 
 void VKTexture::generateMipmaps(CommandBuffer *commandBuffer) {
   generateMipmapsFn(vk(commandBuffer)->v);
