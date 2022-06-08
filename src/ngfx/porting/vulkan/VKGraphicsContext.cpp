@@ -96,20 +96,20 @@ void VKGraphicsContext::initRenderPass(const RenderPassConfig &config,
     if (config.numSamples == 1) {
         attachments.push_back({
              0, colorFormat, VK_SAMPLE_COUNT_1_BIT,
-             VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_STORE,
+             VkAttachmentLoadOp(colorAttachmentDesc.loadOp), VkAttachmentStoreOp(colorAttachmentDesc.storeOp),
              VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE,
              initialLayout, finalLayout
         });
     } else {
         attachments.push_back({
              0, colorFormat, VkSampleCountFlagBits(config.numSamples),
-             VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_DONT_CARE,
+             VkAttachmentLoadOp(colorAttachmentDesc.loadOp), VK_ATTACHMENT_STORE_OP_DONT_CARE,
              VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE,
              initialLayout, finalLayout
         });
         attachments.push_back({
              0, colorFormat, VK_SAMPLE_COUNT_1_BIT,
-             VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_STORE,
+             VK_ATTACHMENT_LOAD_OP_DONT_CARE, VkAttachmentStoreOp(colorAttachmentDesc.storeOp),
              VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE,
              initialLayout, finalLayout
         });
@@ -128,17 +128,25 @@ void VKGraphicsContext::initRenderPass(const RenderPassConfig &config,
         (depthStencilAttachmentDesc->finalLayout)
             ? VkImageLayout(*depthStencilAttachmentDesc->finalLayout)
             : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-    attachments.push_back({
-         0, depthFormat, VkSampleCountFlagBits(config.numSamples),
-         VK_ATTACHMENT_LOAD_OP_CLEAR, VK_ATTACHMENT_STORE_OP_DONT_CARE,
-         VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE,
-         initialLayout, finalLayout
-    });
-    if (config.enableDepthStencilResolve) {
+    if (!config.enableDepthStencilResolve) {
+        attachments.push_back({
+            0, depthFormat, VkSampleCountFlagBits(config.numSamples),
+            VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp),  VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
+            VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp), VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
+            initialLayout, finalLayout
+        });
+    }
+    else {
+        attachments.push_back({
+            0, depthFormat, VkSampleCountFlagBits(config.numSamples),
+            VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp),  VK_ATTACHMENT_STORE_OP_DONT_CARE,
+            VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp),VK_ATTACHMENT_STORE_OP_DONT_CARE,
+            initialLayout, finalLayout
+        });
         attachments.push_back({
              0, depthFormat, VK_SAMPLE_COUNT_1_BIT,
-             VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_STORE,
-             VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE,
+             VK_ATTACHMENT_LOAD_OP_DONT_CARE, VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
+             VK_ATTACHMENT_LOAD_OP_DONT_CARE, VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
              initialLayout, finalLayout
         });
     }
