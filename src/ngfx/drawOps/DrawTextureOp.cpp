@@ -58,6 +58,6 @@ void DrawTextureOp::createPipeline() {
           .get(),
       FragmentShaderModule::create(device, NGFX_DATA_DIR "/drawTexture.frag")
           .get(),
-      ctx->surfaceFormat, ctx->depthFormat);
+      ctx->surfaceFormat, ctx->depthStencilFormat);
   ctx->pipelineCache->add(key, graphicsPipeline);
 }

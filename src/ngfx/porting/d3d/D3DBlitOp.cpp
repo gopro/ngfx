@@ -67,7 +67,7 @@ void D3DBlitOp::createPipeline() {
       VertexShaderModule::create(device, NGFX_DATA_DIR "/d3dBlitOp.vert").get(),
       FragmentShaderModule::create(device, NGFX_DATA_DIR "/d3dBlitOp.frag")
           .get(),
-      dstTexture->format, ctx->depthFormat);
+      dstTexture->format, ctx->depthStencilFormat);
   ctx->pipelineCache->add(key, graphicsPipeline);
 }
 

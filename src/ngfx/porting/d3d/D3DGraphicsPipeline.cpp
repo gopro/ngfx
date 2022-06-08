@@ -53,7 +53,7 @@ void D3DGraphicsPipeline::create(
     D3DGraphicsContext *ctx, const State &state,
     const std::vector<CD3DX12_ROOT_PARAMETER1> &rootParameters,
     const std::vector<D3D12_INPUT_ELEMENT_DESC> &inputElements,
-    const Shaders &shaders, DXGI_FORMAT colorFormat, DXGI_FORMAT depthFormat) {
+    const Shaders &shaders, DXGI_FORMAT colorFormat, DXGI_FORMAT depthStencilFormat) {
   D3DPipeline::create(ctx);
   HRESULT hResult;
   d3dPrimitiveTopology = state.primitiveTopology;
@@ -113,7 +113,7 @@ void D3DGraphicsPipeline::create(
   desc.RasterizerState = rasterizerState;
   desc.BlendState = blendDesc;
   desc.DepthStencilState = depthStencilDesc;
-  desc.DSVFormat = depthFormat;
+  desc.DSVFormat = depthStencilFormat;
   desc.SampleMask = UINT_MAX;
   desc.PrimitiveTopologyType =
       getPrimitiveTopologyType(state.primitiveTopology);
@@ -129,7 +129,7 @@ void D3DGraphicsPipeline::create(
 GraphicsPipeline *
 GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
                          VertexShaderModule *vs, FragmentShaderModule *fs,
-                         PixelFormat colorFormat, PixelFormat depthFormat,
+                         PixelFormat colorFormat, PixelFormat depthStencilFormat,
                          std::vector<VertexInputAttributeDescription> vertexAttributes,
                          std::set<std::string> instanceAttributes) {
   D3DGraphicsPipeline *d3dGraphicsPipeline = new D3DGraphicsPipeline();
@@ -286,7 +286,7 @@ GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
   shaders.PS = d3d(fs)->d3dShaderByteCode;
   d3dGraphicsPipeline->create(
       d3d(graphicsContext), d3dState, d3dRootParams, d3dVertexInputAttributes,
-      shaders, DXGI_FORMAT(colorFormat), DXGI_FORMAT(depthFormat));
+      shaders, DXGI_FORMAT(colorFormat), DXGI_FORMAT(depthStencilFormat));
 
   return d3dGraphicsPipeline;
 }

@@ -65,7 +65,7 @@ public:
               const std::vector<CD3DX12_ROOT_PARAMETER1> &rootParameters,
               const std::vector<D3D12_INPUT_ELEMENT_DESC> &inputElements,
               const Shaders &shaders, DXGI_FORMAT colorFormat,
-              DXGI_FORMAT depthFormat);
+              DXGI_FORMAT depthStencilFormat);
   D3D_PRIMITIVE_TOPOLOGY d3dPrimitiveTopology;
   uint32_t d3dStencilRef = 0;
 private:

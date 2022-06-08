@@ -74,6 +74,6 @@ void DrawMeshOp::createPipeline() {
       VertexShaderModule::create(device, NGFX_DATA_DIR "/drawMesh.vert").get(),
       FragmentShaderModule::create(device, NGFX_DATA_DIR "/drawMesh.frag")
           .get(),
-      ctx->surfaceFormat, ctx->depthFormat);
+      ctx->surfaceFormat, ctx->depthStencilFormat);
   ctx->pipelineCache->add(key, graphicsPipeline);
 }

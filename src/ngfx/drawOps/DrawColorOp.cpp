@@ -56,6 +56,6 @@ void DrawColorOp::createPipeline() {
       VertexShaderModule::create(device, NGFX_DATA_DIR "/drawColor.vert").get(),
       FragmentShaderModule::create(device, NGFX_DATA_DIR "/drawColor.frag")
           .get(),
-      ctx->surfaceFormat, ctx->depthFormat);
+      ctx->surfaceFormat, ctx->depthStencilFormat);
   ctx->pipelineCache->add(key, graphicsPipeline);
 }

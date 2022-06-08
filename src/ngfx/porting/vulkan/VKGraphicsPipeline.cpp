@@ -172,7 +172,7 @@ static std::map<VertexFormat, uint32_t> strideMap = {{VERTEXFORMAT_FLOAT, 4},
 GraphicsPipeline *
 GraphicsPipeline::create(GraphicsContext* graphicsContext, const State& state,
     VertexShaderModule* vs, FragmentShaderModule* fs,
-    PixelFormat colorFormat, PixelFormat depthFormat,
+    PixelFormat colorFormat, PixelFormat depthStencilFormat,
     std::vector<VertexInputAttributeDescription> vertexAttributes,
     std::set<std::string> instanceAttributes) {
   VKGraphicsPipeline *vkGraphicsPipeline = new VKGraphicsPipeline();

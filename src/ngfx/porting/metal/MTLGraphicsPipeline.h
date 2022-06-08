@@ -32,7 +32,7 @@ public:
   };
   void create(MTLGraphicsContext *ctx, const State &state,
               MTLVertexDescriptor *vertexDescriptor, const Shaders &shaders,
-              ::MTLPixelFormat colorFormat, ::MTLPixelFormat depthFormat);
+              ::MTLPixelFormat colorFormat, ::MTLPixelFormat depthStencilFormat);
   virtual ~MTLGraphicsPipeline() {}
   id<MTLRenderPipelineState> mtlPipelineState;
   id<MTLDepthStencilState> mtlDepthStencilState;

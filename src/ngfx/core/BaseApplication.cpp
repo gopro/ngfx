@@ -61,7 +61,7 @@ void BaseApplication::init() {
         {outputTexture.get()}};
     if (enableDepthStencil) {
       depthTexture.reset(ngfx::Texture::create(
-          ctx.get(), graphics.get(), nullptr, ctx->depthFormat, size, w, h, 1,
+          ctx.get(), graphics.get(), nullptr, ctx->depthStencilFormat, size, w, h, 1,
           1, IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT));
       attachments.push_back({depthTexture.get()});
     }

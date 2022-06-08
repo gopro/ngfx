@@ -58,8 +58,8 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
       filter.AllowList.pSeverityList = severityList;
       infoQueue->PushStorageFilter(&filter);
   }
-  std::vector<DXGI_FORMAT> depthFormatCandidates = { DXGI_FORMAT_D32_FLOAT_S8X24_UINT, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D16_UNORM };
-  depthFormat = PixelFormat(findSupportedFormat(depthFormatCandidates, D3D12_FORMAT_SUPPORT1_DEPTH_STENCIL));
+  std::vector<DXGI_FORMAT> depthStencilFormatCandidates = { DXGI_FORMAT_D32_FLOAT_S8X24_UINT, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D16_UNORM };
+  depthStencilFormat = PixelFormat(findSupportedFormat(depthStencilFormatCandidates, D3D12_FORMAT_SUPPORT1_DEPTH_STENCIL));
 
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
@@ -117,7 +117,7 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
   }
   if (surface && enableDepthStencil) {
     d3dDepthStencilView.reset((D3DTexture *)Texture::create(
-        this, nullptr, nullptr, depthFormat, surface->w * surface->h * 4,
+        this, nullptr, nullptr, depthStencilFormat, surface->w * surface->h * 4,
         surface->w, surface->h, 1, 1,
         IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT));
     if (numSamples != 1) {
@@ -126,7 +126,7 @@ void D3DGraphicsContext::setSurface(Surface *surface) {
   }
   std::optional<AttachmentDescription> depthAttachmentDescription;
   if (enableDepthStencil)
-    depthAttachmentDescription = {depthFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
+    depthAttachmentDescription = { depthStencilFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
   else
     depthAttachmentDescription = nullopt;
   if (surface && !surface->offscreen) {

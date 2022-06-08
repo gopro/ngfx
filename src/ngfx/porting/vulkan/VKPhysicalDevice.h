@@ -36,10 +36,11 @@ public:
   VkPhysicalDeviceMemoryProperties deviceMemoryProperties;
   std::vector<VkQueueFamilyProperties> queueFamilyProperties;
   std::vector<std::string> supportedExtensions;
-  VkFormat depthFormat;
+  VkFormat depthFormat, depthStencilFormat;
 
 private:
   void chooseDepthFormat();
+  void chooseDepthStencilFormat();
   void selectDevice(VkInstance instance);
   void getProperties();
 };

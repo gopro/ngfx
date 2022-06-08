@@ -119,7 +119,8 @@ public:
   PipelineCache *pipelineCache = nullptr;
   PixelFormat surfaceFormat = PIXELFORMAT_UNDEFINED,
               defaultOffscreenSurfaceFormat = PIXELFORMAT_UNDEFINED,
-              depthFormat = PIXELFORMAT_UNDEFINED;
+              depthFormat = PIXELFORMAT_UNDEFINED,
+              depthStencilFormat = PIXELFORMAT_UNDEFINED;
   glm::vec4 clearColor = glm::vec4(0.0f);
 
 protected:

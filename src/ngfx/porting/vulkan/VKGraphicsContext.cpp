@@ -39,6 +39,7 @@ void VKGraphicsContext::create(const char *appName, bool enableDepthStencil,
   vkDescriptorSetLayoutCache.create(vkDevice.v);
   this->enableDepthStencil = enableDepthStencil;
   depthFormat = PixelFormat(vkPhysicalDevice.depthFormat);
+  depthStencilFormat = PixelFormat(vkPhysicalDevice.depthStencilFormat);
   vkQueryPool.create(vkDevice.v, VK_QUERY_TYPE_TIMESTAMP, 2);
 }
 
@@ -119,7 +120,7 @@ void VKGraphicsContext::initRenderPass(const RenderPassConfig &config,
   auto &depthStencilAttachmentDesc = config.depthStencilAttachmentDescription;
   if (depthStencilAttachmentDesc) {
     depthAttachmentBaseIndex = attachments.size();
-    VkFormat depthFormat = VkFormat(depthStencilAttachmentDesc->format);
+    VkFormat depthStencilFormat = VkFormat(depthStencilAttachmentDesc->format);
     VkImageLayout initialLayout =
         (depthStencilAttachmentDesc->initialLayout)
             ? VkImageLayout(*depthStencilAttachmentDesc->initialLayout)
@@ -130,7 +131,7 @@ void VKGraphicsContext::initRenderPass(const RenderPassConfig &config,
             : VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     if (!config.enableDepthStencilResolve) {
         attachments.push_back({
-            0, depthFormat, VkSampleCountFlagBits(config.numSamples),
+            0, depthStencilFormat, VkSampleCountFlagBits(config.numSamples),
             VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp),  VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
             VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp), VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
             initialLayout, finalLayout
@@ -138,13 +139,13 @@ void VKGraphicsContext::initRenderPass(const RenderPassConfig &config,
     }
     else {
         attachments.push_back({
-            0, depthFormat, VkSampleCountFlagBits(config.numSamples),
+            0, depthStencilFormat, VkSampleCountFlagBits(config.numSamples),
             VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp),  VK_ATTACHMENT_STORE_OP_DONT_CARE,
             VkAttachmentLoadOp(depthStencilAttachmentDesc->loadOp),VK_ATTACHMENT_STORE_OP_DONT_CARE,
             initialLayout, finalLayout
         });
         attachments.push_back({
-             0, depthFormat, VK_SAMPLE_COUNT_1_BIT,
+             0, depthStencilFormat, VK_SAMPLE_COUNT_1_BIT,
              VK_ATTACHMENT_LOAD_OP_DONT_CARE, VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
              VK_ATTACHMENT_LOAD_OP_DONT_CARE, VkAttachmentStoreOp(depthStencilAttachmentDesc->storeOp),
              initialLayout, finalLayout
@@ -263,14 +264,14 @@ void VKGraphicsContext::setSurface(Surface *surface) {
   }
   if (surface && enableDepthStencil) {
     vkDepthStencilImage.create(&vkDevice, {surface->w, surface->h, 1},
-                               vkPhysicalDevice.depthFormat,
+                               vkPhysicalDevice.depthStencilFormat,
                                VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
     vkDepthStencilImageView.create(
         vkDevice.v, vkDepthStencilImage.v, VK_IMAGE_VIEW_TYPE_2D,
-        vkPhysicalDevice.depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+        vkPhysicalDevice.depthStencilFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
     if (numSamples != 1) {
       msDepthImageCreateInfo = {};
-      msDepthImageCreateInfo.format = vkPhysicalDevice.depthFormat;
+      msDepthImageCreateInfo.format = vkPhysicalDevice.depthStencilFormat;
       msDepthImageCreateInfo.extent = {surface->w, surface->h, 1};
       msDepthImageCreateInfo.samples = VkSampleCountFlagBits(numSamples);
       msDepthImageCreateInfo.usage =
@@ -282,18 +283,18 @@ void VKGraphicsContext::setSurface(Surface *surface) {
                                                               // on mobile GPU
       vkMultisampleDepthImageView.create(
           vkDevice.v, vkMultisampleDepthImage.v, VK_IMAGE_VIEW_TYPE_2D,
-          vkPhysicalDevice.depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
+          vkPhysicalDevice.depthStencilFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
     }
   }
-  std::optional<AttachmentDescription> depthAttachmentDescription;
+  std::optional<AttachmentDescription> depthStencilAttachmentDescription;
   if (enableDepthStencil)
-    depthAttachmentDescription = { depthFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
+    depthStencilAttachmentDescription = { depthStencilFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
   else
-    depthAttachmentDescription = nullopt;
+    depthStencilAttachmentDescription = nullopt;
   if (surface && !surface->offscreen) {
     RenderPassConfig onscreenRenderPassConfig = {
         {{surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE }},
-        depthAttachmentDescription,
+        depthStencilAttachmentDescription,
         false,
         numSamples};
     vkDefaultRenderPass =
@@ -302,7 +303,7 @@ void VKGraphicsContext::setSurface(Surface *surface) {
   defaultOffscreenSurfaceFormat = PixelFormat(VK_FORMAT_R8G8B8A8_UNORM);
   RenderPassConfig offscreenRenderPassConfig = {
       { { defaultOffscreenSurfaceFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE } },
-      depthAttachmentDescription,
+      depthStencilAttachmentDescription,
       false,
       numSamples};
   vkDefaultOffscreenRenderPass =

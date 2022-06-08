@@ -84,23 +84,40 @@ void VKPhysicalDevice::selectDevice(VkInstance instance) {
   NGFX_LOG("selected device: %s", deviceProperties.deviceName);
 }
 
-void VKPhysicalDevice::chooseDepthFormat() {
-  std::vector<VkFormat> depthFormatCandidates = {
+void VKPhysicalDevice::chooseDepthStencilFormat() {
+  std::vector<VkFormat> depthStencilFormatCandidates = {
       VK_FORMAT_D32_SFLOAT_S8_UINT,
       VK_FORMAT_D24_UNORM_S8_UINT,
-      VK_FORMAT_D16_UNORM
   };
 
-  for (auto &format : depthFormatCandidates) {
+  for (auto &format : depthStencilFormatCandidates) {
     VkFormatProperties formatProps;
     vkGetPhysicalDeviceFormatProperties(v, format, &formatProps);
     // Format must support depth stencil attachment for optimal tiling
     if (formatProps.optimalTilingFeatures &
         VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
-      depthFormat = format;
+      depthStencilFormat = format;
       break;
     }
   }
+}
+
+void VKPhysicalDevice::chooseDepthFormat() {
+    std::vector<VkFormat> depthFormatCandidates = {
+        VK_FORMAT_D32_SFLOAT,
+        VK_FORMAT_D16_UNORM,
+    };
+
+    for (auto& format : depthFormatCandidates) {
+        VkFormatProperties formatProps;
+        vkGetPhysicalDeviceFormatProperties(v, format, &formatProps);
+        // Format must support depth stencil attachment for optimal tiling
+        if (formatProps.optimalTilingFeatures &
+            VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT) {
+            depthFormat = format;
+            break;
+        }
+    }
 }
 
 uint32_t
@@ -124,6 +141,7 @@ void VKPhysicalDevice::create(VkInstance instance) {
   selectDevice(instance);
   getProperties();
   chooseDepthFormat();
+  chooseDepthStencilFormat();
 }
 
 VKPhysicalDevice::~VKPhysicalDevice() {}
