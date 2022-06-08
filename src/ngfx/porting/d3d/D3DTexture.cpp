@@ -49,6 +49,8 @@ void D3DTexture::getResourceDesc() {
             texFormat = DXGI_FORMAT_R16_TYPELESS;
         else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT && isSampled)
             texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+        else if (texFormat == DXGI_FORMAT_D32_FLOAT && isSampled)
+            texFormat = DXGI_FORMAT_R32_TYPELESS;
         else if (texFormat == DXGI_FORMAT_D32_FLOAT_S8X24_UINT && isSampled)
             texFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
         resourceDesc =

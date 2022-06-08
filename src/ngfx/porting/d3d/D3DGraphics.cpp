@@ -344,6 +344,8 @@ void D3DGraphics::endRenderPass(CommandBuffer *commandBuffer) {
           texFormat = DXGI_FORMAT_R16_TYPELESS;
       else if (texFormat == DXGI_FORMAT_D24_UNORM_S8_UINT)
           texFormat = DXGI_FORMAT_R24G8_TYPELESS;
+      else if (texFormat == DXGI_FORMAT_D32_FLOAT)
+          texFormat = DXGI_FORMAT_R32_TYPELESS;
       else if (texFormat == DXGI_FORMAT_D32_FLOAT_S8X24_UINT)
           texFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
       D3D_TRACE(d3dCommandList->v->ResolveSubresource(
