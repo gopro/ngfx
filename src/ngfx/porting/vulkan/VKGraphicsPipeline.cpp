@@ -173,7 +173,7 @@ GraphicsPipeline *
 GraphicsPipeline::create(GraphicsContext* graphicsContext, const State& state,
     VertexShaderModule* vs, FragmentShaderModule* fs,
     PixelFormat colorFormat, PixelFormat depthFormat,
-    std::vector<VertexInputAttributeDescription> vertexAttributes /* TODO */,
+    std::vector<VertexInputAttributeDescription> vertexAttributes,
     std::set<std::string> instanceAttributes) {
   VKGraphicsPipeline *vkGraphicsPipeline = new VKGraphicsPipeline();
   VKGraphicsPipeline::State vkState = {
@@ -227,7 +227,7 @@ GraphicsPipeline::create(GraphicsContext* graphicsContext, const State& state,
   // TODO: support interleaved vertex bindings
   for (uint32_t j = 0; j < vs->attributes.size(); j++) {
     auto &va = vs->attributes[j];
-    uint32_t binding = va.location, offset = 0;
+    uint32_t binding = va.location, offset = vertexAttributes.empty() ? 0 : vertexAttributes[j].offset;
     for (uint32_t k = 0; k < va.count; k++) {
       vkVertexInputAttributes.push_back(
           {va.location + k, binding, VkFormat(va.format), offset});
