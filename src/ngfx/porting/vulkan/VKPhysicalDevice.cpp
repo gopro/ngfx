@@ -85,10 +85,13 @@ void VKPhysicalDevice::selectDevice(VkInstance instance) {
 }
 
 void VKPhysicalDevice::chooseDepthFormat() {
+  std::vector<VkFormat> depthFormatCandidates = {
+      VK_FORMAT_D32_SFLOAT_S8_UINT,
+      VK_FORMAT_D24_UNORM_S8_UINT,
+      VK_FORMAT_D16_UNORM
+  };
 
-  std::vector<VkFormat> depthFormats = {VK_FORMAT_D16_UNORM};
-
-  for (auto &format : depthFormats) {
+  for (auto &format : depthFormatCandidates) {
     VkFormatProperties formatProps;
     vkGetPhysicalDeviceFormatProperties(v, format, &formatProps);
     // Format must support depth stencil attachment for optimal tiling

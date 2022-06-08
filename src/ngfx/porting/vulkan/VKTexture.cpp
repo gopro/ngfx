@@ -46,12 +46,7 @@ void VKTexture::create(VKGraphicsContext *ctx, void *data, uint32_t size,
   this->genMipmaps = genMipmaps;
   this->samplerCreateInfo.reset(pSamplerCreateInfo);
   numPlanes = 1; //TODO
-  const std::vector<VkFormat> depthFormats = {
-      VK_FORMAT_D16_UNORM, VK_FORMAT_X8_D24_UNORM_PACK32, VK_FORMAT_D32_SFLOAT};
-  depthTexture = std::find(depthFormats.begin(), depthFormats.end(), format) !=
-                 depthFormats.end();
-  this->aspectFlags =
-      depthTexture ? VK_IMAGE_ASPECT_DEPTH_BIT : VK_IMAGE_ASPECT_COLOR_BIT;
+  aspectFlags = getImageAspectFlags(format);
   VkImageType imageType;
   if (imageViewType == VK_IMAGE_VIEW_TYPE_1D ||
       imageViewType == VK_IMAGE_VIEW_TYPE_1D_ARRAY)
@@ -120,6 +115,18 @@ VkDescriptorSet VKTexture::getStorageImageDescriptorSet(VkCommandBuffer cmdBuffe
     return storageImageDescriptorSet;
 }
 
+VkImageAspectFlags VKTexture::getImageAspectFlags(VkFormat format) {
+    switch (format) {
+    case VK_FORMAT_D16_UNORM:
+    case VK_FORMAT_X8_D24_UNORM_PACK32:
+        return VK_IMAGE_ASPECT_DEPTH_BIT;
+    case VK_FORMAT_D24_UNORM_S8_UINT:
+    case VK_FORMAT_D32_SFLOAT_S8_UINT:
+        return VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+    default:
+        return VK_IMAGE_ASPECT_COLOR_BIT;
+    }
+}
 
 void VKTexture::generateMipmaps(CommandBuffer *commandBuffer) {
   generateMipmapsFn(vk(commandBuffer)->v);
