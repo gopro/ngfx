@@ -104,7 +104,7 @@ void VKGraphicsContext::initRenderPass(const RenderPassConfig &config,
     } else {
         attachments.push_back({
              0, colorFormat, VkSampleCountFlagBits(config.numSamples),
-             VkAttachmentLoadOp(colorAttachmentDesc.loadOp), VK_ATTACHMENT_STORE_OP_DONT_CARE,
+             VkAttachmentLoadOp(colorAttachmentDesc.loadOp), VkAttachmentStoreOp(colorAttachmentDesc.storeOp), /* TODO: DONT_CARE? */
              VK_ATTACHMENT_LOAD_OP_DONT_CARE, VK_ATTACHMENT_STORE_OP_DONT_CARE,
              initialLayout, finalLayout
         });
