@@ -23,7 +23,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <cstdarg>
-#include <exception>
+#include <stdexcept>
 #ifndef __PRETTY_FUNCTION__
 #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
@@ -51,7 +51,7 @@ inline void debugMessage(FILE* filenum, const char* fmt, ...) {
     snprintf(buffer, sizeof(buffer), "ERROR: [%s][%s][%d] " fmt "\n", __FILE__, \
         __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__); \
     LOG_FN(stderr, "%s", buffer); \
-    throw std::exception(buffer); \
+    throw std::runtime_error(buffer); \
 }
 #define NGFX_LOG_TRACE(fmt, ...)                                               \
   NGFX_LOG("[%s][%s][%d] " fmt, __FILE__, __PRETTY_FUNCTION__, __LINE__,       \
