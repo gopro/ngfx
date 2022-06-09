@@ -71,15 +71,17 @@ void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MT
     
     if (state.depthTestEnable) {
         MTLDepthStencilDescriptor *depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
-        depthStencilDesc.depthCompareFunction = MTLCompareFunctionLess;
+        depthStencilDesc.depthCompareFunction = ::MTLCompareFunctionLess;
         depthStencilDesc.depthWriteEnabled = state.depthWriteEnable;
         mtlDepthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
     }
 }
 
-GraphicsPipeline* GraphicsPipeline::create(GraphicsContext* ctx, const GraphicsPipeline::State &state,
-         VertexShaderModule* vs, FragmentShaderModule* fs, PixelFormat colorFormat, PixelFormat depthFormat,
-         std::set<std::string> instanceAttributes) {
+GraphicsPipeline* GraphicsPipeline::create(GraphicsContext *graphicsContext, const State &state,
+                                           VertexShaderModule *vs, FragmentShaderModule *fs,
+                                           PixelFormat colorFormat, PixelFormat depthStencilFormat,
+                                           std::vector<VertexInputAttributeDescription> vertexAttributes,
+                                           std::set<std::string> instanceAttributes) {
     MTLGraphicsPipeline* mtlGraphicsPipeline = new MTLGraphicsPipeline();
     auto& descriptorBindings = mtlGraphicsPipeline->descriptorBindings;
     
@@ -109,8 +111,8 @@ GraphicsPipeline* GraphicsPipeline::create(GraphicsContext* ctx, const GraphicsP
     shaders.VS = mtl(vs)->mtlFunction;
     shaders.PS = mtl(fs)->mtlFunction;
     
-    mtlGraphicsPipeline->create(mtl(ctx), state, vertexDescriptor, shaders, ::MTLPixelFormat(colorFormat),
-        ::MTLPixelFormat(depthFormat));
+    mtlGraphicsPipeline->create(mtl(graphicsContext), state, vertexDescriptor, shaders, ::MTLPixelFormat(colorFormat),
+        ::MTLPixelFormat(depthStencilFormat));
     [vertexDescriptor release];
     return mtlGraphicsPipeline;
 }

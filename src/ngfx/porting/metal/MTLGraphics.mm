@@ -113,7 +113,7 @@ void MTLGraphics::bindUniformBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, ui
         [computeEncoder->v setBuffer:mtl(buffer)->v offset:0 atIndex:binding];
     }
 }
-void MTLGraphics::bindStorageBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, uint32_t binding, ShaderStageFlags shaderStageFlags) {
+void MTLGraphics::bindStorageBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, uint32_t binding, ShaderStageFlags shaderStageFlags, bool readonly) {
     if (MTLGraphicsPipeline* graphicsPipeline = dynamic_cast<MTLGraphicsPipeline*>(currentPipeline)) {
         auto renderEncoder = (MTLRenderCommandEncoder*)currentCommandEncoder;
         if (shaderStageFlags & SHADER_STAGE_VERTEX_BIT) [renderEncoder->v setVertexBuffer:mtl(buffer)->v offset:0 atIndex:binding];

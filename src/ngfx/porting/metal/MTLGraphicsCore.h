@@ -22,6 +22,10 @@
 #include "ngfx/porting/metal/MTLGraphicsCoreDefines.h"
 
 namespace ngfx {
+
+#define    DEFAULT_STENCIL_READ_MASK    ( 0xff )
+#define    DEFAULT_STENCIL_WRITE_MASK    ( 0xff )
+
 enum PrimitiveTopology {
   PRIMITIVE_TOPOLOGY_POINT_LIST = MTLPrimitiveTypePoint,
   PRIMITIVE_TOPOLOGY_LINE_LIST = MTLPrimitiveTypeLine,
@@ -74,6 +78,26 @@ enum ColorComponentFlagBits {
 enum CommandBufferLevel {
   COMMAND_BUFFER_LEVEL_PRIMARY,
   COMMAND_BUFFER_LEVEL_SECONDARY
+};
+enum CompareOp {
+    COMPARE_OP_NEVER = MTLCompareFunctionNever,
+    COMPARE_OP_LESS = MTLCompareFunctionLess,
+    COMPARE_OP_EQUAL = MTLCompareFunctionEqual,
+    COMPARE_OP_LESS_EQUAL = MTLCompareFunctionLessEqual,
+    COMPARE_OP_GREATER = MTLCompareFunctionGreater,
+    COMPARE_OP_NOT_EQUAL = MTLCompareFunctionNotEqual,
+    COMPARE_OP_GREATER_EQUAL = MTLCompareFunctionGreaterEqual,
+    COMPARE_OP_ALWAYS = MTLCompareFunctionAlways
+};
+enum StencilOp {
+    STENCIL_OP_KEEP = MTLStencilOperationKeep,
+    STENCIL_OP_ZERO = MTLStencilOperationZero,
+    STENCIL_OP_REPLACE = MTLStencilOperationReplace,
+    STENCIL_OP_INCR_SAT = MTLStencilOperationIncrementClamp,
+    STENCIL_OP_DECR_SAT = MTLStencilOperationDecrementClamp,
+    STENCIL_OP_INVERT = MTLStencilOperationInvert,
+    STENCIL_OP_INCR = MTLStencilOperationIncrementWrap,
+    STENCIL_OP_DECR = MTLStencilOperationDecrementWrap
 };
 enum CullModeFlags {
   CULL_MODE_NONE = MTLCullModeNone,
@@ -130,7 +154,9 @@ enum PixelFormat {
   PIXELFORMAT_BGRA8_UNORM = MTLPixelFormatBGRA8Unorm,
   PIXELFORMAT_D16_UNORM = MTLPixelFormatDepth16Unorm,
   PIXELFORMAT_D24_UNORM = MTLPixelFormatDepth24Unorm_Stencil8,
-  PIXELFORMAT_D24_UNORM_S8 = MTLPixelFormatDepth24Unorm_Stencil8
+  PIXELFORMAT_D24_UNORM_S8_UINT = MTLPixelFormatDepth24Unorm_Stencil8,
+  PIXELFORMAT_D32_SFLOAT = MTLPixelFormatDepth32Float,
+  PIXELFORMAT_D32_SFLOAT_S8_UINT = MTLPixelFormatDepth32Float_Stencil8
 };
 
 enum IndexFormat {
@@ -147,7 +173,9 @@ enum IndexFormat {
 enum VertexFormat { DEFINE_VERTEXFORMATS(FLOAT, Float) };
 
 enum DescriptorType {
+  DESCRIPTOR_TYPE_SAMPLER,
   DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+  DESCRIPTOR_TYPE_SAMPLED_IMAGE,
   DESCRIPTOR_TYPE_STORAGE_IMAGE,
   DESCRIPTOR_TYPE_UNIFORM_BUFFER,
   DESCRIPTOR_TYPE_STORAGE_BUFFER
@@ -171,4 +199,15 @@ enum ImageLayout {
   IMAGE_LAYOUT_GENERAL,
   IMAGE_LAYOUT_PRESENT_SRC
 };
+
+enum AttachmentLoadOp {
+    ATTACHMENT_LOAD_OP_LOAD = MTLLoadActionLoad,
+    ATTACHMENT_LOAD_OP_CLEAR = MTLLoadActionClear,
+    ATTACHMENT_LOAD_OP_DONT_CARE = MTLLoadActionDontCare
+};
+enum AttachmentStoreOp {
+    ATTACHMENT_STORE_OP_STORE = MTLStoreActionStore,
+    ATTACHMENT_STORE_OP_DONT_CARE = MTLStoreActionDontCare
+};
+
 } // namespace ngfx

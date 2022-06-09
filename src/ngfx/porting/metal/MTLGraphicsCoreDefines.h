@@ -64,6 +64,36 @@ enum MTLColorWriteMask {
   MTLColorWriteMaskAlpha = 0x1 << 0,
   MTLColorWriteMaskAll = 0xf
 };
+enum MTLCompareFunction {
+    MTLCompareFunctionNever = 0,
+    MTLCompareFunctionLess = 1,
+    MTLCompareFunctionEqual = 2,
+    MTLCompareFunctionLessEqual = 3,
+    MTLCompareFunctionGreater = 4,
+    MTLCompareFunctionNotEqual = 5,
+    MTLCompareFunctionGreaterEqual = 6,
+    MTLCompareFunctionAlways = 7,
+};
+enum MTLStencilOperation {
+    MTLStencilOperationKeep = 0,
+    MTLStencilOperationZero = 1,
+    MTLStencilOperationReplace = 2,
+    MTLStencilOperationIncrementClamp = 3,
+    MTLStencilOperationDecrementClamp = 4,
+    MTLStencilOperationInvert = 5,
+    MTLStencilOperationIncrementWrap = 6,
+    MTLStencilOperationDecrementWrap = 7,
+};
+enum MTLLoadAction {
+    MTLLoadActionDontCare = 0,
+    MTLLoadActionLoad = 1,
+    MTLLoadActionClear = 2,
+};
+enum MTLStoreAction {
+    MTLStoreActionDontCare = 0,
+    MTLStoreActionStore = 1,
+    MTLStoreActionMultisampleResolve = 2,
+};
 enum MTLSamplerAddressMode {
     MTLSamplerAddressModeClampToEdge = 0,
     MTLSamplerAddressModeMirrorClampToEdge = 1,

@@ -79,8 +79,10 @@ MTLTexture::~MTLTexture() {
     [v release];
 }
 
-void MTLTexture::upload(void* data, uint32_t size, uint32_t x, uint32_t y, uint32_t z,
-        int32_t w, int32_t h, int32_t d, int32_t arrayLayers) {
+void MTLTexture::upload(void *data, uint32_t size, uint32_t x, uint32_t y,
+                        uint32_t z, int32_t w, int32_t h,
+                        int32_t d, int32_t arrayLayers, int32_t numPlanes,
+                        int32_t dataPitch) {
     if (!data) return;
     if (w == -1) w = this->w;
     if (h == -1) h = this->h;
@@ -121,7 +123,7 @@ void MTLTexture::generateMipmapsFn(id<MTLCommandBuffer> mtlCommandBuffer) {
 }
 
 void MTLTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y, uint32_t z,
-          int32_t w, int32_t h, int32_t d, int32_t arrayLayers) {
+          int32_t w, int32_t h, int32_t d, int32_t arrayLayers, int32_t numPlanes) {
     const bool flipY = false; //TODO:move to param
     if (w == -1) w = this->w;
     if (h == -1) h = this->h;
@@ -155,20 +157,24 @@ void MTLTexture::download(void* data, uint32_t size, uint32_t x, uint32_t y, uin
     }
 }
 
-Texture* Texture::create(GraphicsContext* ctx, Graphics* graphics, void* data, PixelFormat format, uint32_t size,
-         uint32_t w, uint32_t h, uint32_t d, uint32_t arrayLayers, ImageUsageFlags imageUsageFlags,
-         TextureType textureType, bool genMipmaps, FilterMode minFilter, FilterMode magFilter, FilterMode mipFilter,
-         uint32_t numSamples) {
+Texture* Texture::create(GraphicsContext* graphicsContext, Graphics* graphics, void* data,
+                         PixelFormat format, uint32_t size, uint32_t w, uint32_t h, uint32_t d,
+                         uint32_t arrayLayers, ImageUsageFlags imageUsageFlags,
+                         TextureType textureType, bool genMipmaps, uint32_t numSamples,
+                         SamplerDesc* samplerDesc, int32_t dataPitch) {
     MTLTexture* mtlTexture = new MTLTexture();
     MTLTextureUsage textureUsage = 0;
     if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) textureUsage |= MTLTextureUsageShaderRead;
     if (imageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT) textureUsage |= MTLTextureUsageRenderTarget;
     else if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) textureUsage |= MTLTextureUsageRenderTarget;
-    MTLSamplerDescriptor *mtlSamplerDescriptor = [MTLSamplerDescriptor new];
-    mtlSamplerDescriptor.minFilter = ::MTLSamplerMinMagFilter(minFilter);
-    mtlSamplerDescriptor.magFilter = ::MTLSamplerMinMagFilter(magFilter);
-    mtlSamplerDescriptor.mipFilter = (mipFilter == FILTER_NEAREST) ? MTLSamplerMipFilterNearest : MTLSamplerMipFilterLinear;
-    mtlTexture->create(mtl(ctx), data, ::MTLPixelFormat(format), size, w, h, d, arrayLayers,
+    MTLSamplerDescriptor *mtlSamplerDescriptor = nil;
+    if (samplerDesc && imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+        mtlSamplerDescriptor = [MTLSamplerDescriptor new];
+        mtlSamplerDescriptor.minFilter = ::MTLSamplerMinMagFilter(samplerDesc->minFilter);
+        mtlSamplerDescriptor.magFilter = ::MTLSamplerMinMagFilter(samplerDesc->magFilter);
+        mtlSamplerDescriptor.mipFilter = (samplerDesc->mipFilter == FILTER_NEAREST) ? ::MTLSamplerMipFilterNearest : ::MTLSamplerMipFilterLinear;
+    }
+    mtlTexture->create(mtl(graphicsContext), data, ::MTLPixelFormat(format), size, w, h, d, arrayLayers,
        textureUsage, ::MTLTextureType(textureType), genMipmaps, mtlSamplerDescriptor, numSamples);
     [mtlSamplerDescriptor release];
     return mtlTexture;
