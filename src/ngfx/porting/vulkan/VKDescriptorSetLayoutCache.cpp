@@ -25,6 +25,7 @@ using namespace ngfx;
 void VKDescriptorSetLayoutCache::create(VkDevice device) {
   this->device = device;
   initDescriptorSetLayout(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+  initDescriptorSetLayout(VK_DESCRIPTOR_TYPE_SAMPLER);
   initDescriptorSetLayout(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
   initDescriptorSetLayout(VK_DESCRIPTOR_TYPE_STORAGE_IMAGE);
   initDescriptorSetLayout(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
