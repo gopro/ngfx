@@ -31,6 +31,8 @@ void MTLGraphicsContext::create(const char* appName, bool enableDepthStencil, bo
     this->debug = debug;
     mtlDevice.create();
     mtlCommandQueue = [mtlDevice.v newCommandQueue];
+    depthFormat = PixelFormat(MTLPixelFormatDepth32Float);
+    depthStencilFormat = PixelFormat(MTLPixelFormatDepth32Float_Stencil8);
 }
 MTLGraphicsContext::~MTLGraphicsContext() {}
 
@@ -56,7 +58,6 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         NGFX_TODO("");
     }
     if (surface && enableDepthStencil) {
-        depthFormat = PixelFormat(MTLPixelFormatDepth24Unorm_Stencil8);
         if (!surface->offscreen && mtkView) mtkView.depthStencilPixelFormat = ::MTLPixelFormat(depthFormat);
         else if (!surface->offscreen) {
             mtl_surface->depthStencilTexture.reset(new MTLDepthStencilTexture);
