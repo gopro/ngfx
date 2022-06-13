@@ -72,7 +72,10 @@ void MTLTexture::create(MTLGraphicsContext *ctx, void* data, ::MTLPixelFormat fo
     [textureDescriptor release];
     
     upload(data, size);
-    mtlSamplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
+
+    if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
+        mtlSamplerState = [device newSamplerStateWithDescriptor:samplerDescriptor];
+    }
 }
 
 MTLTexture::~MTLTexture() {
