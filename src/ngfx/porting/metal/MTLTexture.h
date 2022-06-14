@@ -30,7 +30,7 @@ class MTLTexture : public Texture {
 public:
   void create(MTLGraphicsContext *ctx, void *data, ::MTLPixelFormat format,
               uint32_t size, uint32_t w, uint32_t h, uint32_t d,
-              uint32_t arrayLayers, MTLTextureUsage textureUsage,
+              uint32_t arrayLayers, ImageUsageFlags imageUsageFlags,
               ::MTLTextureType textureType, bool genMipmaps,
               MTLSamplerDescriptor *samplerDescriptor, uint32_t numSamples);
   virtual ~MTLTexture();

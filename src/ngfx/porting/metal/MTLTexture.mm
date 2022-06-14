@@ -28,14 +28,22 @@ using namespace ngfx;
 
 void MTLTexture::create(MTLGraphicsContext *ctx, void* data, ::MTLPixelFormat format, uint32_t size,
         uint32_t w, uint32_t h, uint32_t d, uint32_t arrayLayers,
-        MTLTextureUsage textureUsage, ::MTLTextureType textureType,
+        ImageUsageFlags imageUsageFlags, ::MTLTextureType textureType,
         bool genMipmaps, MTLSamplerDescriptor* samplerDescriptor, uint32_t numSamples) {
     this->ctx = ctx;
     this->w = w; this->h = h; this->d = d; this->arrayLayers = arrayLayers;
     this->textureType = ngfx::TextureType(textureType);
     this->format = PixelFormat(format);
     this->numSamples = numSamples;
+    this->imageUsageFlags = imageUsageFlags;
     auto device = ctx->mtlDevice.v;
+    MTLTextureUsage textureUsage = 0;
+    if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT)
+        textureUsage |= MTLTextureUsageShaderRead;
+    if (imageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+        textureUsage |= MTLTextureUsageRenderTarget;
+    else if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
+        textureUsage |= MTLTextureUsageRenderTarget;
     MTLTextureDescriptor *textureDescriptor = [MTLTextureDescriptor new];
     textureDescriptor.pixelFormat = format;
     textureDescriptor.width = w;
@@ -166,10 +174,6 @@ Texture* Texture::create(GraphicsContext* graphicsContext, Graphics* graphics, v
                          TextureType textureType, bool genMipmaps, uint32_t numSamples,
                          SamplerDesc* samplerDesc, int32_t dataPitch) {
     MTLTexture* mtlTexture = new MTLTexture();
-    MTLTextureUsage textureUsage = 0;
-    if (imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) textureUsage |= MTLTextureUsageShaderRead;
-    if (imageUsageFlags & IMAGE_USAGE_COLOR_ATTACHMENT_BIT) textureUsage |= MTLTextureUsageRenderTarget;
-    else if (imageUsageFlags & IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT) textureUsage |= MTLTextureUsageRenderTarget;
     MTLSamplerDescriptor *mtlSamplerDescriptor = nil;
     if (samplerDesc && imageUsageFlags & IMAGE_USAGE_SAMPLED_BIT) {
         mtlSamplerDescriptor = [MTLSamplerDescriptor new];
@@ -178,7 +182,7 @@ Texture* Texture::create(GraphicsContext* graphicsContext, Graphics* graphics, v
         mtlSamplerDescriptor.mipFilter = (samplerDesc->mipFilter == FILTER_NEAREST) ? ::MTLSamplerMipFilterNearest : ::MTLSamplerMipFilterLinear;
     }
     mtlTexture->create(mtl(graphicsContext), data, ::MTLPixelFormat(format), size, w, h, d, arrayLayers,
-       textureUsage, ::MTLTextureType(textureType), genMipmaps, mtlSamplerDescriptor, numSamples);
+       imageUsageFlags, ::MTLTextureType(textureType), genMipmaps, mtlSamplerDescriptor, numSamples);
     [mtlSamplerDescriptor release];
     return mtlTexture;
 }
