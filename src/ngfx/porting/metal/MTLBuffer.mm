@@ -39,6 +39,8 @@ Buffer* Buffer::create(GraphicsContext* ctx, const void* data, uint32_t size, Bu
 void* MTLBuffer::map() { return v.contents; }
 void MTLBuffer::unmap() {}
 void MTLBuffer::upload(const void* data, uint32_t size, uint32_t offset) {
+    if (!data)
+        return;
     memcpy((uint8_t*)(v.contents) + offset, data, size);
 }
 void MTLBuffer::download(void* data, uint32_t size, uint32_t offset) {
