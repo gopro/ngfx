@@ -148,7 +148,7 @@ target_include_directories(ngfx PUBLIC . src
 )
 target_link_directories(ngfx PUBLIC
     ${NGFX_GRAPHICS_BACKEND_LIBRARY_DIRS}
-	${WINDOW_BACKEND_LIBRARY_DIRS}
+    ${WINDOW_BACKEND_LIBRARY_DIRS}
     ${SHADERC_LIBRARY_DIRS}
     ${SPIRV_CROSS_LIBRARY_DIRS}
 )
