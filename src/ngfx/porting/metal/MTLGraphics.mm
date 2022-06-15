@@ -116,8 +116,10 @@ void MTLGraphics::bindUniformBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, ui
 void MTLGraphics::bindStorageBuffer(CommandBuffer* cmdBuffer, Buffer* buffer, uint32_t binding, ShaderStageFlags shaderStageFlags, bool readonly) {
     if (MTLGraphicsPipeline* graphicsPipeline = dynamic_cast<MTLGraphicsPipeline*>(currentPipeline)) {
         auto renderEncoder = (MTLRenderCommandEncoder*)currentCommandEncoder;
-        if (shaderStageFlags & SHADER_STAGE_VERTEX_BIT) [renderEncoder->v setVertexBuffer:mtl(buffer)->v offset:0 atIndex:binding];
-        if (shaderStageFlags & SHADER_STAGE_FRAGMENT_BIT) [renderEncoder->v setFragmentBuffer:mtl(buffer)->v offset:0 atIndex:binding];
+        if (shaderStageFlags & SHADER_STAGE_VERTEX_BIT)
+            [renderEncoder->v setVertexBuffer:mtl(buffer)->v offset:0 atIndex:binding];
+        if (shaderStageFlags & SHADER_STAGE_FRAGMENT_BIT)
+            [renderEncoder->v setFragmentBuffer:mtl(buffer)->v offset:0 atIndex:binding];
     }
     else if (MTLComputePipeline* computePipeline = dynamic_cast<MTLComputePipeline*>(currentPipeline)) {
         auto computeEncoder = (MTLComputeCommandEncoder*)currentCommandEncoder;

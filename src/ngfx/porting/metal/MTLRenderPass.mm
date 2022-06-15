@@ -77,13 +77,15 @@ MTLRenderPassDescriptor* MTLRenderPass::getDescriptor(MTLGraphicsContext* mtlCtx
         depthAttachment.loadAction = ::MTLLoadActionClear;
         depthAttachment.resolveTexture = mtlFramebuffer->depthAttachment.resolveTexture;
         depthAttachment.texture = mtlFramebuffer->depthAttachment.texture;
-        if (depthAttachment.resolveTexture) depthAttachment.storeAction = ::MTLStoreActionMultisampleResolve;
+        if (depthAttachment.resolveTexture)
+            depthAttachment.storeAction = ::MTLStoreActionMultisampleResolve;
         else depthAttachment.storeAction = ::MTLStoreActionDontCare;
     }
     auto stencilAttachment = mtlRenderPassDescriptor.stencilAttachment;
     if (mtlFramebuffer->stencilAttachment) {
         stencilAttachment.texture = mtlFramebuffer->stencilAttachment.texture;
     }
-    if (mtlRenderPassDescriptor.stencilAttachment) mtlRenderPassDescriptor.stencilAttachment.clearStencil = clearStencil;
+    if (mtlRenderPassDescriptor.stencilAttachment)
+        mtlRenderPassDescriptor.stencilAttachment.clearStencil = clearStencil;
     return mtlRenderPassDescriptor;
 }

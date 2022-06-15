@@ -68,7 +68,8 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         }
     }
     std::optional<AttachmentDescription> depthAttachmentDescription;
-    if (enableDepthStencil) depthAttachmentDescription = { depthFormat };
+    if (enableDepthStencil)
+        depthAttachmentDescription = { depthFormat };
     else depthAttachmentDescription = nullopt;
     if (surface && !surface->offscreen) {
         RenderPassConfig onscreenRenderPassConfig = {
