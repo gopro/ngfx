@@ -40,6 +40,7 @@ public:
   ::MTLPrimitiveType mtlPrimitiveType;
   ::MTLCullMode mtlCullMode;
   ::MTLWinding mtlFrontFaceWinding;
+  uint32_t stencilRef = 0;
 };
 MTL_CAST(GraphicsPipeline);
 } // namespace ngfx

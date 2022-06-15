@@ -69,10 +69,33 @@ void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MT
     mtlCullMode = ::MTLCullMode(state.cullModeFlags);
     mtlFrontFaceWinding = ::MTLWinding(state.frontFace);
     
-    if (state.depthTestEnable) {
+    if (state.depthTestEnable || state.stencilEnable) {
         MTLDepthStencilDescriptor *depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
-        depthStencilDesc.depthCompareFunction = ::MTLCompareFunctionLess;
+        depthStencilDesc.depthCompareFunction = (state.depthTestEnable) ?
+            ::MTLCompareFunction(state.depthFunc) :
+            ::MTLCompareFunctionAlways;
         depthStencilDesc.depthWriteEnabled = state.depthWriteEnable;
+        if (state.stencilEnable) {
+            MTLStencilDescriptor *frontFaceStencil = [[MTLStencilDescriptor alloc] init];
+            frontFaceStencil.readMask = state.stencilReadMask;
+            frontFaceStencil.writeMask = state.stencilWriteMask;
+            frontFaceStencil.stencilFailureOperation = ::MTLStencilOperation(state.frontStencilFailOp);
+            frontFaceStencil.depthFailureOperation = ::MTLStencilOperation(state.frontStencilDepthFailOp);
+            frontFaceStencil.depthStencilPassOperation = ::MTLStencilOperation(state.frontStencilPassOp);
+            frontFaceStencil.stencilCompareFunction = ::MTLCompareFunction(state.frontStencilFunc);
+            depthStencilDesc.frontFaceStencil = frontFaceStencil;
+
+            MTLStencilDescriptor *backFaceStencil = [[MTLStencilDescriptor alloc] init];
+            backFaceStencil.readMask = state.stencilReadMask;
+            backFaceStencil.writeMask = state.stencilWriteMask;
+            backFaceStencil.stencilFailureOperation = ::MTLStencilOperation(state.backStencilFailOp);
+            backFaceStencil.depthFailureOperation = ::MTLStencilOperation(state.backStencilDepthFailOp);
+            backFaceStencil.depthStencilPassOperation = ::MTLStencilOperation(state.backStencilPassOp);
+            backFaceStencil.stencilCompareFunction = ::MTLCompareFunction(state.backStencilFunc);
+            depthStencilDesc.backFaceStencil = backFaceStencil;
+
+            stencilRef = state.stencilRef;
+        }
         mtlDepthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
     }
 }

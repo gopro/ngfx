@@ -137,6 +137,7 @@ void MTLGraphics::bindGraphicsPipeline(CommandBuffer* cmdBuffer, GraphicsPipelin
     [renderEncoder->v setFrontFacingWinding: mtlPipeline->mtlFrontFaceWinding];
     if (mtlPipeline->mtlDepthStencilState) {
         [renderEncoder->v setDepthStencilState: mtlPipeline->mtlDepthStencilState];
+        [renderEncoder->v setStencilReferenceValue: mtlPipeline->stencilRef];
     }
     currentPrimitiveType = mtl(graphicsPipeline)->mtlPrimitiveType;
     currentPipeline = graphicsPipeline;
