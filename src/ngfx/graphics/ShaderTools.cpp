@@ -242,7 +242,7 @@ int ShaderTools::compileShaderMSL(const string &file,
     return 0;
   }
 
-  string debugFlags = "-gline-tables-only -MO";
+  string debugFlags = ""; //-gline-tables-only -MO";
   int result = cmd("xcrun -sdk macosx metal " + debugFlags + " -c " +
                    inFileName + " -o " + outDir + "/" + strippedFilename +
                    ".air && "
