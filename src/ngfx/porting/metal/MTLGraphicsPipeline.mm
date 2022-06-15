@@ -29,7 +29,7 @@
 using namespace ngfx;
 
 void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MTLVertexDescriptor* vertexDescriptor,
-         const Shaders& shaders, ::MTLPixelFormat colorFormat, ::MTLPixelFormat depthFormat) {
+         const Shaders& shaders, ::MTLPixelFormat colorFormat, ::MTLPixelFormat depthStencilFormat) {
     NSError* error;
     auto device = ctx->mtlDevice.v;
     MTLRenderPipelineDescriptor *pipelineStateDescriptor = [MTLRenderPipelineDescriptor new];
@@ -51,13 +51,13 @@ void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MT
     
     pipelineStateDescriptor.rasterSampleCount = state.numSamples;
     pipelineStateDescriptor.vertexDescriptor = vertexDescriptor;
-    pipelineStateDescriptor.depthAttachmentPixelFormat = depthFormat;
+    pipelineStateDescriptor.depthAttachmentPixelFormat = depthStencilFormat;
     const std::vector<MTLPixelFormat> stencilFormats = {
         MTLPixelFormatStencil8 ,MTLPixelFormatDepth24Unorm_Stencil8,
         MTLPixelFormatDepth32Float_Stencil8,
     };
-    if (std::find(stencilFormats.begin(), stencilFormats.end(), depthFormat) != stencilFormats.end()) {
-        pipelineStateDescriptor.stencilAttachmentPixelFormat = depthFormat;
+    if (std::find(stencilFormats.begin(), stencilFormats.end(), depthStencilFormat) != stencilFormats.end()) {
+        pipelineStateDescriptor.stencilAttachmentPixelFormat = depthStencilFormat;
     }
     
     MTLPipelineOption options = MTLPipelineOptionArgumentInfo | MTLPipelineOptionBufferTypeInfo;
