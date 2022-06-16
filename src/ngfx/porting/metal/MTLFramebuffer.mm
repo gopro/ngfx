@@ -61,8 +61,8 @@ Framebuffer* Framebuffer::create(Device* device, RenderPass* renderPass,
                 auto& resolveAttachment = *attachmentsIt++;
                 auto mtlResolveTexture = mtl(resolveAttachment.texture);
                 colorAttachment.resolveTexture = mtlResolveTexture->v;
-                colorAttachment.resolveSlice = attachment.layer;
-                colorAttachment.resolveLevel = attachment.level;
+                colorAttachment.resolveSlice = resolveAttachment.layer;
+                colorAttachment.resolveLevel = resolveAttachment.level;
             }
             else {
                 colorAttachment.texture = mtlTexture->v;
