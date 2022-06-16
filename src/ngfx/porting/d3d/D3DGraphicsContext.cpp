@@ -58,8 +58,13 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
       filter.AllowList.pSeverityList = severityList;
       infoQueue->PushStorageFilter(&filter);
   }
-  std::vector<DXGI_FORMAT> depthStencilFormatCandidates = { DXGI_FORMAT_D32_FLOAT_S8X24_UINT, DXGI_FORMAT_D24_UNORM_S8_UINT, DXGI_FORMAT_D16_UNORM };
+  std::vector<DXGI_FORMAT> depthStencilFormatCandidates = {
+      DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
+      DXGI_FORMAT_D24_UNORM_S8_UINT,
+      DXGI_FORMAT_D16_UNORM
+  };
   depthStencilFormat = PixelFormat(findSupportedFormat(depthStencilFormatCandidates, D3D12_FORMAT_SUPPORT1_DEPTH_STENCIL));
+  depthFormat = depthStencilFormat;
 
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
