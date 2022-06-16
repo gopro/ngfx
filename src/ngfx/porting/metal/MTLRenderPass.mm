@@ -25,6 +25,18 @@
 using namespace ngfx;
 using namespace std;
 
+void MTLRenderPass::create(MTLGraphicsContext *ctx,
+                           AttachmentLoadOp colorLoadOp,
+                           AttachmentStoreOp colorStoreOp,
+                           AttachmentLoadOp depthLoadOp,
+                           AttachmentStoreOp depthStoreOp) {
+  this->ctx = ctx;
+  this->colorLoadOp = colorLoadOp;
+  this->colorStoreOp = colorStoreOp;
+  this->depthLoadOp = depthLoadOp;
+  this->depthStoreOp = depthStoreOp;
+}
+
 MTLRenderPassDescriptor* MTLRenderPass::getDescriptor(MTLGraphicsContext* mtlCtx, MTLFramebuffer* mtlFramebuffer,
        glm::vec4 clearColor, float clearDepth, uint32_t clearStencil) {
     MTLRenderPassDescriptor* mtlRenderPassDescriptor = nullptr;
@@ -66,20 +78,22 @@ MTLRenderPassDescriptor* MTLRenderPass::getDescriptor(MTLGraphicsContext* mtlCtx
     }
     for (auto& colorAttachment : colorAttachments) {
         colorAttachment.clearColor = { clearColor[0], clearColor[1], clearColor[2], clearColor[3] };
-        colorAttachment.loadAction = ::MTLLoadActionClear;
+        colorAttachment.loadAction = ::MTLLoadAction(colorLoadOp);
         if (colorAttachment.resolveTexture)
             colorAttachment.storeAction = MTLStoreActionStoreAndMultisampleResolve;
-        else colorAttachment.storeAction = ::MTLStoreActionStore;
+        else
+            colorAttachment.storeAction = ::MTLStoreAction(colorStoreOp);
     }
     auto depthAttachment = mtlRenderPassDescriptor.depthAttachment;
     if (mtlFramebuffer->depthAttachment) {
         depthAttachment.clearDepth = clearDepth;
-        depthAttachment.loadAction = ::MTLLoadActionClear;
+        depthAttachment.loadAction = ::MTLLoadAction(depthLoadOp);
         depthAttachment.resolveTexture = mtlFramebuffer->depthAttachment.resolveTexture;
         depthAttachment.texture = mtlFramebuffer->depthAttachment.texture;
         if (depthAttachment.resolveTexture)
             depthAttachment.storeAction = ::MTLStoreActionMultisampleResolve;
-        else depthAttachment.storeAction = ::MTLStoreActionDontCare;
+        else
+            depthAttachment.storeAction = ::MTLStoreAction(depthStoreOp);
     }
     auto stencilAttachment = mtlRenderPassDescriptor.stencilAttachment;
     if (mtlFramebuffer->stencilAttachment) {

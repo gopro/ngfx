@@ -28,11 +28,20 @@ namespace ngfx {
 class MTLGraphicsContext;
 class MTLRenderPass : public RenderPass {
 public:
+  void create(MTLGraphicsContext *ctx,
+              AttachmentLoadOp colorLoadOp = ATTACHMENT_LOAD_OP_CLEAR,
+              AttachmentStoreOp colorStoreOp = ATTACHMENT_STORE_OP_STORE,
+              AttachmentLoadOp depthLoadOp = ATTACHMENT_LOAD_OP_CLEAR,
+              AttachmentStoreOp depthStoreOp = ATTACHMENT_STORE_OP_DONT_CARE);
   virtual ~MTLRenderPass() {}
   MTLRenderPassDescriptor *getDescriptor(MTLGraphicsContext *mtlCtx,
                                          MTLFramebuffer *mtlFramebuffer,
                                          glm::vec4 clearColor, float clearDepth,
                                          uint32_t clearStencil);
+  AttachmentLoadOp colorLoadOp, depthLoadOp;
+  AttachmentStoreOp colorStoreOp, depthStoreOp;
+private:
+  MTLGraphicsContext *ctx;
 };
 MTL_CAST(RenderPass);
 } // namespace ngfx

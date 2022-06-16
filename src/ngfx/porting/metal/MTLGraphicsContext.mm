@@ -58,7 +58,7 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         NGFX_TODO("");
     }
     if (surface && enableDepthStencil) {
-        if (!surface->offscreen && mtkView) mtkView.depthStencilPixelFormat = ::MTLPixelFormat(depthFormat);
+        if (!surface->offscreen && mtkView) mtkView.depthStencilPixelFormat = ::MTLPixelFormat(depthStencilFormat);
         else if (!surface->offscreen) {
             mtl_surface->depthStencilTexture.reset(new MTLDepthStencilTexture);
             mtl_surface->depthStencilTexture->create(this, mtl_surface->w, mtl_surface->h);
@@ -69,19 +69,21 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
     }
     std::optional<AttachmentDescription> depthAttachmentDescription;
     if (enableDepthStencil)
-        depthAttachmentDescription = { depthFormat };
+        depthAttachmentDescription = { depthStencilFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
     else depthAttachmentDescription = nullopt;
     if (surface && !surface->offscreen) {
         RenderPassConfig onscreenRenderPassConfig = {
-            { { surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC } },
+            { { surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE } },
             depthAttachmentDescription, false, numSamples
         };
         mtlDefaultRenderPass = (MTLRenderPass*)getRenderPass(onscreenRenderPassConfig);
     }
     defaultOffscreenSurfaceFormat = PixelFormat(MTLPixelFormatRGBA8Unorm);
     RenderPassConfig offscreenRenderPassConfig = {
-        { { defaultOffscreenSurfaceFormat } }, depthAttachmentDescription, false, numSamples
-    };
+        {{defaultOffscreenSurfaceFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE }},
+        depthAttachmentDescription,
+        false,
+        numSamples};
     mtlDefaultOffscreenRenderPass = (MTLRenderPass*)getRenderPass(offscreenRenderPassConfig);
     if (surface && !surface->offscreen) {
         CAMetalLayer* metalLayer = mtl_surface->getMetalLayer();
@@ -94,9 +96,20 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
 
 RenderPass* MTLGraphicsContext::getRenderPass(RenderPassConfig config) {
     for (auto& r : mtlRenderPassCache) {
-        if (r->config == config) return &r->mtlRenderPass;
+        if (r->config == config)
+            return &r->mtlRenderPass;
     }
     auto renderPassData = make_unique<MTLRenderPassData>();
+    renderPassData->config = config;
+    renderPassData->mtlRenderPass.create(this,
+                                         config.colorAttachmentDescriptions[0].loadOp,
+                                         config.colorAttachmentDescriptions[0].storeOp,
+                                         config.depthStencilAttachmentDescription ?
+                                         config.depthStencilAttachmentDescription->loadOp :
+                                         ATTACHMENT_LOAD_OP_CLEAR,
+                                         config.depthStencilAttachmentDescription ?
+                                         config.depthStencilAttachmentDescription->storeOp :
+                                         ATTACHMENT_STORE_OP_DONT_CARE);
     auto result = &renderPassData->mtlRenderPass;
     mtlRenderPassCache.emplace_back(std::move(renderPassData));
     return result;
