@@ -37,8 +37,10 @@ MTLFramebuffer::~MTLFramebuffer() {
     for (auto& colorAttachment : colorAttachments) {
         [colorAttachment release];
     }
-    if (depthAttachment) [depthAttachment release];
-    if (stencilAttachment) [stencilAttachment release];
+    if (depthAttachment)
+        [depthAttachment release];
+    if (stencilAttachment)
+        [stencilAttachment release];
 }
 
 Framebuffer* Framebuffer::create(Device* device, RenderPass* renderPass,
@@ -71,15 +73,23 @@ Framebuffer* Framebuffer::create(Device* device, RenderPass* renderPass,
             continue;
         }
         if (mtlTexture->depthTexture) {
-            if (!depthAttachment) depthAttachment = [MTLRenderPassDepthAttachmentDescriptor new];
-            if (mtlTexture->numSamples > 1) depthAttachment.texture = mtlTexture->v;
-            else if (depthAttachment.texture) depthAttachment.resolveTexture = mtlTexture->v;
-            else depthAttachment.texture = mtlTexture->v;
+            if (!depthAttachment)
+                depthAttachment = [MTLRenderPassDepthAttachmentDescriptor new];
+            if (mtlTexture->numSamples > 1)
+                depthAttachment.texture = mtlTexture->v;
+            else if (depthAttachment.texture)
+                depthAttachment.resolveTexture = mtlTexture->v;
+            else
+                depthAttachment.texture = mtlTexture->v;
         } if (mtlTexture->stencilTexture) {
-            if (!stencilAttachment) stencilAttachment = [MTLRenderPassStencilAttachmentDescriptor new];
-            if (mtlTexture->numSamples > 1) stencilAttachment.texture = mtlTexture->v;
-            else if (stencilAttachment.texture) stencilAttachment.resolveTexture = mtlTexture->v;
-            else stencilAttachment.texture = mtlTexture->v;
+            if (!stencilAttachment)
+                stencilAttachment = [MTLRenderPassStencilAttachmentDescriptor new];
+            if (mtlTexture->numSamples > 1)
+                stencilAttachment.texture = mtlTexture->v;
+            else if (stencilAttachment.texture)
+                stencilAttachment.resolveTexture = mtlTexture->v;
+            else
+                stencilAttachment.texture = mtlTexture->v;
         }
     }
     mtlFramebuffer->create(w, h, colorAttachments, depthAttachment, stencilAttachment);
