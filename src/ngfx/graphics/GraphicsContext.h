@@ -78,7 +78,7 @@ public:
   struct AttachmentDescription {
       bool operator==(const AttachmentDescription& rhs) const {
           return rhs.format == format && rhs.initialLayout == initialLayout &&
-              rhs.finalLayout == finalLayout;
+              rhs.finalLayout == finalLayout && rhs.loadOp == loadOp && rhs.storeOp == storeOp;
       }
       PixelFormat format;
       std::optional<ImageLayout> initialLayout, finalLayout;
