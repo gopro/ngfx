@@ -123,7 +123,7 @@ GraphicsPipeline* GraphicsPipeline::create(GraphicsContext *graphicsContext, con
         uint32_t stride = attr.elementSize;
         auto mtlVertexFormat = attr.format;
         mtlAttr.format = ::MTLVertexFormat(mtlVertexFormat);
-        mtlAttr.offset = 0;
+        mtlAttr.offset = vertexAttributes.empty() ? 0 : vertexAttributes[j].offset;
         mtlLayout.stride = stride;
         if (instanceAttributes.find(attr.name) != instanceAttributes.end())
             mtlLayout.stepFunction = MTLVertexStepFunctionPerInstance;
