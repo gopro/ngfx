@@ -43,6 +43,7 @@ void MTLGraphics::beginComputePass(CommandBuffer* commandBuffer) {
 void MTLGraphics::endComputePass(CommandBuffer* commandBuffer) {
     [currentComputeCommandEncoder.v endEncoding];
     currentComputeCommandEncoder.v = nullptr;
+    currentCommandEncoder = nullptr;
 }
 
 struct MTLGraphicsUtil {
@@ -75,6 +76,7 @@ void MTLGraphics::beginRenderPass(CommandBuffer* commandBuffer, RenderPass* rend
 void MTLGraphics::endRenderPass(CommandBuffer* commandBuffer) {
     [currentRenderCommandEncoder.v endEncoding];
     currentRenderCommandEncoder.v = nullptr;
+    currentCommandEncoder = nullptr;
     [autoReleasePool release];
     currentRenderPass = nullptr;
 }
