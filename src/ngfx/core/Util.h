@@ -29,6 +29,5 @@ public:
   template <typename T> static bool contains(std::vector<T> &v, T item) {
     return (std::find(v.begin(), v.end(), item) != v.end());
   }
-  static uint64_t hash(const std::string &s);
 };
 } // namespace ngfx
