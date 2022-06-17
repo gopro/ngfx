@@ -100,43 +100,6 @@ with the platform.
 
 ---
 
-## Competitive Analysis
-
-Another approach to achieving a cross-platform solution is to use an
-emulation layer such as MoltenVK to emulate a different platform's APIs
-on top of Apple's Metal platform APIs.  However there are several 
-drawbacks:
-- No support from Apple.  By using MoltenVK, it is unlikely that the user 
-can receive any support from Apple for any issues that may be encountered 
-on the platform.  In fact, in the past, an app that was shipped to the 
-Apple app store was temporarily kicked off the app store, because 
-MoltenVK violated Apple's terms (at the time, MoltenVK used internal APIs).
-- Inability to leverage competitive features.  Apple has a GPU developed 
-in house with competitive features, such as support for combining 
-rendering and compute operations using a single render pass while sharing 
-local memory, using "Tile Shaders".  This is supported using Metal 
-"Tile Shaders" and significantly improves memory efficiency by 
-avoiding unnecessary reads/writes to external memory.  This feature is 
-not exposed in Vulkan because no other GPUs support this.  As Apple 
-continues to differentiate from competitors, these features will be 
-exposed through Metal, not through Vulkan + some emulation layer.
-- Inability to leverage platform-optimized frameworks.  By using Vulkan 
-on Apple platforms via an emulation layer, the user cannot leverage 
-Metal frameworks such as Metal Performance Shaders that are optimized 
-for the platform
-- Limitations of performance and functionality.  An emulation layer 
-adds overhead compared to using Metal APIs directly, and it is already 
-clear that MoltenVK doesn't fully support all the Vulkan functionality.
-- Simplified programming model.  Just getting a triangle on the screen 
-with Vulkan can be a danting task, with thousands of lines of code required.
-In contrast, ngfx provides a cross-platform abstraction API with a fraction 
-of complexity, while providing similar performance benefits.
-- Inability to leverage hardware-optimized machine learning.  Metal 
-supports not just graphics but also high performance machine learning 
-(through Metal performance shaders).  By using MoltenVK, the user cannot 
-benefit from all the rich features provided by the platform, including
-hardware-accelerated neural network computation.
-
 
 ## Build Instructions
 
