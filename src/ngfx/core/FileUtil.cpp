@@ -53,11 +53,40 @@ string FileUtil::tempDir() {
   return fs::canonical(fs::temp_directory_path()).string();
 }
 
+#define RETRY_WITH_TIMEOUT(fn, t) \
+const uint32_t timeoutMs = t; \
+auto t0 = system_clock::now(); \
+std::string err = ""; \
+while (true) { \
+    try { \
+        fn; \
+        break; \
+    } \
+    catch (std::exception e) { \
+        err = e.what(); \
+        std::this_thread::sleep_for(milliseconds(10)); \
+    } \
+    auto t1 = system_clock::now(); \
+    if (duration_cast<milliseconds>(t1 - t0).count() > timeoutMs) { \
+        NGFX_ERR("%s: %s timeoutMS: %d", err.c_str(), path.c_str(), timeoutMs); \
+    } \
+}
+
+bool FileUtil::exists(const fs::path& path) {
+    bool r;
+    RETRY_WITH_TIMEOUT(r = fs::exists(path), 3000);
+    return r;
+}
+
+void FileUtil::remove(const fs::path& path) {
+    RETRY_WITH_TIMEOUT(fs::remove(path), 3000);
+}
+
 FileUtil::Lock::Lock(const std::string &path, uint32_t timeoutMs)
     : lockPath(path + ".lock"), timeoutMs(timeoutMs) {
   fs::path fpath(path);
   auto t0 = system_clock::now();
-  while (fs::exists(lockPath)) {
+  while (FileUtil::exists(lockPath)) {
     std::this_thread::sleep_for(milliseconds(10));
     auto t1 = system_clock::now();
     if (duration_cast<milliseconds>(t1 - t0).count() > timeoutMs) {
@@ -66,7 +95,9 @@ FileUtil::Lock::Lock(const std::string &path, uint32_t timeoutMs)
   }
   writeFile(lockPath, "");
 }
-FileUtil::Lock::~Lock() { fs::remove(lockPath); }
+FileUtil::Lock::~Lock() {
+    FileUtil::remove(lockPath);
+}
 
 string FileUtil::readFile(const string &path) {
   File file;

@@ -53,5 +53,8 @@ public:
             const std::vector<std::string> &extensions);
   static void copyFiles(const std::vector<std::string>& files,
       const std::string& outDir);
+
+  static bool exists(const std::filesystem::path& path);
+  static void remove(const std::filesystem::path& path);
 };
 }; // namespace ngfx
