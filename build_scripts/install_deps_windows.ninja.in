@@ -3,7 +3,6 @@ CMAKE_SYSTEM_VERSION = {CMAKE_SYSTEM_VERSION}
 SHADERC_VERSION = {SHADERC_VERSION}
 VCPKG_DIR = {VCPKG_DIR}
 VCPKG_TRIPLET = {VCPKG_TRIPLET}
-VULKAN_SDK_VERSION = {VULKAN_SDK_VERSION}
 PKGCONF_VERSION = {PKGCONF_VERSION}
 PREFIX = {PREFIX}
 UNZIP = {UNZIP}
@@ -51,10 +50,10 @@ build .pkgconf-installed: SHELL_COMMAND
     popd
 build pkgconf: phony .pkgconf-installed
 
-build .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed: SHELL_COMMAND
-    COMMAND = ${{WGET}} https://sdk.lunarg.com/sdk/download/${{VULKAN_SDK_VERSION}}/windows/VulkanSDK-${{VULKAN_SDK_VERSION}}-Installer.exe -OutFile VulkanSDK-${{VULKAN_SDK_VERSION}}-Installer.exe && $
-    ./VulkanSDK-${{VULKAN_SDK_VERSION}}-Installer.exe /S
-build VulkanSDK-${{VULKAN_SDK_VERSION}}: phony .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed
+build .VulkanSDK-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} https://sdk.lunarg.com/sdk/download/latest/windows/vulkan-sdk.exe -OutFile VulkanSDK-Installer.exe && $
+    ./VulkanSDK-Installer.exe /S
+build VulkanSDK: phony .VulkanSDK-installed
 
 build .spirv-cross-installed: SHELL_COMMAND
     COMMAND = pushd ${{VCPKG_DIR}} && $

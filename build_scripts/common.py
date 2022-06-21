@@ -57,22 +57,18 @@ INSTALL_LIBDIR = env('INSTALL_LIBDIR', 'lib')
 CMAKE_GENERATOR = env('CMAKE_GENERATOR', { 'Windows': 'Visual Studio 17 2022', 'Linux': 'Ninja', 'Darwin': 'Xcode' }[OS])
 NGFX_GRAPHICS_BACKEND = env('NGFX_GRAPHICS_BACKEND', { 'Windows': 'Direct3D12', 'Linux': 'Vulkan', 'Darwin': 'Metal' }[OS].upper())
 CMAKE = 'cmake.exe' if OS == 'Windows' else 'cmake'
+if OS in ['Windows', 'Darwin']:
+    env('SHADERC_VERSION', '2020.3')
 if OS == 'Windows':
     CMAKE_SYSTEM_VERSION = env('CMAKE_SYSTEM_VERSION', '10.0.22000.0')
-    env('SHADERC_VERSION', '2020.3')
     VCPKG_DIR = env('VCPKG_DIR', 'C:\\vcpkg')
     if not op.isdir(VCPKG_DIR):
         err('{VCPKG_DIR} doesn\'t exist')
     env('VCPKG_TRIPLET', 'x64-windows')
-    env('VULKAN_SDK_VERSION', '1.2.162.1')
     env('PKGCONF_VERSION', '1.7.4')
     CMAKE_MSVC_RUNTIME_LIBRARY = env('CMAKE_MSVC_RUNTIME_LIBRARY', 'MultiThreadedDLL')
     PREFIX = op.join(os.getcwd(), EXTERNAL_DIR, 'windows')
     env('PREFIX', PREFIX)
-elif OS == 'Linux':
-    env('VULKAN_SDK_VERSION', '1.2.170')
-elif OS == 'Darwin':
-    env('SHADERC_VERSION', '2020.3')
 env('UNZIP', 'unzip -q -n')
 env('WGET', 'iwr' if OS == 'Windows' else 'wget -nc -q')
 env('MKDIR', 'ni -ea 0 -ItemType Directory' if OS == 'Windows' else 'mkdir')

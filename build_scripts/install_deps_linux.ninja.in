@@ -1,4 +1,3 @@
-VULKAN_SDK_VERSION = {VULKAN_SDK_VERSION}
 UNZIP = {UNZIP}
 WGET = {WGET}
 BUILDDIR = {BUILDDIR}
@@ -35,15 +34,15 @@ build .renderdoc-installed: SHELL_COMMAND
     COMMAND = if ! dpkg-query -l renderdoc &> /dev/null; then sudo apt -y install renderdoc; fi
 build renderdoc: phony .renderdoc-installed
 
-build .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed: SHELL_COMMAND
+build .VulkanSDK-installed: SHELL_COMMAND
     COMMAND = if ! dpkg-query -l vulkan-sdk &> /dev/null; $
     then wget -qO - https://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -; $
-    sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-${{VULKAN_SDK_VERSION}}-focal.list https://packages.lunarg.com/vulkan/${{VULKAN_SDK_VERSION}}/lunarg-vulkan-${{VULKAN_SDK_VERSION}}-focal.list; $
+    sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-focal.list http://packages.lunarg.com/vulkan/lunarg-vulkan-focal.list; $
     sudo apt -y update; $
     sudo apt install vulkan-sdk; $
     fi
-build VulkanSDK-${{VULKAN_SDK_VERSION}}: phony .VulkanSDK-${{VULKAN_SDK_VERSION}}-installed
+build VulkanSDK: phony .VulkanSDK-installed
 
-build all: phony nlohmann-json stb cmake libglm-dev libglfw3-dev libglew-dev renderdoc VulkanSDK-${{VULKAN_SDK_VERSION}}
+build all: phony nlohmann-json stb cmake libglm-dev libglfw3-dev libglew-dev renderdoc VulkanSDK
 
 default all
