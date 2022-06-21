@@ -73,8 +73,6 @@ void VKDevice::getQueueCreateInfos(VkQueueFlags requestedQueueTypes) {
     queueInfo.queueCount = 1;
     queueInfo.pQueuePriorities = &defaultQueuePriority;
     queueCreateInfos.push_back(queueInfo);
-  } else {
-    queueFamilyIndices.graphics = VK_NULL_HANDLE;
   }
 
   // Compute queue

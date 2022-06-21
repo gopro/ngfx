@@ -34,9 +34,9 @@ public:
   void waitIdle();
   std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
   struct {
-    uint32_t graphics;
-    uint32_t compute;
-    uint32_t transfer;
+    int32_t graphics = -1;
+    int32_t compute = -1;
+    int32_t transfer = -1;
   } queueFamilyIndices;
   VkDevice v = VK_NULL_HANDLE;
   bool enableDebugMarkers = false;
