@@ -58,7 +58,7 @@ CMAKE_GENERATOR = env('CMAKE_GENERATOR', { 'Windows': 'Visual Studio 17 2022', '
 NGFX_GRAPHICS_BACKEND = env('NGFX_GRAPHICS_BACKEND', { 'Windows': 'Direct3D12', 'Linux': 'Vulkan', 'Darwin': 'Metal' }[OS].upper())
 CMAKE = 'cmake.exe' if OS == 'Windows' else 'cmake'
 if OS in ['Windows', 'Darwin']:
-    env('SHADERC_VERSION', '2020.3')
+    env('SHADERC_VERSION', '2022.1')
 if OS == 'Windows':
     CMAKE_SYSTEM_VERSION = env('CMAKE_SYSTEM_VERSION', '10.0.22000.0')
     VCPKG_DIR = env('VCPKG_DIR', 'C:\\vcpkg')
