@@ -23,6 +23,6 @@
 #include "ngfx/porting/metal/MTLApplication.h"
 #define Application MTLApplication
 #else
-#include "ngfx/BaseApplication.h"
+#include "ngfx/core/BaseApplication.h"
 #define Application BaseApplication
 #endif
