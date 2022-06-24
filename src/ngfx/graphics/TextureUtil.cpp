@@ -31,7 +31,7 @@ Texture* TextureUtil::load(GraphicsContext* ctx, Graphics* graphics,
         v.size, v.w, v.h, 1, 1, imageUsageFlags, textureType, genMipmaps, numSamples, samplerDesc);
 }
 
-void TextureUtil::storePNG(const char* filename, Texture* texture) {
+static ImageData download(Texture* texture) {
     ImageData v;
     v.data = malloc(texture->size);
     v.size = texture->size;
@@ -39,5 +39,15 @@ void TextureUtil::storePNG(const char* filename, Texture* texture) {
     v.h = texture->h;
     v.numChannels = 4;
     texture->download(v.data, v.size);
+    return v;
+}
+
+void TextureUtil::storeJPEG(const char* filename, Texture* texture, int quality) {
+    ImageData v = download(texture);
+    ImageUtil::storeJPEG(filename, v, quality);
+}
+
+void TextureUtil::storePNG(const char* filename, Texture* texture) {
+    ImageData v = download(texture);
     ImageUtil::storePNG(filename, v);
 }

@@ -32,7 +32,9 @@ ImageData ImageUtil::load(const char* filename) {
     v.size = v.w * v.h * 4;
     return v;   
 }
-
+void ImageUtil::storeJPEG(const char* filename, const ImageData& v, int quality) {
+    stbi_write_jpg(filename, v.w, v.h, v.numChannels, v.data, quality);
+}
 void ImageUtil::storePNG(const char* filename, const ImageData& v) {
     stbi_write_png(filename, v.w, v.h, v.numChannels, v.data, v.w * v.numChannels);
 }
