@@ -126,7 +126,7 @@ private:
       shaderc_shader_kind shaderKind,
       const MacroDefinitions& defines, std::string& spv, bool verbose = true,
       shaderc_optimization_level optimizationLevel = shaderc_optimization_level_performance,
-      std::string parentPath = "");
+      std::string parentPath = ".");
   inline int compileShaderGLSL(const std::string& src, shaderc_shader_kind shaderKind,
           const MacroDefinitions& defines, std::string& spv,
           bool verbose = true,

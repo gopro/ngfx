@@ -118,7 +118,13 @@ int ShaderTools::compileShaderToSPV(
   vector<string> includePaths = { parentPath };
   auto fileIncluder = make_unique<FileIncluder>(includePaths);
   compileOptions.SetIncluder(std::move(fileIncluder));
-  auto result = compiler.CompileGlslToSpv(src, shaderKind, "", compileOptions);
+  auto preprocessResult = compiler.PreprocessGlsl(src, shaderKind, "", compileOptions);
+  if (preprocessResult.GetCompilationStatus() != shaderc_compilation_status_success) {
+      NGFX_ERR("cannot preprocess file: %s", preprocessResult.GetErrorMessage().c_str());
+      return 1;
+  }
+  string preprocessedSrc(preprocessResult.begin());
+  auto result = compiler.CompileGlslToSpv(preprocessedSrc, shaderKind, "", compileOptions);
   if (result.GetCompilationStatus() != shaderc_compilation_status_success) {
     NGFX_ERR("cannot compile file: %s", result.GetErrorMessage().c_str());
     return 1;
