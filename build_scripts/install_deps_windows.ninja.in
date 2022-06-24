@@ -22,7 +22,8 @@ build nlohmann-json: phony .nlohmann-json-installed
 
 build .stb-installed: SHELL_COMMAND
     COMMAND = ${{MKDIR}} .\stb && $
-    ${{WGET}} https://raw.githubusercontent.com/nothings/stb/master/stb_image.h -OutFile stb/stb_image.h
+    ${{WGET}} https://raw.githubusercontent.com/nothings/stb/master/stb_image.h -OutFile stb/stb_image.h && $
+    ${{WGET}} https://raw.githubusercontent.com/nothings/stb/master/stb_image_write.h -OutFile stb/stb_image_write.h
 build stb: phony .stb-installed
 
 build .glm-installed: SHELL_COMMAND

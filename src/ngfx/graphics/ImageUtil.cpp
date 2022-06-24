@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 GoPro Inc.
+ * Copyright 2022 GoPro Inc.
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -18,21 +18,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-#include "ngfx/graphics/Texture.h"
+#include "ngfx/graphics/ImageUtil.h"
 #define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <memory>
 #include <stb_image.h>
+#include <stb_image_write.h>
 using namespace ngfx;
 
-Texture *Texture::create(GraphicsContext *ctx, Graphics *graphics,
-                         const char *filename, ImageUsageFlags imageUsageFlags,
-                         TextureType textureType, bool genMipmaps,
-                         uint32_t numSamples, SamplerDesc *samplerDesc) {
-  int w, h, channels;
-  std::unique_ptr<stbi_uc> data(stbi_load(filename, &w, &h, &channels, 4));
-  assert(data);
-  Texture *texture =
-      create(ctx, graphics, data.get(), PIXELFORMAT_RGBA8_UNORM, w * h * 4, w,
-             h, 1, 1, imageUsageFlags, textureType, genMipmaps, numSamples, samplerDesc);
-  return texture;
+ImageData ImageUtil::load(const char* filename) {
+    ImageData v;
+    v.data = stbi_load(filename, &v.w, &v.h, &v.numChannels, 4);
+    v.size = v.w * v.h * 4;
+    return v;   
+}
+
+void ImageUtil::storePNG(const char* filename, const ImageData& v) {
+    stbi_write_png(filename, v.w, v.h, v.numChannels, v.data, v.w * v.numChannels);
 }
