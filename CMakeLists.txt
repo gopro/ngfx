@@ -9,6 +9,8 @@ add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 
 project(ngfx)
 
+include(CTest)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -163,23 +165,6 @@ if(WINDOW_BACKEND_GLFW)
     target_include_directories(ngfx PUBLIC ${GLFW_INCLUDE_DIRS})
 endif()
 
-function(build_test name)
-file(GLOB_RECURSE TEST_SOURCE_FILES test/${name}/*.cpp test/${name}/*.h test/${name}/*.mm)
-if(NGFX_GRAPHICS_BACKEND_METAL)
-add_executable(${name} ${TEST_SOURCE_FILES} ${APP_BACKEND_SOURCE_FILES} ${NGFX_DIR}/src/ngfx/porting/appkit/Main.storyboard)
-set(RESOURCE_FILES ${NGFX_DIR}/src/ngfx/porting/appkit/Info.plist ${NGFX_DIR}/src/ngfx/porting/appkit/Main.storyboard)
-set_target_properties(${name} PROPERTIES
-    MACOSX_BUNDLE TRUE
-    MACOSX_FRAMEWORK_IDENTIFIER org.gopro.ngfx
-    RESOURCE "${RESOURCE_FILES}"
-    MACOSX_BUNDLE_INFO_PLIST ${NGFX_DIR}/src/ngfx/porting/appkit/Info.plist
-)
-else()
-add_executable(${name} ${TEST_SOURCE_FILES})
-endif()
-target_link_libraries(${name} ngfx)
-endfunction()
-
 function(build_tool name)
 file(GLOB_RECURSE TOOL_SOURCE_FILES tools/${name}.cpp tools/${name}*.h)
 add_executable(ngfx_${name} ${TOOL_SOURCE_FILES})
@@ -269,3 +254,5 @@ install_headers(ngfx/porting/glfw)
 install_headers(ngfx/porting/metal)
 install_headers(ngfx/porting/vulkan)
 install_headers(ngfx/porting/windows)
+
+add_subdirectory(test)
