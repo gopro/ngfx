@@ -19,6 +19,7 @@
  * under the License.
  */
 #include "ngfx/graphics/GraphicsPipeline.h"
+#include "ngfx/core/HashUtil.h"
 #include <set>
 using namespace ngfx;
 
@@ -29,4 +30,46 @@ void GraphicsPipeline::getBindings(
     *pDescriptorBindings[j] = descriptorBindings[j];
   for (uint32_t j = 0; j < pVertexAttribBindings.size(); j++)
     *pVertexAttribBindings[j] = vertexAttributeBindings[j];
+}
+
+
+size_t BlendParams::key() {
+    return HashUtil::combine(srcColorBlendFactor, dstColorBlendFactor, srcAlphaBlendFactor, dstAlphaBlendFactor,
+        colorBlendOp, alphaBlendOp);
+}
+
+size_t StencilParams::key() {
+    return HashUtil::combine(
+        stencilReadMask,
+        stencilWriteMask,
+        frontStencilFailOp,
+        frontStencilDepthFailOp,
+        frontStencilPassOp,
+        frontStencilFunc,
+        backStencilFailOp,
+        backStencilDepthFailOp,
+        backStencilPassOp,
+        backStencilFunc,
+        stencilRef
+    );
+}
+
+size_t GraphicsPipeline::State::key() {
+    return HashUtil::combine(
+        primitiveTopology,
+        polygonMode,
+        blendEnable,
+        blendParams.key(),
+        colorWriteMask,
+        cullModeFlags,
+        frontFace,
+        lineWidth,
+        depthTestEnable,
+        depthWriteEnable,
+        stencilEnable,
+        depthFunc,
+        stencilParams.key(),
+        numSamples,
+        numColorAttachments
+    );
 }

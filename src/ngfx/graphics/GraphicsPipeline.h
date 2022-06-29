@@ -25,30 +25,21 @@
 #include "ngfx/graphics/Pipeline.h"
 #include "ngfx/graphics/RenderPass.h"
 #include "ngfx/graphics/ShaderModule.h"
+#include "ngfx/graphics/BlendUtil.h"
 #include <set>
 #include <vector>
 
 namespace ngfx {
 class GraphicsContext;
-class GraphicsPipeline : public Pipeline {
-public:
-  struct State {
-    PrimitiveTopology primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-    PolygonMode polygonMode = POLYGON_MODE_FILL;
-    bool blendEnable = false;
+struct BlendParams {
     BlendFactor srcColorBlendFactor = BLEND_FACTOR_SRC_ALPHA;
     BlendFactor dstColorBlendFactor = BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     BlendFactor srcAlphaBlendFactor = BLEND_FACTOR_SRC_ALPHA;
     BlendFactor dstAlphaBlendFactor = BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
     BlendOp colorBlendOp = BLEND_OP_ADD, alphaBlendOp = BLEND_OP_ADD;
-    uint8_t colorWriteMask = COLOR_COMPONENT_R_BIT | COLOR_COMPONENT_G_BIT |
-                             COLOR_COMPONENT_B_BIT | COLOR_COMPONENT_A_BIT;
-    CullModeFlags cullModeFlags = CULL_MODE_BACK_BIT;
-    FrontFace frontFace = FRONT_FACE_COUNTER_CLOCKWISE;
-    float lineWidth = 1.0f;
-    bool depthTestEnable = false, depthWriteEnable = false;
-    CompareOp depthFunc = COMPARE_OP_LESS;
-    bool stencilEnable = false;
+    size_t key();
+};
+struct StencilParams {
     uint8_t stencilReadMask = DEFAULT_STENCIL_READ_MASK;
     uint8_t stencilWriteMask = DEFAULT_STENCIL_WRITE_MASK;
     StencilOp frontStencilFailOp = STENCIL_OP_KEEP;
@@ -60,8 +51,27 @@ public:
     StencilOp backStencilPassOp = STENCIL_OP_KEEP;
     CompareOp backStencilFunc = COMPARE_OP_ALWAYS;
     uint32_t stencilRef = 0;
+    size_t key();
+};
+class GraphicsPipeline : public Pipeline {
+public:
+  struct State {
+    PrimitiveTopology primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    PolygonMode polygonMode = POLYGON_MODE_FILL;
+    bool blendEnable = false;
+    BlendParams blendParams;
+    uint8_t colorWriteMask = COLOR_COMPONENT_R_BIT | COLOR_COMPONENT_G_BIT |
+                             COLOR_COMPONENT_B_BIT | COLOR_COMPONENT_A_BIT;
+    CullModeFlags cullModeFlags = CULL_MODE_BACK_BIT;
+    FrontFace frontFace = FRONT_FACE_COUNTER_CLOCKWISE;
+    float lineWidth = 1.0f;
+    bool depthTestEnable = false, depthWriteEnable = false;
+    CompareOp depthFunc = COMPARE_OP_LESS;
+    bool stencilEnable = false;
+    StencilParams stencilParams;
     RenderPass* renderPass = nullptr;
     uint32_t numSamples = 1, numColorAttachments = 1;
+    size_t key();
   };
   struct Descriptor {
     DescriptorType type;
