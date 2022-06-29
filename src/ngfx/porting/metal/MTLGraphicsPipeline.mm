@@ -36,16 +36,17 @@ void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MT
     pipelineStateDescriptor.label = @"";
     pipelineStateDescriptor.vertexFunction = shaders.VS;
     pipelineStateDescriptor.fragmentFunction = shaders.PS;
+    auto &blendParams = state.blendParams;
     for (uint32_t j = 0; j<state.numColorAttachments; j++) {
         auto colorAttachment = pipelineStateDescriptor.colorAttachments[j];
         colorAttachment.pixelFormat = colorFormat;
         colorAttachment.blendingEnabled = state.blendEnable;
-        colorAttachment.sourceRGBBlendFactor = ::MTLBlendFactor(state.srcColorBlendFactor);
-        colorAttachment.sourceAlphaBlendFactor = ::MTLBlendFactor(state.srcAlphaBlendFactor);
-        colorAttachment.destinationRGBBlendFactor = ::MTLBlendFactor(state.dstColorBlendFactor);
-        colorAttachment.destinationAlphaBlendFactor = ::MTLBlendFactor(state.dstAlphaBlendFactor);
-        colorAttachment.rgbBlendOperation = ::MTLBlendOperation(state.colorBlendOp);
-        colorAttachment.alphaBlendOperation = ::MTLBlendOperation(state.alphaBlendOp);
+        colorAttachment.sourceRGBBlendFactor = ::MTLBlendFactor(blendParams.srcColorBlendFactor);
+        colorAttachment.sourceAlphaBlendFactor = ::MTLBlendFactor(blendParams.srcAlphaBlendFactor);
+        colorAttachment.destinationRGBBlendFactor = ::MTLBlendFactor(blendParams.dstColorBlendFactor);
+        colorAttachment.destinationAlphaBlendFactor = ::MTLBlendFactor(blendParams.dstAlphaBlendFactor);
+        colorAttachment.rgbBlendOperation = ::MTLBlendOperation(blendParams.colorBlendOp);
+        colorAttachment.alphaBlendOperation = ::MTLBlendOperation(blendParams.alphaBlendOp);
         colorAttachment.writeMask = state.colorWriteMask;
     }
     
@@ -75,26 +76,27 @@ void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MT
             ::MTLCompareFunction(state.depthFunc) :
             ::MTLCompareFunctionAlways;
         depthStencilDesc.depthWriteEnabled = state.depthWriteEnable;
+        auto &stencilParams = state.stencilParams;
         if (state.stencilEnable) {
             MTLStencilDescriptor *frontFaceStencil = [[MTLStencilDescriptor alloc] init];
-            frontFaceStencil.readMask = state.stencilReadMask;
-            frontFaceStencil.writeMask = state.stencilWriteMask;
-            frontFaceStencil.stencilFailureOperation = ::MTLStencilOperation(state.frontStencilFailOp);
-            frontFaceStencil.depthFailureOperation = ::MTLStencilOperation(state.frontStencilDepthFailOp);
-            frontFaceStencil.depthStencilPassOperation = ::MTLStencilOperation(state.frontStencilPassOp);
-            frontFaceStencil.stencilCompareFunction = ::MTLCompareFunction(state.frontStencilFunc);
+            frontFaceStencil.readMask = stencilParams.stencilReadMask;
+            frontFaceStencil.writeMask = stencilParams.stencilWriteMask;
+            frontFaceStencil.stencilFailureOperation = ::MTLStencilOperation(stencilParams.frontStencilFailOp);
+            frontFaceStencil.depthFailureOperation = ::MTLStencilOperation(stencilParams.frontStencilDepthFailOp);
+            frontFaceStencil.depthStencilPassOperation = ::MTLStencilOperation(stencilParams.frontStencilPassOp);
+            frontFaceStencil.stencilCompareFunction = ::MTLCompareFunction(stencilParams.frontStencilFunc);
             depthStencilDesc.frontFaceStencil = frontFaceStencil;
 
             MTLStencilDescriptor *backFaceStencil = [[MTLStencilDescriptor alloc] init];
-            backFaceStencil.readMask = state.stencilReadMask;
-            backFaceStencil.writeMask = state.stencilWriteMask;
-            backFaceStencil.stencilFailureOperation = ::MTLStencilOperation(state.backStencilFailOp);
-            backFaceStencil.depthFailureOperation = ::MTLStencilOperation(state.backStencilDepthFailOp);
-            backFaceStencil.depthStencilPassOperation = ::MTLStencilOperation(state.backStencilPassOp);
-            backFaceStencil.stencilCompareFunction = ::MTLCompareFunction(state.backStencilFunc);
+            backFaceStencil.readMask = stencilParams.stencilReadMask;
+            backFaceStencil.writeMask = stencilParams.stencilWriteMask;
+            backFaceStencil.stencilFailureOperation = ::MTLStencilOperation(stencilParams.backStencilFailOp);
+            backFaceStencil.depthFailureOperation = ::MTLStencilOperation(stencilParams.backStencilDepthFailOp);
+            backFaceStencil.depthStencilPassOperation = ::MTLStencilOperation(stencilParams.backStencilPassOp);
+            backFaceStencil.stencilCompareFunction = ::MTLCompareFunction(stencilParams.backStencilFunc);
             depthStencilDesc.backFaceStencil = backFaceStencil;
 
-            stencilRef = state.stencilRef;
+            stencilRef = stencilParams.stencilRef;
         }
         mtlDepthStencilState = [device newDepthStencilStateWithDescriptor:depthStencilDesc];
     }
