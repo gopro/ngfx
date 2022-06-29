@@ -20,6 +20,7 @@
  */
 #pragma once
 #include "Texture.h"
+#include "ImageUtil.h"
 
 namespace ngfx {
 
@@ -30,7 +31,8 @@ public:
           IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT | 
           IMAGE_USAGE_TRANSFER_DST_BIT), TextureType textureType = TEXTURE_TYPE_2D,
       bool genMipmaps = false, uint32_t numSamples = 1, SamplerDesc *samplerDesc = nullptr);
-  static void storeJPEG(const char* filename, Texture* texture, int quality = 90);
-  static void storePNG(const char* filename, Texture* texture);
+  static void download(Texture* texture, ImageData& v);
+  static void storeJPEG(std::string filename, Texture* texture, int quality = 90);
+  static void storePNG(std::string filename, Texture* texture);
 };
 } // namespace ngfx

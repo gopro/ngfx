@@ -24,8 +24,8 @@ namespace ngfx {
 
 class ImageUtil {
 public:
-  static ImageData load(const char *filename);
-  static void storeJPEG(const char* filename, const ImageData& v, int quality = 90);
-  static void storePNG(const char* filename, const ImageData &v);
+  static void load(std::string filename, ImageData &v);
+  static void storeJPEG(std::string filename, const ImageData& v, int quality = 90);
+  static void storePNG(std::string filename, const ImageData &v);
 };
 } // namespace ngfx

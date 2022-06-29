@@ -19,6 +19,7 @@
  * under the License.
  */
 #include "ngfx/graphics/ImageUtil.h"
+#include "ngfx/core/DebugUtil.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <memory>
@@ -26,15 +27,16 @@
 #include <stb_image_write.h>
 using namespace ngfx;
 
-ImageData ImageUtil::load(const char* filename) {
-    ImageData v;
-    v.data = stbi_load(filename, &v.w, &v.h, &v.numChannels, 4);
+void ImageUtil::load(std::string filename, ImageData &v) {
+    v.data = stbi_load(filename.c_str(), &v.w, &v.h, &v.numChannels, 4);
+    if (!v.data) {
+        NGFX_ERR("cannot load file: %s", filename.c_str());
+    }
     v.size = v.w * v.h * 4;
-    return v;   
 }
-void ImageUtil::storeJPEG(const char* filename, const ImageData& v, int quality) {
-    stbi_write_jpg(filename, v.w, v.h, v.numChannels, v.data, quality);
+void ImageUtil::storeJPEG(std::string filename, const ImageData& v, int quality) {
+    stbi_write_jpg(filename.c_str(), v.w, v.h, v.numChannels, v.data, quality);
 }
-void ImageUtil::storePNG(const char* filename, const ImageData& v) {
-    stbi_write_png(filename, v.w, v.h, v.numChannels, v.data, v.w * v.numChannels);
+void ImageUtil::storePNG(std::string filename, const ImageData& v) {
+    stbi_write_png(filename.c_str(), v.w, v.h, v.numChannels, v.data, v.w * v.numChannels);
 }

@@ -20,34 +20,35 @@
  */
 
 #include "TextureUtil.h"
-#include "ImageUtil.h"
 using namespace ngfx;
+using namespace std;
 
 Texture* TextureUtil::load(GraphicsContext* ctx, Graphics* graphics,
     const char* filename, ImageUsageFlags imageUsageFlags, TextureType textureType,
     bool genMipmaps, uint32_t numSamples, SamplerDesc* samplerDesc) {
-    ImageData v = ImageUtil::load(filename);
+    ImageData v;
+    ImageUtil::load(filename, v);
     return Texture::create(ctx, graphics, v.data, PIXELFORMAT_RGBA8_UNORM,
         v.size, v.w, v.h, 1, 1, imageUsageFlags, textureType, genMipmaps, numSamples, samplerDesc);
 }
 
-static ImageData download(Texture* texture) {
-    ImageData v;
+void TextureUtil::download(Texture* texture, ImageData &v) {
     v.data = malloc(texture->size);
     v.size = texture->size;
     v.w = texture->w;
     v.h = texture->h;
     v.numChannels = 4;
     texture->download(v.data, v.size);
-    return v;
 }
 
-void TextureUtil::storeJPEG(const char* filename, Texture* texture, int quality) {
-    ImageData v = download(texture);
+void TextureUtil::storeJPEG(std::string filename, Texture* texture, int quality) {
+    ImageData v;
+    download(texture, v);
     ImageUtil::storeJPEG(filename, v, quality);
 }
 
-void TextureUtil::storePNG(const char* filename, Texture* texture) {
-    ImageData v = download(texture);
+void TextureUtil::storePNG(std::string filename, Texture* texture) {
+    ImageData v;
+    download(texture, v);
     ImageUtil::storePNG(filename, v);
 }
