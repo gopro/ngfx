@@ -27,8 +27,7 @@
 namespace ngfx {
 class DrawColorOp : public DrawOp {
 public:
-  DrawColorOp(GraphicsContext *ctx, const std::vector<glm::vec2> &pos,
-              const glm::vec4 &color);
+  DrawColorOp(GraphicsContext *ctx, std::vector<glm::vec2> pos, glm::vec4 color, OnGetPipelineState onGetPipelineState = nullptr);
   virtual ~DrawColorOp() {}
   void draw(CommandBuffer *commandBuffer, Graphics *graphics) override;
   std::unique_ptr<Buffer> bPos;
@@ -36,6 +35,7 @@ public:
 
 protected:
   virtual void createPipeline();
+  GraphicsPipeline::State getPipelineState();
   GraphicsPipeline *graphicsPipeline;
   uint32_t B_POS, U_UBO;
   uint32_t numVerts;

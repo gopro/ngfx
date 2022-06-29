@@ -22,6 +22,7 @@
 #include "ngfx/graphics/CommandBuffer.h"
 #include "ngfx/graphics/Graphics.h"
 #include "ngfx/graphics/GraphicsContext.h"
+#include <functional>
 
 /** \class DrawOp
  * 
@@ -31,10 +32,12 @@
 namespace ngfx {
 class DrawOp {
 public:
+  using OnGetPipelineState = std::function<void(GraphicsPipeline::State&)>;
   /** Create the draw operation
    *  @param ctx The graphics context
    */
-  DrawOp(GraphicsContext *ctx) : ctx(ctx) {}
+  DrawOp(GraphicsContext *ctx, OnGetPipelineState onGetPipelineState = nullptr)
+      : ctx(ctx), onGetPipelineState(onGetPipelineState) {}
   /** Destroy the draw op */
   virtual ~DrawOp() {}
   /** Draw function.
@@ -46,5 +49,6 @@ public:
 
 protected:
   GraphicsContext *ctx;
+  OnGetPipelineState onGetPipelineState = nullptr;
 };
 } // namespace ngfx

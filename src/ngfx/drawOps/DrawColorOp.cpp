@@ -24,11 +24,12 @@
 #include "ngfx/graphics/ShaderModule.h"
 using namespace ngfx;
 using namespace glm;
+using namespace std;
 
 DrawColorOp::DrawColorOp(GraphicsContext *ctx,
-                         const std::vector<glm::vec2> &pos,
-                         const glm::vec4 &color)
-    : DrawOp(ctx) {
+                         std::vector<glm::vec2> pos,
+                         glm::vec4 color, OnGetPipelineState onGetPipelineState)
+    : DrawOp(ctx, onGetPipelineState) {
   bPos.reset(createVertexBuffer<vec2>(ctx, pos));
   bUbo.reset(createUniformBuffer(ctx, &color, sizeof(color)));
   numVerts = uint32_t(pos.size());
@@ -44,12 +45,11 @@ void DrawColorOp::draw(CommandBuffer *commandBuffer, Graphics *graphics) {
   graphics->draw(commandBuffer, numVerts);
 }
 void DrawColorOp::createPipeline() {
-  const std::string key = "drawColorOp";
+  GraphicsPipeline::State state = getPipelineState();
+  const string key = "drawColorOp_" + to_string(state.key());
   graphicsPipeline = (GraphicsPipeline *)ctx->pipelineCache->get(key);
   if (graphicsPipeline)
     return;
-  GraphicsPipeline::State state;
-  state.primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
   auto device = ctx->device;
   graphicsPipeline = GraphicsPipeline::create(
       ctx, state,
@@ -58,4 +58,12 @@ void DrawColorOp::createPipeline() {
           .get(),
       ctx->surfaceFormat, ctx->depthStencilFormat);
   ctx->pipelineCache->add(key, graphicsPipeline);
+}
+
+GraphicsPipeline::State DrawColorOp::getPipelineState() {
+    GraphicsPipeline::State state;
+    state.primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+    if (onGetPipelineState)
+        onGetPipelineState(state);
+    return state;
 }

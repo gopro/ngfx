@@ -26,23 +26,26 @@
 namespace ngfx {
 class DrawTextureOp : public DrawOp {
 public:
-  DrawTextureOp(GraphicsContext *ctx, Texture *texture)
+  DrawTextureOp(GraphicsContext *ctx, Texture *texture, OnGetPipelineState onGetPipelineState = nullptr)
       : DrawTextureOp(ctx, texture,
                       {glm::vec2(-1, 1), glm::vec2(-1, -1), glm::vec2(1, 1),
                        glm::vec2(1, -1)},
                       {glm::vec2(0, 0), glm::vec2(0, 1), glm::vec2(1, 0),
-                       glm::vec2(1, 1)}) {}
+                       glm::vec2(1, 1)},
+                      onGetPipelineState) {}
   DrawTextureOp(GraphicsContext *ctx, Texture *texture,
                 const std::vector<glm::vec2> &pos,
-                const std::vector<glm::vec2> &texCoord);
+                const std::vector<glm::vec2> &texCoord,
+                OnGetPipelineState onGetPipelineState);
   virtual ~DrawTextureOp() {}
   void draw(CommandBuffer *commandBuffer, Graphics *graphics) override;
   std::unique_ptr<Buffer> bPos, bTexCoord;
   Texture *texture;
 
 protected:
-  virtual void createPipeline();
-  GraphicsPipeline *graphicsPipeline;
+  GraphicsPipeline::State getPipelineState();
+  virtual void getPipeline();
+  GraphicsPipeline *graphicsPipeline = nullptr;
   uint32_t numVerts;
   uint32_t B_POS, B_TEXCOORD, U_TEXTURE;
 };
