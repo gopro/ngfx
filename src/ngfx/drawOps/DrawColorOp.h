@@ -27,10 +27,25 @@
 namespace ngfx {
 class DrawColorOp : public DrawOp {
 public:
-  DrawColorOp(GraphicsContext *ctx, std::vector<glm::vec2> pos, glm::vec4 color, OnGetPipelineState onGetPipelineState = nullptr);
+  template <typename T = glm::vec2>
+  DrawColorOp(GraphicsContext* ctx, std::vector<T> pos, glm::vec4 color, 
+      OnGetPipelineState onGetPipelineState = nullptr,
+      std::vector<glm::i32> index = {})
+      : DrawOp(ctx, onGetPipelineState) {
+      bPos.reset(createVertexBuffer<T>(ctx, pos));
+      if (!index.empty()) {
+          bIndex.reset(createIndexBuffer<glm::i32> (ctx, index));
+          numIndices = index.size();
+      }
+      bUbo.reset(createUniformBuffer(ctx, &color, sizeof(color)));
+      numVerts = uint32_t(pos.size());
+      createPipeline();
+      graphicsPipeline->getBindings({ &U_UBO }, { &B_POS });
+  }
   virtual ~DrawColorOp() {}
   void draw(CommandBuffer *commandBuffer, Graphics *graphics) override;
   std::unique_ptr<Buffer> bPos;
+  std::unique_ptr<Buffer> bIndex;
   std::unique_ptr<Buffer> bUbo;
 
 protected:
@@ -38,6 +53,6 @@ protected:
   GraphicsPipeline::State getPipelineState();
   GraphicsPipeline *graphicsPipeline;
   uint32_t B_POS, U_UBO;
-  uint32_t numVerts;
+  uint32_t numVerts, numIndices;
 };
 } // namespace ngfx
