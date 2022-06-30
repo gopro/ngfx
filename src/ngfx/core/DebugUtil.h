@@ -29,7 +29,7 @@
 #endif
 //#define LOG_TO_DEBUG_CONSOLE
 
-#if defined(WIN32) && defined(LOG_TO_DEBUG_CONSOLE)
+#if defined(_WIN32) && defined(LOG_TO_DEBUG_CONSOLE)
 #include <Windows.h>
 inline void debugMessage(FILE* filenum, const char* fmt, ...) {
     char buffer[1024];
