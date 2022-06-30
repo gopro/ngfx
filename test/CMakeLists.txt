@@ -1,10 +1,16 @@
-set(NGFX_TEST_DATA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data)
-
 include(CTest)
+
+set(NGFX_TEST_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/data)
+set(NGFX_TEST_DATA_REF_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data/ref)
+file(GLOB_RECURSE NGFX_TEST_DATA_SHADER_FILES data/shaders/*)
+install(FILES ${NGFX_TEST_DATA_SHADER_FILES} DESTINATION ${NGFX_TEST_DATA_DIR}/shaders)
+
 file(GLOB_RECURSE NGFX_TEST_SOURCE_FILES common/*.cpp)
 add_library(ngfx_test STATIC ${NGFX_TEST_SOURCE_FILES})
 target_link_libraries(ngfx_test ngfx)
-target_compile_definitions(ngfx_test PUBLIC -DNGFX_TEST_DATA_DIR="${NGFX_TEST_DATA_DIR}")
+target_compile_definitions(ngfx_test PUBLIC
+    -DNGFX_TEST_DATA_DIR="${NGFX_TEST_DATA_DIR}"
+    -DNGFX_TEST_DATA_REF_DIR="${NGFX_TEST_DATA_REF_DIR}")
 
 function(build_test name)
 file(GLOB_RECURSE TEST_SOURCE_FILES ${name}/*.cpp ${name}/*.h ${name}/*.mm)
