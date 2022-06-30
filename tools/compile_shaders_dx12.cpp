@@ -6,12 +6,14 @@ using namespace std;
 using namespace ngfx;
 
 int main(int argc, char** argv) {
-    string dataDir = NGFX_DATA_DIR, outDir = dataDir;
     string filter = (argc > 1) ? argv[1] : "";
+    string dataDir = (argc > 2) ? argv[2] : NGFX_DATA_DIR;
+    string outDir = dataDir;
     const vector<string> paths = { dataDir };
     const vector<string> extensions = {".vert", ".frag", ".comp"};
     auto glslFiles = FileUtil::findFiles(paths, extensions);
-    if (filter != "") glslFiles = FileUtil::filterFiles(glslFiles, filter);
+    if (filter != "")
+        glslFiles = FileUtil::filterFiles(glslFiles, filter);
     ShaderTools shaderTools(true);
     auto spvFiles = shaderTools.compileShaders(glslFiles, outDir, ShaderTools::FORMAT_GLSL);
     auto spvMapFiles = shaderTools.generateShaderMaps(glslFiles, outDir, ShaderTools::FORMAT_GLSL);
