@@ -29,9 +29,14 @@ using namespace std;
 DrawTextureOp::DrawTextureOp(GraphicsContext *ctx, Texture *texture,
                              const std::vector<glm::vec2> &pos,
                              const std::vector<glm::vec2> &texCoord,
-                             OnGetPipelineState onGetPipelineState)
+                             OnGetPipelineState onGetPipelineState,
+                             std::vector<glm::i32> index)
     : DrawOp(ctx, onGetPipelineState), texture(texture) {
     bPos.reset(createVertexBuffer<vec2>(ctx, pos));
+    if (!index.empty()) {
+        bIndex.reset(createIndexBuffer<glm::i32>(ctx, index));
+        numIndices = index.size();
+    }
     bTexCoord.reset(createVertexBuffer<vec2>(ctx, texCoord));
     numVerts = uint32_t(pos.size());
     getPipeline();
@@ -43,8 +48,13 @@ void DrawTextureOp::draw(CommandBuffer *commandBuffer, Graphics *graphics) {
     graphics->bindVertexBuffer(commandBuffer, bPos.get(), B_POS, sizeof(vec2));
     graphics->bindVertexBuffer(commandBuffer, bTexCoord.get(), B_TEXCOORD,
                                 sizeof(vec2));
+    if (bIndex)
+        graphics->bindIndexBuffer(commandBuffer, bIndex.get());
     graphics->bindTexture(commandBuffer, texture, U_TEXTURE);
-    graphics->draw(commandBuffer, numVerts);
+    if (bIndex)
+        graphics->drawIndexed(commandBuffer, numIndices);
+    else
+        graphics->draw(commandBuffer, numVerts);
 }
 void DrawTextureOp::getPipeline() {
     GraphicsPipeline::State state = getPipelineState();
