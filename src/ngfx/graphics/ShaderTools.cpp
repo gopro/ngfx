@@ -422,15 +422,16 @@ int ShaderTools::patchShaderReflectionDataMSL(const std::string &glslReflect,
   // update input bindings
   if (ext == ".vert") {
     json *inputs = getEntry(glslReflectJson, "inputs");
-    for (json &input : *inputs) {
-      RegexUtil::Match metalInputReflectData;
-      bool foundMatch = findMetalReflectData(
-          metalReflectData.attributes, input["name"], metalInputReflectData);
-      if (!foundMatch) {
-        return 1;
-      }
-      input["location"] = stoi(metalInputReflectData.s[3]) + numDescriptors;
-    }
+    if (inputs)
+        for (json &input : *inputs) {
+          RegexUtil::Match metalInputReflectData;
+          bool foundMatch = findMetalReflectData(
+              metalReflectData.attributes, input["name"], metalInputReflectData);
+          if (!foundMatch) {
+            return 1;
+          }
+          input["location"] = stoi(metalInputReflectData.s[3]) + numDescriptors;
+        }
   }
 
   // update descriptor bindings
@@ -483,11 +484,12 @@ int ShaderTools::patchShaderReflectionDataHLSL(const std::string &glslReflect,
   // parse semantics
   if (ext == ".vert") {
     json *inputs = getEntry(glslReflectJson, "inputs");
-    for (json &input : *inputs) {
-      regex p(input["name"].get<string>() + "\\s*:\\s*([^;]*);");
-      vector<RegexUtil::Match> hlslReflectData = RegexUtil::findAll(p, hlsl);
-      input["semantic"] = hlslReflectData[0].s[1];
-    }
+    if (inputs)
+        for (json &input : *inputs) {
+          regex p(input["name"].get<string>() + "\\s*:\\s*([^;]*);");
+          vector<RegexUtil::Match> hlslReflectData = RegexUtil::findAll(p, hlsl);
+          input["semantic"] = hlslReflectData[0].s[1];
+        }
   }
   hlslReflect = glslReflectJson.dump(4);
   return 0;
@@ -520,24 +522,25 @@ string ShaderTools::parseReflectionData(const json &reflectData, string ext) {
   string contents = "";
   if (ext == ".vert") {
     json *inputs = getEntry(reflectData, "inputs");
-    contents += "INPUT_ATTRIBUTES " + to_string(inputs->size()) + "\n";
-    for (const json &input : *inputs) {
-      string inputName = input["name"];
-      string inputSemantic = "";
-      string inputNameLower = toLower(inputName);
-      inputSemantic = "UNDEFINED";
-      if (input.find("semantic") != input.end())
-        inputSemantic = input["semantic"];
-      map<string, string> inputTypeMap = {
-          {"float", "VERTEXFORMAT_FLOAT"}, {"vec2", "VERTEXFORMAT_FLOAT2"},
-          {"vec3", "VERTEXFORMAT_FLOAT3"}, {"vec4", "VERTEXFORMAT_FLOAT4"},
-          {"ivec2", "VERTEXFORMAT_INT2"},  {"ivec3", "VERTEXFORMAT_INT3"},
-          {"ivec4", "VERTEXFORMAT_INT4"},  {"mat2", "VERTEXFORMAT_MAT2"},
-          {"mat3", "VERTEXFORMAT_MAT3"},   {"mat4", "VERTEXFORMAT_MAT4"}};
-      string inputType = inputTypeMap[input["type"]];
-      contents += "\t" + inputName + " " + inputSemantic + " " +
-                  to_string(input["location"].get<int>()) + " " + inputType +
-                  "\n";
+    contents += "INPUT_ATTRIBUTES " + to_string(inputs ? inputs->size() : 0) + "\n";
+    if (inputs) 
+        for (const json &input : *inputs) {
+          string inputName = input["name"];
+          string inputSemantic = "";
+          string inputNameLower = toLower(inputName);
+          inputSemantic = "UNDEFINED";
+          if (input.find("semantic") != input.end())
+            inputSemantic = input["semantic"];
+          map<string, string> inputTypeMap = {
+              {"float", "VERTEXFORMAT_FLOAT"}, {"vec2", "VERTEXFORMAT_FLOAT2"},
+              {"vec3", "VERTEXFORMAT_FLOAT3"}, {"vec4", "VERTEXFORMAT_FLOAT4"},
+              {"ivec2", "VERTEXFORMAT_INT2"},  {"ivec3", "VERTEXFORMAT_INT3"},
+              {"ivec4", "VERTEXFORMAT_INT4"},  {"mat2", "VERTEXFORMAT_MAT2"},
+              {"mat3", "VERTEXFORMAT_MAT3"},   {"mat4", "VERTEXFORMAT_MAT4"}};
+          string inputType = inputTypeMap[input["type"]];
+          contents += "\t" + inputName + " " + inputSemantic + " " +
+                      to_string(input["location"].get<int>()) + " " + inputType +
+                      "\n";
     }
   }
   json *textures = getEntry(reflectData, "textures"),
