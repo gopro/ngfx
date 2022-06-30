@@ -35,13 +35,16 @@
 #include "ngfx/porting/d3d/D3DUtil.h"
 #include "ngfx/porting/d3d/D3DQueryHeap.h"
 #include "ngfx/porting/d3d/D3DReadbackBuffer.h"
+#ifdef ENABLE_GPU_CAPTURE_SUPPORT
+#include "ngfx/graphics/GPUCapture.h"
+#endif
 #include <memory>
 
 namespace ngfx {
 class D3DGraphicsContext : public GraphicsContext {
 public:
   void create(const char *appName, bool enableDepthStencil, bool debug);
-  virtual ~D3DGraphicsContext() {}
+  virtual ~D3DGraphicsContext();
   void setSurface(Surface *surface) override;
   CommandBuffer *drawCommandBuffer(int32_t index = -1) override;
   CommandBuffer *copyCommandBuffer() override;
@@ -85,6 +88,10 @@ private:
   void createFences(ID3D12Device *device);
   void createSwapchainFramebuffers(int w, int h);
   DXGI_FORMAT findSupportedFormat(const std::vector<DXGI_FORMAT>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1);
+#ifdef ENABLE_GPU_CAPTURE_SUPPORT
+  std::unique_ptr<GPUCapture> gpuCapture;
+  bool enableGPUCapture = false;
+#endif
 };
 D3D_CAST(GraphicsContext);
 } // namespace ngfx
