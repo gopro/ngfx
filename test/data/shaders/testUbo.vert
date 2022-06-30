@@ -6,6 +6,7 @@ layout (location = 0) out vec4 v_color;
 struct UBOData {
     float theta0;
     float theta1;
+	float padding0, padding1;
     vec4 color;
     float xScale;
     float yScale;
@@ -26,7 +27,7 @@ void main() {
 		float theta = mix(ubo.theta0, ubo.theta1, float(vertexIndex - 1) / float(numVerts - 1 - 1));
 		p0 = vec2(cos(theta), sin(theta));
 	}
-	p0 = vec2(ubo.xTranslate, ubo.yTranslate) * vec2(ubo.xScale, ubo.yScale) * p0;
+	p0 = vec2(ubo.xTranslate, ubo.yTranslate) + vec2(ubo.xScale, ubo.yScale) * p0;
 	setPos(vec4(p0, 0.0, 1.0));
 	v_color = ubo.color;
 }

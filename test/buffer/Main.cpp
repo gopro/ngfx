@@ -102,7 +102,7 @@ public:
         : FilterOp(ctx, graphics, w, h) {
         numVerts = 20;
         UBOData uboData = {
-            radians(30.0f), radians(300.0f),
+            radians(30.0f), radians(300.0f), 0.0f, 0.0f,
             vec4(0,1,0,1),
             0.6f, 0.5f,
             0.2f, -0.1f,
@@ -121,6 +121,7 @@ public:
     struct UBOData {
         float theta0;
         float theta1;
+        float padding0, padding1;
         vec4 color;
         float xScale;
         float yScale;
