@@ -67,7 +67,34 @@ public:
     std::unique_ptr<DrawColorOp> op;
 };
 class IndexBufferTestOp : public FilterOp {
-
+public:
+    IndexBufferTestOp(GraphicsContext* ctx, Graphics* graphics, int w, int h)
+        : FilterOp(ctx, graphics, w, h) {
+        int numSteps = 20;
+        vector<vec2> pos(numSteps + 1);
+        auto posIter = pos.begin();
+        *posIter++ = vec2(0, 0);
+        for (int j = 0; j < numSteps; j++) {
+            float t = j / float(numSteps - 1);
+            float x0 = -1.0f + 2.0f * t;
+            float y0 = sin(M_PI * t);
+            *posIter++ = vec2(x0, y0);
+        }
+        vector<i32> index(2 * (numSteps + 1));
+        auto indexIter = index.begin();
+        for (int j = 1; j < (numSteps + 1); j++) {
+            *indexIter++ = 0;
+            *indexIter++ = j;
+        }
+        op = make_unique<DrawColorOp>(ctx, pos, vec4(1, 0, 0, 1),
+            [&](GraphicsPipeline::State& state) {
+                state.primitiveTopology = PRIMITIVE_TOPOLOGY_LINE_STRIP;
+            }, index);
+    }
+    void draw(CommandBuffer* commandBuffer, Graphics* graphics) override {
+        op->draw(commandBuffer, graphics);
+    }
+    std::unique_ptr<DrawColorOp> op;
 };
 class UniformBufferTestOp : public FilterOp {
 
@@ -100,7 +127,7 @@ int run(BufferTestMode mode) {
     UnitTest test("buffer_" + toString(mode));
     switch (mode) {
         CASE(VERTEX, VertexBuffer);
-        //CASE(INDEX, IndexBuffer);
+        CASE(INDEX, IndexBuffer);
         //CASE(UNIFORM, UniformBuffer);
         //CASE(STORAGE, StorageBuffer);
         //CASE(INSTANCING, Instancing);
@@ -115,7 +142,7 @@ int run(BufferTestMode mode) {
 int main(int argc, char** argv) {
 	if (argc < 2) {
         vector<BufferTestMode> testModes = {
-            VERTEX /*, INDEX, UNIFORM, STORAGE, INSTANCING,
+            VERTEX, INDEX, /*UNIFORM, STORAGE, INSTANCING,
             UPLOAD, UPLOAD_SUBREGION, DOWNLOAD, DOWNLOAD_SUBREGION, MAP*/
         };
         int r = 0;
