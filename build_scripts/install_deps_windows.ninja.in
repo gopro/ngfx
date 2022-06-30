@@ -1,6 +1,7 @@
 CMAKE_GENERATOR = {CMAKE_GENERATOR}
 CMAKE_SYSTEM_VERSION = {CMAKE_SYSTEM_VERSION}
 SHADERC_VERSION = {SHADERC_VERSION}
+RENDERDOC_VERSION = {RENDERDOC_VERSION}
 VCPKG_DIR = {VCPKG_DIR}
 VCPKG_TRIPLET = {VCPKG_TRIPLET}
 PKGCONF_VERSION = {PKGCONF_VERSION}
@@ -73,6 +74,11 @@ build .shaderc-${{SHADERC_VERSION}}-installed: SHELL_COMMAND
     popd
 build shaderc-${{SHADERC_VERSION}}: phony .shaderc-${{SHADERC_VERSION}}-installed
 
-build all: phony nlohmann-json stb glm d3dx12 glfw spirv-cross shaderc-${{SHADERC_VERSION}} pkgconf
+build .renderdoc-${{RENDERDOC_VERSION}}-installed: SHELL_COMMAND
+    COMMAND = ${{WGET}} https://renderdoc.org/stable/${{RENDERDOC_VERSION}}/RenderDoc_${{RENDERDOC_VERSION}}_64.zip -OutFile RenderDoc_${{RENDERDOC_VERSION}}_64.zip && $
+    ${{UNZIP}} -d . RenderDoc_${{RENDERDOC_VERSION}}_64.zip
+build renderdoc-${{RENDERDOC_VERSION}}: phony .renderdoc-${{RENDERDOC_VERSION}}-installed
+
+build all: phony nlohmann-json stb glm d3dx12 glfw spirv-cross shaderc-${{SHADERC_VERSION}} pkgconf renderdoc-${{RENDERDOC_VERSION}}
 
 default all

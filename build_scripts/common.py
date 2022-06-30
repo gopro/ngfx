@@ -66,6 +66,7 @@ if OS == 'Windows':
         err('{VCPKG_DIR} doesn\'t exist')
     env('VCPKG_TRIPLET', 'x64-windows')
     env('PKGCONF_VERSION', '1.7.4')
+    env('RENDERDOC_VERSION', '1.20')
     CMAKE_MSVC_RUNTIME_LIBRARY = env('CMAKE_MSVC_RUNTIME_LIBRARY', 'MultiThreadedDLL')
     PREFIX = op.join(os.getcwd(), EXTERNAL_DIR, 'windows')
     env('PREFIX', PREFIX)
