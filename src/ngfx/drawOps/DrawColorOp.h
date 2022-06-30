@@ -53,6 +53,6 @@ protected:
   GraphicsPipeline::State getPipelineState();
   GraphicsPipeline *graphicsPipeline;
   uint32_t B_POS, U_UBO;
-  uint32_t numVerts, numIndices;
+  uint32_t numVerts, numIndices = 0;
 };
 } // namespace ngfx

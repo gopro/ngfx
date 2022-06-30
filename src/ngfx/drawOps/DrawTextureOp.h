@@ -36,17 +36,18 @@ public:
   DrawTextureOp(GraphicsContext *ctx, Texture *texture,
                 const std::vector<glm::vec2> &pos,
                 const std::vector<glm::vec2> &texCoord,
-                OnGetPipelineState onGetPipelineState);
+                OnGetPipelineState onGetPipelineState = nullptr,
+                std::vector<glm::i32> index = {});
   virtual ~DrawTextureOp() {}
   void draw(CommandBuffer *commandBuffer, Graphics *graphics) override;
-  std::unique_ptr<Buffer> bPos, bTexCoord;
+  std::unique_ptr<Buffer> bPos, bIndex, bTexCoord;
   Texture *texture;
 
 protected:
   GraphicsPipeline::State getPipelineState();
   virtual void getPipeline();
   GraphicsPipeline *graphicsPipeline = nullptr;
-  uint32_t numVerts;
+  uint32_t numVerts, numIndices = 0;
   uint32_t B_POS, B_TEXCOORD, U_TEXTURE;
 };
 } // namespace ngfx

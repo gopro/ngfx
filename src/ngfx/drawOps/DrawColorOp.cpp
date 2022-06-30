@@ -26,19 +26,6 @@ using namespace ngfx;
 using namespace glm;
 using namespace std;
 
-#if 0
-DrawColorOp::DrawColorOp(GraphicsContext *ctx,
-                         std::vector<glm::vec2> pos,
-                         glm::vec4 color, OnGetPipelineState onGetPipelineState)
-    : DrawOp(ctx, onGetPipelineState) {
-  bPos.reset(createVertexBuffer<vec2>(ctx, pos));
-  bUbo.reset(createUniformBuffer(ctx, &color, sizeof(color)));
-  numVerts = uint32_t(pos.size());
-  createPipeline();
-  graphicsPipeline->getBindings({&U_UBO}, {&B_POS});
-}
-#endif
-
 void DrawColorOp::draw(CommandBuffer *commandBuffer, Graphics *graphics) {
   graphics->bindGraphicsPipeline(commandBuffer, graphicsPipeline);
   graphics->bindVertexBuffer(commandBuffer, bPos.get(), B_POS, sizeof(vec2));
