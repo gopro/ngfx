@@ -46,43 +46,13 @@ BlendParams BlendUtil::getBlendParams(BlendMode mode) {
 	return blendParamsMap.at(mode);
 }
 
+static const vector<string> BlendModeStr = { "darken", "lighten", "multiply", "screen", "overlay",
+"src", "src_over", "src_in", "dst", "dst_in", "clear", "src_out", "dst_out", "dst_over" };
 
 BlendMode BlendUtil::toBlendMode(string str) {
-	const map<string, BlendMode> blendModeMap = {
-		{ "darken", DARKEN },
-		{ "lighten", LIGHTEN },
-		{ "multiply", MULTIPLY },
-		{ "screen", SCREEN },
-		{ "overlay", OVERLAY },
-		{ "src", SRC },
-		{ "src_over", SRC_OVER },
-		{ "src_in", SRC_IN },
-		{ "dst", DST },
-		{ "dst_in", DST_IN },
-		{ "clear", CLEAR },
-		{ "src_out", SRC_OUT },
-		{ "dst_out", DST_OUT },
-		{ "dst_over", DST_OVER }
-	};
-	return blendModeMap.at(str);
+	return BlendMode(find(BlendModeStr.begin(), BlendModeStr.end(), str) - BlendModeStr.begin());
 }
 
 string BlendUtil::toString(BlendMode blendMode) {
-	const map<BlendMode, string> blendModeStrMap = {
-		{ DARKEN,	"darken"	},
-		{ LIGHTEN,	"lighten"	},
-		{ MULTIPLY, "multiply"	},
-		{ SCREEN,	"screen"	},
-		{ OVERLAY,	"overlay"	},
-		{ SRC,		"src"		},
-		{ SRC_OVER, "src_over"	},
-		{ SRC_IN,	"src_in"	},
-		{ DST,		"dst"		},
-		{ DST_IN,	"dst_in"	},
-		{ CLEAR,	"clear"		},
-		{ SRC_OUT,	"src_out"	},
-		{ DST_OUT,	"dst_out"	},
-		{ DST_OVER, "dst_over"  }
-	};
-	return blendModeStrMap.at(blendMode);
+	return BlendModeStr[blendMode];
 }
