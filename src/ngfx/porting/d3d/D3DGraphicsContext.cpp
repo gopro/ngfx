@@ -34,6 +34,13 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   this->enableDepthStencil = enableDepthStencil;
 
   UINT dxgiFactoryFlags = 0;
+#ifdef ENABLE_GPU_CAPTURE_SUPPORT
+  enableGPUCapture = getenv("NGFX_GPU_CAPTURE");
+  if (enableGPUCapture) {
+      gpuCapture.reset(GPUCapture::create());
+  }
+#endif
+
   if (debug) {
     ComPtr<ID3D12Debug1> debugController;
     V(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)));
@@ -72,6 +79,18 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
   d3dComputeCommandList.create(d3dDevice.v.Get());
   d3dQueryTimestampHeap.create(d3dDevice.v.Get(), D3D12_QUERY_HEAP_TYPE_TIMESTAMP, 2);
   d3dTimestampResultBuffer.create(this, 2 * sizeof(uint64_t));
+#ifdef ENABLE_GPU_CAPTURE_SUPPORT
+  if (enableGPUCapture) {
+      gpuCapture->begin();
+  }
+#endif
+}
+
+D3DGraphicsContext::~D3DGraphicsContext() {
+#ifdef ENABLE_GPU_CAPTURE_SUPPORT
+    if (enableGPUCapture)
+        gpuCapture->end();
+#endif
 }
 
 DXGI_FORMAT D3DGraphicsContext::findSupportedFormat(const std::vector<DXGI_FORMAT>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1) {
