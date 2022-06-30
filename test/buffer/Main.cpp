@@ -97,7 +97,53 @@ public:
     std::unique_ptr<DrawColorOp> op;
 };
 class UniformBufferTestOp : public FilterOp {
-
+public:
+    UniformBufferTestOp(GraphicsContext* ctx, Graphics* graphics, int w, int h)
+        : FilterOp(ctx, graphics, w, h) {
+        numVerts = 20;
+        UBOData uboData = {
+            radians(30.0f), radians(300.0f),
+            vec4(0,1,0,1),
+            0.6f, 0.5f,
+            0.2f, -0.1f,
+            numVerts
+        };
+        bUbo.reset(createUniformBuffer(ctx, &uboData, sizeof(uboData)));
+        createPipeline();
+        graphicsPipeline->getBindings({ &U_UBO }, {});
+    }
+    void draw(CommandBuffer* commandBuffer, Graphics* graphics) {
+        graphics->bindGraphicsPipeline(commandBuffer, graphicsPipeline.get());
+        graphics->bindUniformBuffer(commandBuffer, bUbo.get(), U_UBO,
+            SHADER_STAGE_VERTEX_BIT);
+        graphics->draw(commandBuffer, numVerts);
+    }
+    struct UBOData {
+        float theta0;
+        float theta1;
+        vec4 color;
+        float xScale;
+        float yScale;
+        float xTranslate;
+        float yTranslate;
+        int numVerts;
+    };
+    void createPipeline() {
+        GraphicsPipeline::State state;
+        state.primitiveTopology = PRIMITIVE_TOPOLOGY_LINE_STRIP;
+        auto device = ctx->device;
+        graphicsPipeline.reset(GraphicsPipeline::create(
+            ctx, state,
+            VertexShaderModule::create(device, NGFX_TEST_DATA_DIR "/shaders/testUbo.vert").get(),
+            FragmentShaderModule::create(device, NGFX_TEST_DATA_DIR "/shaders/testUbo.frag")
+            .get(),
+            ctx->surfaceFormat, ctx->depthStencilFormat)
+        );
+    }
+    unique_ptr<Buffer> bUbo;
+    unique_ptr<GraphicsPipeline> graphicsPipeline;
+    uint32_t U_UBO;
+    int numVerts;
 };
 class StorageBufferTestOp : public FilterOp {
 
@@ -128,7 +174,7 @@ int run(BufferTestMode mode) {
     switch (mode) {
         CASE(VERTEX, VertexBuffer);
         CASE(INDEX, IndexBuffer);
-        //CASE(UNIFORM, UniformBuffer);
+        CASE(UNIFORM, UniformBuffer);
         //CASE(STORAGE, StorageBuffer);
         //CASE(INSTANCING, Instancing);
         //CASE(UPLOAD, BufferUpload);
@@ -142,7 +188,7 @@ int run(BufferTestMode mode) {
 int main(int argc, char** argv) {
 	if (argc < 2) {
         vector<BufferTestMode> testModes = {
-            VERTEX, INDEX, /*UNIFORM, STORAGE, INSTANCING,
+            VERTEX, INDEX, UNIFORM, /*STORAGE, INSTANCING,
             UPLOAD, UPLOAD_SUBREGION, DOWNLOAD, DOWNLOAD_SUBREGION, MAP*/
         };
         int r = 0;
