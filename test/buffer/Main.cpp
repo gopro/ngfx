@@ -26,6 +26,7 @@
 #include "test/common/UnitTest.h"
 #include "ngfx/graphics/BufferUtil.h"
 #include "ngfx/drawOps/DrawColorOp.h"
+#include "ngfx/graphics/Colors.h"
 using namespace std;
 using namespace ngfx;
 using namespace glm;
@@ -147,7 +148,49 @@ public:
     int numVerts;
 };
 class StorageBufferTestOp : public FilterOp {
-
+public:
+    StorageBufferTestOp(GraphicsContext* ctx, Graphics* graphics, int w, int h)
+        : FilterOp(ctx, graphics, w, h) {
+        SSBOData ssboData = {
+            Color::Cyan, Color::Red, Color::Blue, Color::Magenta,
+            Color::Green, Color::Black, Color::Yellow, Color::Cyan,
+            Color::Magenta, Color::Blue, Color::Red, Color::Green,
+            Color::Yellow, Color::Cyan, Color::Gray, Color::Red,
+        };
+        vector<vec2> pos = { vec2(-1, 1), vec2(-1, -1), vec2(1, 1), vec2(1, -1) };
+        numVerts = pos.size();
+        bPos.reset(createVertexBuffer<vec2>(ctx, pos));
+        bSsbo.reset(createStorageBuffer(ctx, &ssboData, sizeof(ssboData)));
+        createPipeline();
+        graphicsPipeline->getBindings({ &U_SSBO }, { &B_POS });
+    }
+    void draw(CommandBuffer* commandBuffer, Graphics* graphics) {
+        graphics->bindGraphicsPipeline(commandBuffer, graphicsPipeline.get());
+        graphics->bindVertexBuffer(commandBuffer, bPos.get(), B_POS, sizeof(vec2));
+        graphics->bindStorageBuffer(commandBuffer, bSsbo.get(), U_SSBO,
+            SHADER_STAGE_FRAGMENT_BIT, false);
+        graphics->draw(commandBuffer, numVerts);
+    }
+    static const int NUM_COLORS = 16;
+    struct SSBOData {
+        vec4 colors[NUM_COLORS];
+    };
+    void createPipeline() {
+        GraphicsPipeline::State state;
+        state.primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+        auto device = ctx->device;
+        graphicsPipeline.reset(GraphicsPipeline::create(
+            ctx, state,
+            VertexShaderModule::create(device, NGFX_TEST_DATA_DIR "/shaders/testSSBO.vert").get(),
+            FragmentShaderModule::create(device, NGFX_TEST_DATA_DIR "/shaders/testSSBO.frag")
+            .get(),
+            ctx->surfaceFormat, ctx->depthStencilFormat)
+        );
+    }
+    unique_ptr<Buffer> bPos, bSsbo;
+    unique_ptr<GraphicsPipeline> graphicsPipeline;
+    uint32_t B_POS, U_SSBO;
+    int numVerts;
 };
 class InstancingTestOp : public FilterOp {
 
@@ -176,7 +219,7 @@ int run(BufferTestMode mode) {
         CASE(VERTEX, VertexBuffer);
         CASE(INDEX, IndexBuffer);
         CASE(UNIFORM, UniformBuffer);
-        //CASE(STORAGE, StorageBuffer);
+        CASE(STORAGE, StorageBuffer);
         //CASE(INSTANCING, Instancing);
         //CASE(UPLOAD, BufferUpload);
         //CASE(UPLOAD_SUBREGION, BufferUploadSubregion);
@@ -189,7 +232,7 @@ int run(BufferTestMode mode) {
 int main(int argc, char** argv) {
 	if (argc < 2) {
         vector<BufferTestMode> testModes = {
-            VERTEX, INDEX, UNIFORM, /*STORAGE, INSTANCING,
+            VERTEX, INDEX, UNIFORM, STORAGE, /*INSTANCING,
             UPLOAD, UPLOAD_SUBREGION, DOWNLOAD, DOWNLOAD_SUBREGION, MAP*/
         };
         int r = 0;
