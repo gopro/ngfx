@@ -193,7 +193,49 @@ public:
     int numVerts;
 };
 class InstancingTestOp : public FilterOp {
-
+public:
+    InstancingTestOp(GraphicsContext* ctx, Graphics* graphics, int w, int h)
+        : FilterOp(ctx, graphics, w, h) {
+        numVerts = 128;
+        numInstances = 100;
+        vector<vec2> pos(numVerts);
+        for (int j = 0; j < numVerts; j++) {
+            float theta = radians(360.0f * (float(j) / float(numVerts - 1.0f)));
+            pos[j] = 0.1f * vec2(cos(theta), sin(theta));
+        }
+        vector<vec2> translate(numInstances);
+        for (int j = 0; j < numInstances; j++) {
+            int x = j % 10, y = j / 10;
+            translate[j] = vec2(mix(-1.0f, 1.0f, (x+1) / 11.0f), mix(-1.0f, 1.0f, (y+1) / 11.0f));
+        }
+        bPos.reset(createVertexBuffer<vec2>(ctx, pos));
+        bTranslate.reset(createVertexBuffer<vec2>(ctx, translate));
+        createPipeline();
+        graphicsPipeline->getBindings({}, { &B_POS, &B_TRANSLATE });
+    }
+    void draw(CommandBuffer* commandBuffer, Graphics* graphics) {
+        graphics->bindGraphicsPipeline(commandBuffer, graphicsPipeline.get());
+        graphics->bindVertexBuffer(commandBuffer, bPos.get(), B_POS, sizeof(vec2));
+        graphics->bindVertexBuffer(commandBuffer, bTranslate.get(), B_TRANSLATE, sizeof(vec2));
+        graphics->draw(commandBuffer, numVerts, numInstances);
+    }
+    void createPipeline() {
+        GraphicsPipeline::State state;
+        state.primitiveTopology = PRIMITIVE_TOPOLOGY_LINE_STRIP;
+        auto device = ctx->device;
+        graphicsPipeline.reset(GraphicsPipeline::create(
+            ctx, state,
+            VertexShaderModule::create(device, NGFX_TEST_DATA_DIR "/shaders/testInstancing.vert").get(),
+            FragmentShaderModule::create(device, NGFX_TEST_DATA_DIR "/shaders/testInstancing.frag")
+            .get(),
+            ctx->surfaceFormat, ctx->depthStencilFormat,
+            {}, {"translate"})
+        );
+    }
+    unique_ptr<GraphicsPipeline> graphicsPipeline;
+    unique_ptr<Buffer> bPos, bTranslate;
+    uint32_t B_POS, B_TRANSLATE;
+    int numVerts, numInstances;
 };
 class BufferUploadTestOp : public FilterOp {
 
@@ -220,7 +262,7 @@ int run(BufferTestMode mode) {
         CASE(INDEX, IndexBuffer);
         CASE(UNIFORM, UniformBuffer);
         CASE(STORAGE, StorageBuffer);
-        //CASE(INSTANCING, Instancing);
+        CASE(INSTANCING, Instancing);
         //CASE(UPLOAD, BufferUpload);
         //CASE(UPLOAD_SUBREGION, BufferUploadSubregion);
         //CASE(DOWNLOAD_SUBREGION, BufferDownloadSubregion);
@@ -232,8 +274,8 @@ int run(BufferTestMode mode) {
 int main(int argc, char** argv) {
 	if (argc < 2) {
         vector<BufferTestMode> testModes = {
-            VERTEX, INDEX, UNIFORM, STORAGE, /*INSTANCING,
-            UPLOAD, UPLOAD_SUBREGION, DOWNLOAD, DOWNLOAD_SUBREGION, MAP*/
+            VERTEX, INDEX, UNIFORM, STORAGE, INSTANCING, /*
+            UPLOAD, UPLOAD_SUBREGION, DOWNLOAD, DOWNLOAD_SUBREGION, MAP */
         };
         int r = 0;
         for (BufferTestMode m : testModes)
