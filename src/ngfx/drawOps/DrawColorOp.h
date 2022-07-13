@@ -21,6 +21,7 @@
 #pragma once
 #include "ngfx/graphics/DrawOp.h"
 #include "ngfx/graphics/Graphics.h"
+#include "ngfx/graphics/BufferUtil.h"
 
 #include <memory>
 
