@@ -59,8 +59,7 @@ public:
         drawTextureOp = make_unique<DrawTextureOp>(ctx, drawDstTextureOp->outputTexture.get());
         drawTextureBlendOp = make_unique<DrawTextureOp>(ctx, drawSrcTextureOp->outputTexture.get(),
             [&](GraphicsPipeline::State& state) {
-                state.blendEnable = true;
-                state.blendParams = BlendUtil::getBlendParams(blendMode);
+                state.setBlendMode(blendMode);
         });
 
         auto commandBuffer = ctx->drawCommandBuffer();

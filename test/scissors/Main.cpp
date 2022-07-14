@@ -16,8 +16,7 @@ public:
         pos = { vec2(-1.0f, 1.0f), vec2(-1.0f, 0.0f), vec2(0.0f, 1.0f), vec2(0.0f) };
         op[2] = make_unique<DrawColorOp>(ctx, pos, vec4(0.0f, 1.0f, 0.0f, 0.2f),
             [&](GraphicsPipeline::State& state) {
-                state.blendEnable = true;
-                state.blendParams = BlendUtil::getBlendParams(BlendMode::SRC_OVER);
+                state.setBlendMode(BlendMode::SRC_OVER);
             });
     }
     void draw(CommandBuffer* commandBuffer, Graphics* graphics) override {

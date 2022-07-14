@@ -129,5 +129,4 @@ int main(int argc, char** argv) {
     }
     string primitiveTopologyStr = argv[1];
     return run(toPrimitiveTopology(primitiveTopologyStr));
-    return 0;
 }

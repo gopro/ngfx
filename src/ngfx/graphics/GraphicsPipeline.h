@@ -58,6 +58,10 @@ public:
   struct State {
     PrimitiveTopology primitiveTopology = PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     PolygonMode polygonMode = POLYGON_MODE_FILL;
+    inline void setBlendMode(BlendMode mode) {
+        blendEnable = true;
+        blendParams = BlendUtil::getBlendParams(mode);
+    }
     bool blendEnable = false;
     BlendParams blendParams;
     uint8_t colorWriteMask = COLOR_COMPONENT_R_BIT | COLOR_COMPONENT_G_BIT |
