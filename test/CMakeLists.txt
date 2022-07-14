@@ -138,6 +138,7 @@ add_test(NAME texture_mipmap COMMAND test_texture mipmap)
 add_test(NAME transform_rotate COMMAND test_transform rotate)
 add_test(NAME transform_scale COMMAND test_transform scale)
 add_test(NAME transform_translate COMMAND test_transform translate)
+add_test(NAME transform_compound COMMAND test_transform compound)
 
 add_test(NAME viewport COMMAND test_viewport)
 
