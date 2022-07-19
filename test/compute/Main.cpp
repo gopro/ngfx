@@ -22,7 +22,7 @@ int run() {
     unique_ptr<Graphics> graphics;
     graphics.reset(Graphics::create(ctx.get()));
     using MatrixParam = MatrixMultiplyOp::MatrixParam;
-    const int DIM = 4096;
+    const int DIM = 16; // 4096;
     vector<float> srcData[2], dstData[2];
     for (int j = 0; j < 2; j++) {
         srcData[j] = vector<float>(DIM * DIM);
@@ -39,7 +39,9 @@ int run() {
     auto op = make_unique<MatrixMultiplyGPUOp>(ctx.get(),
         src0, src1, dst0);
     auto commandBuffer = ctx->computeCommandBuffer();
+    commandBuffer->begin();
     op->apply(commandBuffer, graphics.get());
+    commandBuffer->end();
     ctx->submit(commandBuffer);
     ctx->queue->waitIdle();
     //compare against CPU
