@@ -4,10 +4,10 @@ precision highp float;
 layout (std140, set = 0, binding = 0) uniform UBO_CS {
 	int src0_w, src0_h, src1t_w, src1t_h, dst_w, dst_h;
 }; 
-layout(std430, set = 1, binding = 0) buffer srcBuffer0 {
+layout(std430, set = 1, binding = 0) readonly buffer srcBuffer0 {
 	float data[];
 } src0;
-layout(std430, set = 2, binding = 0) buffer srcBuffer1 {
+layout(std430, set = 2, binding = 0) readonly buffer srcBuffer1 {
 	float data[];
 } src1t;
 layout(std430, set = 3, binding = 0) buffer dstBuffer {
