@@ -3,6 +3,7 @@
 #include "ngfx/computeOps/MatrixMultiplyGPUOp.h"
 #include "ngfx/computeOps/MatrixMultiplyCPUOp.h"
 #include "test/common/UnitTest.h"
+#include "ngfx/porting/renderdoc/RDGPUCapture.h"
 #include <array>
 using namespace ngfx;
 using namespace std;
@@ -16,8 +17,11 @@ int compareData(float* v0, float* v1, int size) {
 }
 
 int run() {
+    //RDGPUCapture gpuCapture;
+    //gpuCapture.create();
     unique_ptr<GraphicsContext> ctx;
     ctx.reset(GraphicsContext::create("compute_matrix_multiply", false));
+    //gpuCapture.begin();
     ctx->setSurface(nullptr);
     unique_ptr<Graphics> graphics;
     graphics.reset(Graphics::create(ctx.get()));
@@ -34,7 +38,7 @@ int run() {
     }
     MatrixParam src0 = { DIM, DIM, srcData[0].data() };
     MatrixParam src1 = { DIM, DIM, srcData[1].data() };
-    MatrixParam dst0 = { DIM, DIM, dstData[0].data() };
+    MatrixParam dst0 = { DIM, DIM, nullptr };
     //test matrix multiply on GPU
     auto op = make_unique<MatrixMultiplyGPUOp>(ctx.get(),
         src0, src1, dst0);
@@ -44,6 +48,9 @@ int run() {
     commandBuffer->end();
     ctx->submit(commandBuffer);
     ctx->queue->waitIdle();
+    op->bDst->download(dstData[0].data(), dstData[0].size() * sizeof(dstData[0][0]));
+
+    //gpuCapture.end();
     //compare against CPU
     MatrixParam dst1 = { DIM, DIM, dstData[1].data() };
     auto cpuOp = make_unique<MatrixMultiplyCPUOp>(src0, src1, dst1);
