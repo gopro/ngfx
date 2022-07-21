@@ -68,6 +68,7 @@ void D3DBuffer::create(D3DGraphicsContext *ctx, const void *data, uint32_t size,
 D3DBuffer::~D3DBuffer() {}
 
 // TODO: add read/write flags for map
+// current this maps for reading (readback buffer)
 void *D3DBuffer::map() {
   if (heapType == D3D12_HEAP_TYPE_DEFAULT) {
     assert(d3dReadbackBuffer == nullptr);
@@ -145,6 +146,12 @@ void D3DBuffer::upload(const void *data, uint32_t size, uint32_t offset) {
     memcpy(dst + offset, data, size);
     unmap();
   }
+}
+
+void D3DBuffer::download(void* data, uint32_t size, uint32_t offset) {
+    uint8_t *src = (uint8_t *)map();
+    memcpy(data, src + offset, size);
+    unmap();
 }
 
 void D3DBuffer::setName(const std::string& name) {
