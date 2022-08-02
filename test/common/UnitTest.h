@@ -6,7 +6,8 @@
 namespace ngfx {
 	class UnitTest {
 	public:
-		UnitTest(std::string testName, int outputWidth = 256, int outputHeight = 256);
+		UnitTest(std::string testName, int outputWidth = 256, int outputHeight = 256,
+			bool enableDepthStencil = false);
 		int run();
 		std::unique_ptr<GraphicsContext> ctx;
 		std::unique_ptr<Surface> surface;
