@@ -28,7 +28,7 @@
 namespace ngfx {
 class DrawMeshOp : public DrawOp {
 public:
-  DrawMeshOp(GraphicsContext *ctx, MeshData &meshData);
+  DrawMeshOp(GraphicsContext *ctx, const MeshData &meshData);
   virtual ~DrawMeshOp() {}
   void draw(CommandBuffer *commandBuffer, Graphics *graphics) override;
   struct LightData {
