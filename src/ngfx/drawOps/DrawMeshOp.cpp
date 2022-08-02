@@ -25,7 +25,7 @@
 using namespace ngfx;
 using namespace glm;
 
-DrawMeshOp::DrawMeshOp(GraphicsContext *ctx, MeshData &meshData) : DrawOp(ctx) {
+DrawMeshOp::DrawMeshOp(GraphicsContext *ctx, const MeshData &meshData) : DrawOp(ctx) {
   bPos.reset(createVertexBuffer<vec3>(ctx, meshData.pos));
   bNormals.reset(createVertexBuffer<vec3>(ctx, meshData.normal));
   bFaces.reset(createIndexBuffer<ivec3>(ctx, meshData.faces));
