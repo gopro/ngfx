@@ -37,9 +37,10 @@ public:
    *  @param graphics The graphics interface
    *  @param dstWidth The destination width
    *  @param dstHeight The destination height
+   *  @param enableDepthStencil Enable depth / stencil attachment
    */
   FilterOp(GraphicsContext *ctx, Graphics *graphics, uint32_t dstWidth,
-           uint32_t dstHeight);
+           uint32_t dstHeight, bool enableDepthStencil = false);
   /** Destroy the filter operation */
   virtual ~FilterOp() {}
   /** Apply the filter
@@ -51,6 +52,8 @@ public:
              Graphics *graphics);
   /** The output texture */
   std::unique_ptr<Texture> outputTexture;
+  /** The depth / stencil attachment */
+  std::unique_ptr<Texture> depthStencilTexture;
   /** The output framebuffer */
   std::unique_ptr<Framebuffer> outputFramebuffer;
 };
