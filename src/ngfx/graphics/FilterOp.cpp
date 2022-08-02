@@ -20,9 +20,10 @@
  */
 #include "ngfx/graphics/FilterOp.h"
 using namespace ngfx;
+using namespace std;
 
 FilterOp::FilterOp(GraphicsContext *ctx, Graphics *graphics, uint32_t dstWidth,
-                   uint32_t dstHeight)
+                   uint32_t dstHeight, bool enableDepthStencil)
     : DrawOp(ctx) {
   uint32_t w = dstWidth, h = dstHeight, size = w * h * 4;
   SamplerDesc samplerDesc = {
@@ -34,9 +35,20 @@ FilterOp::FilterOp(GraphicsContext *ctx, Graphics *graphics, uint32_t dstWidth,
       ImageUsageFlags(IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_DST_BIT |
                       IMAGE_USAGE_COLOR_ATTACHMENT_BIT),
       TEXTURE_TYPE_2D, false, 1, &samplerDesc));
+  if (enableDepthStencil) {
+      uint32_t depthStencilSize = size; /* TODO */
+      depthStencilTexture.reset(Texture::create(
+          ctx, graphics, nullptr, ctx->depthStencilFormat, depthStencilSize,
+          w, h, 1, 1, ImageUsageFlags(IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT),
+          TEXTURE_TYPE_2D, false, 1, nullptr
+      ));
+  }
+  vector<Framebuffer::Attachment> attachments = { {  outputTexture.get() } };
+  if (enableDepthStencil)
+      attachments.push_back({ { depthStencilTexture.get() } });
   outputFramebuffer.reset(Framebuffer::create(ctx->device,
                                               ctx->defaultOffscreenRenderPass,
-                                              {{outputTexture.get()}}, w, h));
+                                              attachments, w, h));
 }
 
 void FilterOp::apply(GraphicsContext *ctx, CommandBuffer *commandBuffer,
