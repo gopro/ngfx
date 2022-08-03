@@ -11,4 +11,3 @@ void main() {
 	vec4 srcData = imageLoad(src, ivec2(j, k));
     imageStore(dst, ivec2(k, j), srcData);
 }
-
