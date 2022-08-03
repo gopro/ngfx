@@ -19,6 +19,7 @@
  * under the License.
  */
 #include "ngfx/graphics/FilterOp.h"
+#include "ngfx/graphics/FormatUtil.h"
 using namespace ngfx;
 using namespace std;
 
@@ -36,7 +37,7 @@ FilterOp::FilterOp(GraphicsContext *ctx, Graphics *graphics, uint32_t dstWidth,
                       IMAGE_USAGE_COLOR_ATTACHMENT_BIT),
       TEXTURE_TYPE_2D, false, 1, &samplerDesc));
   if (enableDepthStencil) {
-      uint32_t depthStencilSize = size; /* TODO */
+      uint32_t depthStencilSize = w * h * FormatUtil::getBytesPerPixel(ctx->depthStencilFormat);
       depthStencilTexture.reset(Texture::create(
           ctx, graphics, nullptr, ctx->depthStencilFormat, depthStencilSize,
           w, h, 1, 1, ImageUsageFlags(IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT),
