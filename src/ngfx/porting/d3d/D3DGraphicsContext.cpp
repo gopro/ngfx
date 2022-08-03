@@ -27,8 +27,7 @@ using namespace std;
 using Microsoft::WRL::ComPtr;
 #define MAX_DESCRIPTORS 1024
 
-void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
-                                bool debug) {
+void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil, bool debug) {
   HRESULT hResult;
   this->debug = debug;
   this->enableDepthStencil = enableDepthStencil;
@@ -65,13 +64,15 @@ void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil,
       filter.AllowList.pSeverityList = severityList;
       infoQueue->PushStorageFilter(&filter);
   }
-  std::vector<DXGI_FORMAT> depthStencilFormatCandidates = {
-      DXGI_FORMAT_D32_FLOAT_S8X24_UINT,
-      DXGI_FORMAT_D24_UNORM_S8_UINT,
-      DXGI_FORMAT_D16_UNORM
+  std::vector<PixelFormat> depthStencilFormatCandidates = {
+      PixelFormat(DXGI_FORMAT_D32_FLOAT_S8X24_UINT),
+      PixelFormat(DXGI_FORMAT_D24_UNORM_S8_UINT),
+      PixelFormat(DXGI_FORMAT_D16_UNORM)
   };
   depthStencilFormat = PixelFormat(findSupportedFormat(depthStencilFormatCandidates, D3D12_FORMAT_SUPPORT1_DEPTH_STENCIL));
   depthFormat = depthStencilFormat;
+  if (onSelectDepthStencilFormats)
+      onSelectDepthStencilFormats(depthStencilFormatCandidates, depthFormat, depthStencilFormat);
 
   d3dCommandQueue.create(this);
   createDescriptorHeaps();
@@ -93,13 +94,14 @@ D3DGraphicsContext::~D3DGraphicsContext() {
 #endif
 }
 
-DXGI_FORMAT D3DGraphicsContext::findSupportedFormat(const std::vector<DXGI_FORMAT>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1) {
+DXGI_FORMAT D3DGraphicsContext::findSupportedFormat(const std::vector<PixelFormat>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1) {
     HRESULT hResult;
     for (const auto format : formats) {
-        D3D12_FEATURE_DATA_FORMAT_SUPPORT formatSupport = { format };
+        DXGI_FORMAT dxgiFormat = DXGI_FORMAT(format);
+        D3D12_FEATURE_DATA_FORMAT_SUPPORT formatSupport = { dxgiFormat };
         V(d3dDevice.v->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &formatSupport, sizeof(formatSupport)));
         if (formatSupport.Support1 & formatSupport1)
-            return format;
+            return dxgiFormat;
     }
     return DXGI_FORMAT_UNKNOWN;
 }
@@ -267,9 +269,11 @@ void D3DGraphicsContext::createBindings() {
 }
 
 GraphicsContext *GraphicsContext::create(const char *appName,
-                                         bool enableDepthStencil, bool debug) {
+                                         bool enableDepthStencil, bool debug,
+                                         OnSelectDepthStencilFormats onSelectDepthStencilFormats) {
   NGFX_LOG("debug: %s", (debug) ? "true" : "false");
   auto d3dGraphicsContext = new D3DGraphicsContext();
+  d3dGraphicsContext->onSelectDepthStencilFormats = onSelectDepthStencilFormats;
   d3dGraphicsContext->create(appName, enableDepthStencil, debug);
   return d3dGraphicsContext;
 }

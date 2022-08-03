@@ -87,7 +87,7 @@ private:
                         D3DRenderPass &renderPass);
   void createFences(ID3D12Device *device);
   void createSwapchainFramebuffers(int w, int h);
-  DXGI_FORMAT findSupportedFormat(const std::vector<DXGI_FORMAT>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1);
+  DXGI_FORMAT findSupportedFormat(const std::vector<PixelFormat>& formats, D3D12_FORMAT_SUPPORT1 formatSupport1);
 #ifdef ENABLE_GPU_CAPTURE_SUPPORT
   std::unique_ptr<GPUCapture> gpuCapture;
   bool enableGPUCapture = false;
