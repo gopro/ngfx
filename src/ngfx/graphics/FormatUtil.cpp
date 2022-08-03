@@ -40,6 +40,7 @@ int FormatUtil::getBytesPerPixel(PixelFormat format) {
         { PIXELFORMAT_D16_UNORM, 2 },
         { PIXELFORMAT_D24_UNORM, 4 },
         { PIXELFORMAT_D24_UNORM_S8_UINT, 4 },
+        { PIXELFORMAT_D32_SFLOAT, 4 },
         { PIXELFORMAT_D32_SFLOAT_S8_UINT, 8 }
     };
     return bppMap.at(format);
