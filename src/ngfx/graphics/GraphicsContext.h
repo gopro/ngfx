@@ -29,15 +29,22 @@
 #include "ngfx/graphics/RenderPass.h"
 #include "ngfx/graphics/Surface.h"
 #include "ngfx/graphics/Swapchain.h"
+#include <functional>
 #include <optional>
 #include <vector>
 
 namespace ngfx {
 class GraphicsContext {
 public:
+  using OnSelectDepthStencilFormats = std::function<void(
+      const std::vector<PixelFormat>& depthStencilFormatCandidates,
+      PixelFormat& depthFormat,
+      PixelFormat& depthStencilFormat
+  )>;
   static GraphicsContext *create(const char *appName,
                                  bool enableDepthStencil = false,
-                                 bool debug = true);
+                                 bool debug = true,
+                                 OnSelectDepthStencilFormats onSelectDepthStencilFormats = nullptr);
   virtual ~GraphicsContext() {}
   virtual void setSurface(Surface *surface) = 0;
   virtual void beginRenderPass(CommandBuffer *commandBuffer,
@@ -125,5 +132,6 @@ public:
 
 protected:
   bool debug = false, enableDepthStencil = false;
+  OnSelectDepthStencilFormats onSelectDepthStencilFormats;
 };
 }; // namespace ngfx
