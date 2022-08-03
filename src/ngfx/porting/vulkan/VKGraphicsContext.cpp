@@ -349,9 +349,11 @@ void VKGraphicsContext::createBindings() {
   renderCompleteSemaphore = &vkRenderCompleteSemaphore;
 }
 GraphicsContext *GraphicsContext::create(const char *appName,
-                                         bool enableDepthStencil, bool debug) {
+                                         bool enableDepthStencil, bool debug,
+                                         OnSelectDepthStencilFormats onSelectDepthStencilFormats) {
   NGFX_LOG("debug: %s", (debug) ? "true" : "false");
   auto vkGraphicsContext = new VKGraphicsContext();
+  vkGraphicsContext->onSelectDepthStencilFormats = onSelectDepthStencilFormats;
   vkGraphicsContext->create(appName, enableDepthStencil, debug);
   return vkGraphicsContext;
 }

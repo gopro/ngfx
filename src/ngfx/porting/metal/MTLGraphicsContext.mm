@@ -154,9 +154,11 @@ void MTLGraphicsContext::submit(CommandBuffer* commandBuffer) {
     }
 }
 
-GraphicsContext* GraphicsContext::create(const char* appName, bool enableDepthStencil, bool debug) {
+GraphicsContext* GraphicsContext::create(const char* appName, bool enableDepthStencil, bool debug,
+                                         OnSelectDepthStencilFormats onSelectDepthStencilFormats) {
     NGFX_LOG("debug: %s", (debug)?"true": "false");
     auto mtlGraphicsContext = new MTLGraphicsContext();
+    mtlGraphicsContext->onSelectDepthStencilFormats = onSelectDepthStencilFormats;
     mtlGraphicsContext->create(appName, enableDepthStencil, debug);
     return mtlGraphicsContext;
 }
