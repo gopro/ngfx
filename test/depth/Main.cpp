@@ -72,10 +72,15 @@ private:
     }
 };
 
-int run(PixelFormat depthFormat) {
-    UnitTest test("depth_" + toString(depthFormat), 256, 256, true);
+int run(PixelFormat depthStencilFormat) {
+    UnitTest test("depth_" + toString(depthStencilFormat), 256, 256, true, [&](
+                const std::vector<PixelFormat>& depthStencilFormatCandidates,
+                PixelFormat& depthFormatParam,
+                PixelFormat& depthStencilFormatParam) {
+            depthStencilFormatParam = depthStencilFormat;
+        });
     test.op = make_unique<DepthModeTestOp>(test.ctx.get(), test.graphics.get(),
-        test.outputWidth, test.outputHeight, depthFormat);
+        test.outputWidth, test.outputHeight, depthStencilFormat);
     return test.run();
 }
 
