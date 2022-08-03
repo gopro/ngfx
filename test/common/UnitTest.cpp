@@ -6,9 +6,10 @@ using namespace ngfx;
 using namespace std;
 namespace fs = std::filesystem;
 
-UnitTest::UnitTest(std::string testName, int outputWidth, int outputHeight, bool enableDepthStencil) :
+UnitTest::UnitTest(std::string testName, int outputWidth, int outputHeight, bool enableDepthStencil, 
+	GraphicsContext::OnSelectDepthStencilFormats onSelectDepthStencilFormats) :
 		testName(testName), outputWidth(outputWidth), outputHeight(outputHeight) {
-	ctx.reset(GraphicsContext::create(testName.c_str(), enableDepthStencil));
+	ctx.reset(GraphicsContext::create(testName.c_str(), enableDepthStencil, true, onSelectDepthStencilFormats));
 	surface.reset(new Surface(outputWidth, outputHeight, true));
 	graphics.reset(Graphics::create(ctx.get()));
 	ctx->setSurface(surface.get());
