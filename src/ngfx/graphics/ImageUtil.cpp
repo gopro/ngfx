@@ -28,11 +28,13 @@
 using namespace ngfx;
 
 void ImageUtil::load(std::string filename, ImageData &v) {
-    v.data = stbi_load(filename.c_str(), &v.w, &v.h, &v.numChannels, 4);
+    int numChannels;
+    v.data = stbi_load(filename.c_str(), &v.w, &v.h, &numChannels, 4);
     if (!v.data) {
         NGFX_ERR("cannot load file: %s", filename.c_str());
     }
     v.size = v.w * v.h * 4;
+    v.numChannels = 4;
 }
 void ImageUtil::storeJPEG(std::string filename, const ImageData& v, int quality) {
     stbi_write_jpg(filename.c_str(), v.w, v.h, v.numChannels, v.data, quality);
