@@ -24,6 +24,11 @@
 namespace ngfx {
 
 struct ImageData {
+    ImageData() {}
+    ImageData(int w, int h, int numChannels = 4) : w(w), h(h), numChannels(numChannels) {
+        size = w * h * numChannels;
+        data = malloc(size);
+    }
     ~ImageData() {
         free(data);
     }
