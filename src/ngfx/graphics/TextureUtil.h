@@ -26,6 +26,11 @@ namespace ngfx {
 
 class TextureUtil {
 public:
+  static Texture* load(GraphicsContext* ctx, Graphics* graphics,
+        const ImageData &imageData, ImageUsageFlags imageUsageFlags = ImageUsageFlags(
+            IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT |
+            IMAGE_USAGE_TRANSFER_DST_BIT), TextureType textureType = TEXTURE_TYPE_2D,
+      bool genMipmaps = false, uint32_t numSamples = 1, SamplerDesc* samplerDesc = nullptr);
   static Texture* load(GraphicsContext *ctx, Graphics *graphics, 
       const char *filename, ImageUsageFlags imageUsageFlags = ImageUsageFlags(
           IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT | 
