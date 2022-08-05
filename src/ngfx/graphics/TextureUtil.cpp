@@ -24,12 +24,18 @@ using namespace ngfx;
 using namespace std;
 
 Texture* TextureUtil::load(GraphicsContext* ctx, Graphics* graphics,
+    const ImageData &imageData, ImageUsageFlags imageUsageFlags, TextureType textureType,
+    bool genMipmaps, uint32_t numSamples, SamplerDesc* samplerDesc) {
+    return Texture::create(ctx, graphics, imageData.data, PIXELFORMAT_RGBA8_UNORM,
+        imageData.size, imageData.w, imageData.h, 1, 1,
+        imageUsageFlags, textureType, genMipmaps, numSamples, samplerDesc);
+}
+Texture* TextureUtil::load(GraphicsContext* ctx, Graphics* graphics,
     const char* filename, ImageUsageFlags imageUsageFlags, TextureType textureType,
     bool genMipmaps, uint32_t numSamples, SamplerDesc* samplerDesc) {
     ImageData v;
     ImageUtil::load(filename, v);
-    return Texture::create(ctx, graphics, v.data, PIXELFORMAT_RGBA8_UNORM,
-        v.size, v.w, v.h, 1, 1, imageUsageFlags, textureType, genMipmaps, numSamples, samplerDesc);
+    return TextureUtil::load(ctx, graphics, v, imageUsageFlags, textureType, genMipmaps, numSamples, samplerDesc);
 }
 
 void TextureUtil::download(Texture* texture, ImageData &v) {
