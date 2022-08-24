@@ -141,5 +141,3 @@ add_test(NAME transform_translate COMMAND test_transform translate)
 add_test(NAME transform_compound COMMAND test_transform compound)
 
 add_test(NAME viewport COMMAND test_viewport)
-
-add_subdirectory(ref/skia)
