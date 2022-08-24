@@ -274,4 +274,4 @@ install_headers(ngfx/porting/metal)
 install_headers(ngfx/porting/vulkan)
 install_headers(ngfx/porting/windows)
 
-add_subdirectory(test)
+#add_subdirectory(test)
