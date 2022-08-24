@@ -82,6 +82,49 @@ static int testMatrixMultiply() {
     return compareData(dstData[0].data(), dstData[1].data(), DIM * DIM);
 }
 
+class ConvolveGPUOp : public FilterOp {
+public:
+    ConvolveGPUOp(GraphicsContext* ctx) : FilterOp(ctx) {}
+    ConvolveGPUOp(GraphicsContext* ctx, Texture* srcTexture, Texture* dstTexture, kernel_t kernel)
+        : ConvolveGPUOp(ctx) {
+        setKernel(kernel);
+        this->srcTexture = srcTexture;
+        this->dstTexture = dstTexture;
+        createPipeline();
+    }
+    virtual ~ConvolveGPUOp() {}
+    void draw(CommandBuffer* commandBuffer, Graphics* graphics) override {
+        graphics->bindUniformBuffer(commandBuffer, bUbo.get(), U_UBO, SHADER_STAGE_COMPUTE_BIT);
+        graphics->bindComputePipeline(commandBuffer, computePipeline);
+    }
+    void setKernel(kernel_t kernel) {
+        float* kernelData = uboData.kernel_data;
+        uboData.kernel_w = kernel.w;
+        uboData.kernel_h = kernel.h;
+        memcpy(uboData.kernel_data, kernel.data, kernel.w * kernel.h * sizeof(float));
+        bUbo.reset(createUniformBuffer(ctx, &uboData, sizeof(uboData)));
+
+    }
+    std::unique_ptr<Buffer> bUbo;
+    Texture* srcTexture = nullptr;
+    Texture* dstTexture = nullptr;
+
+protected:
+    void createPipeline() {
+        computePipeline = ComputePipeline::create(
+            ctx,
+            ComputeShaderModule::create(ctx->device, NGFX_TEST_DATA_DIR "/shaders/testConvolve.comp").get());
+    }
+    static const int MAX_KERNEL_SIZE = 64;
+    struct ConvolveUboData {
+        float kernel_data[MAX_KERNEL_SIZE];
+        int kernel_w, kernel_h;
+    };
+    ConvolveUboData uboData;
+    ComputePipeline* computePipeline;
+    uint32_t U_UBO = 0, U_SRC_IMAGE = 1, U_DST_IMAGE = 2;
+};
+
 class GaussianOp : public ComputeOp {
 public:
     GaussianOp(GraphicsContext* ctx) : ComputeOp(ctx) {}
