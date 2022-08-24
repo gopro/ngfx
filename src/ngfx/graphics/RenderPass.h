@@ -22,9 +22,20 @@
 
 namespace ngfx {
 class Framebuffer;
+/** \class RenderPass
+   *
+   *  This class defines the base class for a render pass 
+   *  which allows rendering to an onscreen or offscreen surface 
+   *  via a framebuffer object.
+   *  The user will typically call the getRenderPass member function 
+   *  in the graphics context to get a render pass object corresponding 
+   *  to a render pass configuration
+   *  
+   */
 class RenderPass {
 public:
   virtual ~RenderPass() {}
+  /** The current framebuffer object */
   Framebuffer *currentFramebuffer = nullptr;
 };
 }; // namespace ngfx

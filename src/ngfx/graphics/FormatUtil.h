@@ -22,8 +22,12 @@
 #include "GraphicsCore.h"
 
 namespace ngfx {
+    /** \class FormatUtil
+     *  This module provides various pixel format utility functions */
+
     class FormatUtil {
     public:
+        /** Get the number of bytes per pixel for a given format */
         static int getBytesPerPixel(PixelFormat format);
     };
 }

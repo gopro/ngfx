@@ -22,10 +22,20 @@
 #include "ImageData.h"
 namespace ngfx {
 
+/** \class ImageUtil
+ *
+ *  This class provides various functionality to import and export 
+ *  images as JPEGs and PNGs.  JPEG is a lossy format best suited for 
+ *  photos, while PNG is a lossless format best suited for computer graphics content.
+ */
+
 class ImageUtil {
 public:
+  /** Load the image from file into an ImageData structure */
   static void load(std::string filename, ImageData &v);
+  /** Store an image as a JPEG to file */
   static void storeJPEG(std::string filename, const ImageData& v, int quality = 90);
+  /** Store an image as a PNG to file */
   static void storePNG(std::string filename, const ImageData &v);
 };
 } // namespace ngfx

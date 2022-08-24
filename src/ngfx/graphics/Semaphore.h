@@ -23,6 +23,11 @@
 #include <cstdint>
 
 namespace ngfx {
+/** \class Semaphore
+*   This class provides support for synchronizing between tasks running on the GPU,
+    especially when running across multiple queues.
+ */
+
 class Semaphore {
 public:
   static Semaphore *create(Device *device);

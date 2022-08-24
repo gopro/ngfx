@@ -22,6 +22,12 @@
 #include <glm/glm.hpp>
 
 namespace ngfx {
+
+/** \struct Color
+    *
+    *  This module defines various colors as RGBA float values
+    */
+
 struct Color {
     static constexpr glm::vec4 Transparent = { 0, 0, 0, 0 };
     static constexpr glm::vec4 Black = { 0, 0, 0, 1 };

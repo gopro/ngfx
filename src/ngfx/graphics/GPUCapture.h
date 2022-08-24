@@ -22,11 +22,20 @@
 #pragma once
 
 namespace ngfx {
+    /** \class GPUCapture
+    * 
+    * This module defines an interface for capturing
+    the low-level graphics API calls programmatically for debugging.
+    * This is particularly useful for capturing offscreen rendering */
+
     class GPUCapture {
     public:
+        /** Create GPU capture context */
         static GPUCapture* create();
         virtual ~GPUCapture() {}
+        /** Begin capture */
         virtual void begin() = 0;
+        /** End capture */
         virtual void end() = 0;
     };
 };

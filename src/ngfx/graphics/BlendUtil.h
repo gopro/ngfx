@@ -27,9 +27,16 @@ namespace ngfx {
 		DARKEN, LIGHTEN, MULTIPLY, SCREEN, OVERLAY,
 		SRC, SRC_OVER, SRC_IN, DST, DST_IN, CLEAR, SRC_OUT, DST_OUT, DST_OVER
 	};
+	/** \struct BlendUtil
+ *
+ *  This module provides various blending utility functions
+ */
 	struct BlendUtil {
+		/** Get blend parameters for a given porter duff blend mode */
 		static BlendParams getBlendParams(BlendMode mode);
+		/** Convert blend mode string to enum */
 		static BlendMode toBlendMode(std::string str);
+		/** Convert blend mode enum to string */
 		static std::string toString(BlendMode blendMode);
 	};
 }

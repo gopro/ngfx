@@ -23,8 +23,17 @@
 #include <string>
 
 namespace ngfx {
+
+/** \struct MeshUtil
+ * 
+ *  This module provides utility functions for importing and exporting a mesh 
+ *  using the internal MeshData format
+ */
+
 struct MeshUtil {
+  /** Import mesh from file */
   static void importMesh(const std::string &file, MeshData &meshData);
+  /** Export mesh to file */
   static void exportMesh(const std::string &file, MeshData &meshData);
 };
 } // namespace ngfx

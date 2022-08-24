@@ -21,6 +21,9 @@
 #pragma once
 
 namespace ngfx {
+/** \class Pipeline
+ *  This defines a common base class for graphics and compute pipelines */
+
 class Pipeline {
 public:
   virtual ~Pipeline() {}

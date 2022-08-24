@@ -19,6 +19,12 @@
  * under the License.
  */
 #pragma once
+
+ /** \module GraphicsCore
+ *
+ *  This module provides various enums as a platform abstraction API
+ */
+
 #include <cstdint>
 #include <string>
 #ifdef NGFX_GRAPHICS_BACKEND_VULKAN

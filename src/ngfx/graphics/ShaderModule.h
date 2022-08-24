@@ -29,16 +29,32 @@
 #define ENABLE_NGL_INTEGRATION
 
 namespace ngfx {
+/** \class ShaderModule
+ *
+ *   This class provides support for shader modules 
+ *   including vertex, fragment and compute shaders.
+ *   It can optionally provide shader reflection info,
+ *   provided via the ShaderTools module.
+ *   Shaders can be precompiled offline, or compiled at runtime.
+ *   For best performance it's best to precompile them offline.
+ */
 class ShaderModule {
 public:
   virtual ~ShaderModule() {}
+  /** Information associated with a descriptor.
+   *  A descriptor is a resource that's bound to the shader.
+   */
   struct DescriptorInfo {
+    /** The descriptor name */
     std::string name;
+    /** The set layout index */
     uint32_t set;
+    /** The descriptor type */
     DescriptorType type;
   };
   typedef std::vector<DescriptorInfo> DescriptorInfos;
   DescriptorInfos descriptors;
+  /** Find descriptor info by name */
   inline DescriptorInfo *findDescriptorInfo(const std::string &name) {
     for (auto &desc : descriptors) {
       if (desc.name == name)
@@ -46,15 +62,31 @@ public:
     }
     return nullptr;
   }
+  /** Information about a member variable of a buffer.
+   *  The buffer layout can be defined using a struct.
+   */
   struct BufferMemberInfo {
-    uint32_t offset, size, arrayCount, arrayStride;
+    /** The offset of the member variable (in bytes) */
+    uint32_t offset,
+    /** The size of the member variable (in bytes) */
+        size,
+    /** The array count, if the member variable is an array */
+        arrayCount,
+    /** The offset between elements in the array (if the member variable is an array) */
+        arrayStride;
   };
   typedef std::map<std::string, BufferMemberInfo> BufferMemberInfos;
+  /** Information about a buffer */
   struct BufferInfo {
+    /** The buffer name */
     std::string name;
+    /** The set layout index */
     uint32_t set;
+    /** If true, this buffer is bound as readonly, else it is bound as read/write */
     bool readonly;
+    /** The shader stages that have access to the buffer */
     ShaderStageFlags shaderStages;
+    /** The information of the buffer member variables */
     BufferMemberInfos memberInfos;
   };
   typedef std::map<std::string, BufferInfo> BufferInfos;
@@ -74,19 +106,38 @@ public:
   void initBindings(std::ifstream &in, ShaderStageFlags shaderStages);
   void initBindings(const std::string &filename, ShaderStageFlags shaderStages);
 };
+
+/** \class VertexShaderModule
+ *  This class supports vertex shader modules
+ */
 class VertexShaderModule : public ShaderModule {
 public:
   static std::unique_ptr<VertexShaderModule>
+  /** Create vertex shader module from file 
+      @param filename: This is the filename prefix for the files associated with this 
+      shader module.  When precompiled shaders is enabled as a configuration option, 
+      this will load the precompiled shader along with any corresponding reflection info 
+      if available. Otherwise, this will load the shader code and compile it at runtime */
   create(Device *device, const std::string &filename);
   virtual ~VertexShaderModule() {}
+  /** Describes a vertex shader attribute */
   struct AttributeDescription {
+    /** The semantic keyword describing the attribute.  Some backends like DirectX 12 provide 
+        predefined semantics like POSITION, TEXCOORD for describing the attribute */
     std::string semantic;
+    /** The layout location index */
     uint32_t location;
+    /** The attribute format */
     VertexFormat format;
+    /** The attribute name */
     std::string name;
-    uint32_t count, elementSize;
+    /** The attribute count */
+    uint32_t count,
+    /** The size of each element (bytes) */
+        elementSize;
   };
   std::vector<AttributeDescription> attributes;
+  /** Find attribute by name */
   inline AttributeDescription *findAttribute(const std::string &name) {
     for (auto &attr : attributes) {
       if (attr.name == name)
@@ -96,6 +147,11 @@ public:
   }
   void initBindings(const std::string &filename);
 };
+
+/** \class FragmentShaderModule
+ *  This class supports fragment shader modules
+ */
+
 class FragmentShaderModule : public ShaderModule {
 public:
   static std::unique_ptr<FragmentShaderModule>
@@ -105,6 +161,11 @@ public:
     ShaderModule::initBindings(filename, SHADER_STAGE_FRAGMENT_BIT);
   }
 };
+
+/** \class ComputeShaderModule
+ *  This class supports compute shader modules
+ */
+
 class ComputeShaderModule : public ShaderModule {
 public:
   static std::unique_ptr<ComputeShaderModule>

@@ -24,9 +24,22 @@
 using namespace glm;
 
 namespace ngfx {
+/** \struct MeshData
+ *
+ *  This is a structure for storing mesh data.
+ *  There is also an offline tool for convert a mesh 
+ *  stored in a standard format such as as PLY to this 
+    internal format
+ */
+
 struct MeshData {
-  std::vector<vec3> pos, normal;
+  /** The mesh positions (vertices) */
+  std::vector<vec3> pos,
+  /** The per-vertex normals (optional) */
+      normal;
+  /** The mesh faces (triangles), stored as indices */
   std::vector<ivec3> faces;
+  /** The mesh bounding box */
   vec3 bounds[2] = {vec3(FLT_MAX), vec3(FLT_MIN)};
 };
 }; // namespace ngfx

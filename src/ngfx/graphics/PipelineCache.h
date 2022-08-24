@@ -25,9 +25,15 @@
 #include <string>
 
 namespace ngfx {
+/** \class PipelineCache
+ *
+ *  This class provides support for caching pipeline objects.
+ *  The pipeline class has a function to compute a unique key
+ */
 class PipelineCache {
 public:
   virtual ~PipelineCache() {}
+  /** Get pipeline object associated with a key */
   virtual Pipeline *get(const std::string &key);
   virtual void add(const std::string &key, Pipeline *value);
 

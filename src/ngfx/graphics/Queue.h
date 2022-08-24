@@ -26,11 +26,25 @@
 #include <vector>
 
 namespace ngfx {
+    /** \class Queue
+    *
+    *  This class provides a base class for a queue.
+    *  The user records graphics or compute commands to a command buffer,
+    *  and these are submitted to the GPU via a queue.
+    *  There can be more than one queue and they can have different capabilities
+       (e.g. graphics, compute, and transfer)
+    */
 class Queue {
 public:
   virtual ~Queue() {}
+  /** Queue the swapchain image for presenting to the display */
   virtual void present() = 0;
+  /** Submit the command buffer to the GPU for processing.  
+      This is an asynchronous operation */
   virtual void submit(CommandBuffer *commandBuffer) = 0;
+  /** Wait for the GPU to finish executing commands.
+      The user can also use a fence to be notified when the commands finish 
+      executing on the GPU */
   virtual void waitIdle() = 0;
 };
 } // namespace ngfx

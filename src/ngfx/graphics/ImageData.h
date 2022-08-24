@@ -23,17 +23,34 @@
 
 namespace ngfx {
 
+/** \struct ImageData
+ *
+ *  This struct provides a container for storing image data
+ */
+
 struct ImageData {
     ImageData() {}
+    /** Create ImageData struct and allocate the data
+     *  @param w The image width
+        @ param h The image height
+        @param numChannels The number of color channels */
     ImageData(int w, int h, int numChannels = 4) : w(w), h(h), numChannels(numChannels) {
         size = w * h * numChannels;
         data = malloc(size);
     }
+    /** Destroy the struct and free the data */
     ~ImageData() {
         free(data);
     }
-    int w = 0, h = 0, numChannels = 4;
+    /** The image width */
+    int w = 0,
+    /** The image height */
+        h = 0,
+    /** The number of channels */
+        numChannels = 4;
+    /** The image data */
     void* data = nullptr;
+    /** The data size (in bytes) */
     int size = 0;
 };
 } // namespace ngfx

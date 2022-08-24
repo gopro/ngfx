@@ -22,7 +22,11 @@
 #include "GraphicsCore.h"
 
 namespace ngfx {
+    /** \class FilterUtil
+    * This class provides various utility functions for filters
+    */
     namespace FilterUtil {
+        /** Compute the gaussian function */
         extern float gaussian(int x, float sigma = 0.84089642f);
     }
 }
