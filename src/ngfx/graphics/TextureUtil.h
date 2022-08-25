@@ -24,20 +24,31 @@
 
 namespace ngfx {
 
+/** \class TextureUtil
+ * 
+ *  This module provides various utility functions for importing and exporting images 
+ *  into GPU textures
+ */
+
 class TextureUtil {
 public:
+  /** Load texture from image data */
   static Texture* load(GraphicsContext* ctx, Graphics* graphics,
         const ImageData &imageData, ImageUsageFlags imageUsageFlags = ImageUsageFlags(
             IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT |
             IMAGE_USAGE_TRANSFER_DST_BIT), TextureType textureType = TEXTURE_TYPE_2D,
       bool genMipmaps = false, uint32_t numSamples = 1, SamplerDesc* samplerDesc = nullptr);
+  /** Load texture from an image file (e.g. PNG or JPEG) */
   static Texture* load(GraphicsContext *ctx, Graphics *graphics, 
       const char *filename, ImageUsageFlags imageUsageFlags = ImageUsageFlags(
           IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_SRC_BIT | 
           IMAGE_USAGE_TRANSFER_DST_BIT), TextureType textureType = TEXTURE_TYPE_2D,
       bool genMipmaps = false, uint32_t numSamples = 1, SamplerDesc *samplerDesc = nullptr);
+  /** Download texture contents into image data object */
   static void download(Texture* texture, ImageData& v);
+  /** Store the GPU texture as a JPEG image */
   static void storeJPEG(std::string filename, Texture* texture, int quality = 90);
+  /** Store the GPU texture as a PNG image */
   static void storePNG(std::string filename, Texture* texture);
 };
 } // namespace ngfx
