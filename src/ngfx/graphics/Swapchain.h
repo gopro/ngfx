@@ -24,6 +24,12 @@
 #include <cstdint>
 
 namespace ngfx {
+/** \class Swapchain
+ *  This class provides the base class for a swapchain abstraction
+ *  A swapchain contains a set of one or more images that are presented to the 
+ *  display
+ */
+
 class Swapchain {
 public:
   virtual ~Swapchain() {}

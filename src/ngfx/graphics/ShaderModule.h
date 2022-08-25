@@ -103,6 +103,7 @@ public:
     return &it->second;
   }
   BufferInfos uniformBufferInfos, shaderStorageBufferInfos;
+  /** This is an internal function for parsing reflection info (optional) */
   void initBindings(std::ifstream &in, ShaderStageFlags shaderStages);
   void initBindings(const std::string &filename, ShaderStageFlags shaderStages);
 };

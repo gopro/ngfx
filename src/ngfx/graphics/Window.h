@@ -25,21 +25,39 @@
 
 namespace ngfx {
 class GraphicsContext;
+/** \class Window
+ *
+ *  The window class provides an abstraction class for window support.
+ *  It provides APIs for creating a window and receiving window events including 
+ *  update events, key events, and mouse events.
+ */
+
 class Window {
 public:
+  /** Create a window */
   static Window *create(GraphicsContext *graphicsContext, const char *title,
                         std::function<void(Window *thiz)> onWindowCreated,
                         int w = DISPLAY_WIDTH, int h = DISPLAY_HEIGHT);
   virtual ~Window() {}
+  /** Poll if the user requested the window to close */
   virtual bool shouldClose() = 0;
+  /** Poll for new events (non-blocking) */
   virtual void pollEvents() = 0;
   enum { DISPLAY_WIDTH = -1, DISPLAY_HEIGHT = -1 };
-  int w, h;
-  Surface *surface = nullptr;
-  std::function<void()> onUpdate = nullptr, onPaint = nullptr;
+  int w, /**< The window width */
+      h; /**< The window height */
+  Surface *surface = nullptr; /**< The window surface */
+  /**< An optional callback that will be called on window update events */
+  std::function<void()> onUpdate = nullptr,
+  /**< An optional callback that will be called on window paint events */
+      onPaint = nullptr;
+  /**< An optional callback that will be called on key events */
   std::function<void(KeyCode code, InputAction action)> onKey = nullptr;
+  /**< An optional callback that will be called on scroll events */
   std::function<void(double xoffset, double yoffset)> onScroll = nullptr;
+  /**< An optional callback that will be called when the mouse cursor position changes */
   std::function<void(double x, double y)> onCursorPos = nullptr;
+  /**< An optional callback that will be called on mouse button events */
   std::function<void(MouseButton button, InputAction action)> onMouseButton =
       nullptr;
 };

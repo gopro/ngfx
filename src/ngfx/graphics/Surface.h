@@ -22,14 +22,31 @@
 #include <cstdint>
 
 namespace ngfx {
+
+/** \class Surface
+ *
+ *  This class provides the base class for an abstraction of a surface such as a 
+ *  window surface or offscreen surface.  The difference between a 
+ *  surface and a texture is that a texture supports random sampling, 
+ *  and is typically stored in memory using a different layout to optimize 
+ *  for sampling.  The user can either create a surface via the Window API 
+ *  or wrap an existing surface that's created externally.
+ */
+
 class Surface {
 public:
   Surface() {}
+  /** Construct the surface object */
   Surface(uint32_t w, uint32_t h, bool offscreen = false)
       : w(w), h(h), offscreen(offscreen) {}
+  /** Wrap an existing window handle */
   static Surface* createFromWindowHandle(uint32_t w, uint32_t h, void* handle);
   virtual ~Surface() {}
-  uint32_t w = 0, h = 0;
+  /** The surface width */
+  uint32_t w = 0,
+  /** The surface height */
+      h = 0;
+  /** If true, the surface is offscreen */
   bool offscreen = false;
 };
 }; // namespace ngfx
