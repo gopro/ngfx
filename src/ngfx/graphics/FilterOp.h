@@ -32,7 +32,9 @@
 namespace ngfx {
 class FilterOp : public DrawOp {
 public:
-  /** Create a filter operation
+   /** Create a filter with external output texture */
+   FilterOp(GraphicsContext* ctx, Graphics* graphics, Texture* outputTexture, bool enableDepthStencil);
+  /** Create a filter operation, and allocate the output texture
    *  @param ctx The graphics context
    *  @param graphics The graphics interface
    *  @param dstWidth The destination width
@@ -51,10 +53,14 @@ public:
   void apply(GraphicsContext *ctx, CommandBuffer *commandBuffer,
              Graphics *graphics);
   /** The output texture */
-  std::unique_ptr<Texture> outputTexture;
+  Texture* outputTexture = nullptr;
   /** The depth / stencil attachment */
   std::unique_ptr<Texture> depthStencilTexture;
   /** The output framebuffer */
   std::unique_ptr<Framebuffer> outputFramebuffer;
+private:
+    void init(GraphicsContext* ctx, Graphics* graphics, uint32_t w, uint32_t h, bool enableDepthStencil);
+    /** If output texture is allocated internally, stores the output texture */
+    std::unique_ptr<Texture> outputTextureInternalPtr;
 };
 }; // namespace ngfx

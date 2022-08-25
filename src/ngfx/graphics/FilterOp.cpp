@@ -23,6 +23,28 @@
 using namespace ngfx;
 using namespace std;
 
+void FilterOp::init(GraphicsContext* ctx, Graphics* graphics, uint32_t w, uint32_t h, bool enableDepthStencil) {
+    if (enableDepthStencil) {
+        uint32_t depthStencilSize = w * h * FormatUtil::getBytesPerPixel(ctx->depthStencilFormat);
+        depthStencilTexture.reset(Texture::create(
+            ctx, graphics, nullptr, ctx->depthStencilFormat, depthStencilSize,
+            w, h, 1, 1, ImageUsageFlags(IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT),
+            TEXTURE_TYPE_2D, false, 1, nullptr
+        ));
+    }
+    vector<Framebuffer::Attachment> attachments = { {  outputTexture } };
+    if (enableDepthStencil)
+        attachments.push_back({ { depthStencilTexture.get() } });
+    outputFramebuffer.reset(Framebuffer::create(ctx->device,
+        ctx->defaultOffscreenRenderPass,
+        attachments, w, h));
+}
+
+FilterOp::FilterOp(GraphicsContext* ctx, Graphics* graphics, Texture* outputTexture, bool enableDepthStencil)
+    : DrawOp(ctx), outputTexture(outputTexture) {
+    init(ctx, graphics, outputTexture->w, outputTexture->h, enableDepthStencil);
+}
+
 FilterOp::FilterOp(GraphicsContext *ctx, Graphics *graphics, uint32_t dstWidth,
                    uint32_t dstHeight, bool enableDepthStencil)
     : DrawOp(ctx) {
@@ -31,25 +53,13 @@ FilterOp::FilterOp(GraphicsContext *ctx, Graphics *graphics, uint32_t dstWidth,
             FILTER_LINEAR, FILTER_LINEAR, FILTER_LINEAR,
             CLAMP_TO_EDGE, CLAMP_TO_EDGE, CLAMP_TO_EDGE
   };
-  outputTexture.reset(Texture::create(
+  outputTextureInternalPtr.reset(Texture::create(
       ctx, graphics, nullptr, PIXELFORMAT_RGBA8_UNORM, size, w, h, 1, 1,
       ImageUsageFlags(IMAGE_USAGE_SAMPLED_BIT | IMAGE_USAGE_TRANSFER_DST_BIT |
                       IMAGE_USAGE_COLOR_ATTACHMENT_BIT),
       TEXTURE_TYPE_2D, false, 1, &samplerDesc));
-  if (enableDepthStencil) {
-      uint32_t depthStencilSize = w * h * FormatUtil::getBytesPerPixel(ctx->depthStencilFormat);
-      depthStencilTexture.reset(Texture::create(
-          ctx, graphics, nullptr, ctx->depthStencilFormat, depthStencilSize,
-          w, h, 1, 1, ImageUsageFlags(IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT),
-          TEXTURE_TYPE_2D, false, 1, nullptr
-      ));
-  }
-  vector<Framebuffer::Attachment> attachments = { {  outputTexture.get() } };
-  if (enableDepthStencil)
-      attachments.push_back({ { depthStencilTexture.get() } });
-  outputFramebuffer.reset(Framebuffer::create(ctx->device,
-                                              ctx->defaultOffscreenRenderPass,
-                                              attachments, w, h));
+  outputTexture = outputTextureInternalPtr.get();
+  init(ctx, graphics, outputTexture->w, outputTexture->h, enableDepthStencil);
 }
 
 void FilterOp::apply(GraphicsContext *ctx, CommandBuffer *commandBuffer,

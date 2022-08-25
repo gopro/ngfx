@@ -24,13 +24,13 @@ int UnitTest::run() {
 	ctx->queue->waitIdle();
 	fs::path refFilePath = NGFX_TEST_DATA_REF_DIR "/" + testName + ".png";
 	if (genRefs) {
-		TextureUtil::storePNG(refFilePath.string(), op->outputTexture.get());
+		TextureUtil::storePNG(refFilePath.string(), op->outputTexture);
 		return 0;
 	}
 	fs::path filePath = "out/" + testName + ".png";
-	TextureUtil::storePNG(filePath.string(), op->outputTexture.get());
+	TextureUtil::storePNG(filePath.string(), op->outputTexture);
 	ImageData textureData;
-	TextureUtil::download(op->outputTexture.get(), textureData);
+	TextureUtil::download(op->outputTexture, textureData);
 	ImageData refImageData;
 	ImageUtil::load(refFilePath.string(), refImageData);
 	if (textureData.size != refImageData.size) {
