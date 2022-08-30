@@ -125,7 +125,14 @@ with the platform.
 
 Install CMake 3.19.1 (or newer)
 
-1.3) Install Third-Party Dependencies
+1.3) Set Environment Variables
+
+*On Windows 10 (or newer):*
+
+`.\build_scripts\windows\msvc-env.ps1`  
+`.\build_scripts\windows\set_env.ps1`
+
+1.4) Install Third-Party Dependencies
 
 *ngfx has the following dependencies:*
 
@@ -181,7 +188,7 @@ We provide a helper script to build
 
 - *os*: Windows, Linux, or Darwin (Mac OS)
 
-**4) Install**
+**5) Install**
 
 `cmake.exe --install *build_folder* --config *build_type*`
 
