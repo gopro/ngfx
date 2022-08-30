@@ -21,6 +21,7 @@
 #include "BlendUtil.h"
 #include "ngfx/core/HashUtil.h"
 #include "ngfx/graphics/GraphicsPipeline.h"
+#include <algorithm>
 #include <map>
 using namespace ngfx;
 using namespace std;
