@@ -37,7 +37,6 @@ void RDGPUCapture::create() {
     mod = dlopen("librenderdoc.so", RTLD_LAZY);
     if (!mod) {
         NGFX_ERR("Could not load renderdoc.so: %s", dlerror());
-        return NGL_ERROR_UNSUPPORTED;
     }
     pRENDERDOC_GetAPI RENDERDOC_GetAPI =
         dlsym(s->mod, "RENDERDOC_GetAPI");
