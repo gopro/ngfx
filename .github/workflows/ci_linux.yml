@@ -19,7 +19,7 @@ jobs:
       run: |
         export OS=Linux
         sudo apt -y update
-        sudo apt -y install ninja-build
+        sudo apt -y install ninja-build librenderdoc-dev
         python3 build_scripts/install_deps.py && \
         python3 build_scripts/configure.py && \
         python3 build_scripts/build.py
