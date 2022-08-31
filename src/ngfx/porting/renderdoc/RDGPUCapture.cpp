@@ -39,7 +39,7 @@ void RDGPUCapture::create() {
         NGFX_ERR("Could not load renderdoc.so: %s", dlerror());
     }
     pRENDERDOC_GetAPI RENDERDOC_GetAPI =
-        dlsym(s->mod, "RENDERDOC_GetAPI");
+        (pRENDERDOC_GetAPI)dlsym(mod, "RENDERDOC_GetAPI");
 #endif
     int ret = RENDERDOC_GetAPI(eRENDERDOC_API_Version_1_5_0, (void**)&rdApi);
     if (ret == 0) {
