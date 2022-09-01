@@ -82,8 +82,161 @@ static int testMatrixMultiply() {
     return compareData(dstData[0].data(), dstData[1].data(), DIM * DIM);
 }
 
+class ConvolveGPUOp : public ComputeOp {
+public:
+    ConvolveGPUOp(GraphicsContext* ctx, Graphics* graphics) 
+        : ComputeOp(ctx) {
+        createPipeline();
+        computePipeline->getBindings({ &U_UBO, &U_SRC_IMAGE, &U_DST_IMAGE});
+    }
+    virtual ~ConvolveGPUOp() {}
+    void apply(CommandBuffer* commandBuffer = nullptr,
+            Graphics* graphics = nullptr) override {
+        graphics->bindComputePipeline(commandBuffer, computePipeline);
+        graphics->bindUniformBuffer(commandBuffer, bUbo.get(), U_UBO, SHADER_STAGE_COMPUTE_BIT);
+        graphics->bindTextureAsImage(commandBuffer, srcTexture, U_SRC_IMAGE);
+        graphics->bindTextureAsImage(commandBuffer, dstTexture, U_DST_IMAGE);
+        graphics->dispatch(commandBuffer, dstTexture->w, dstTexture->h, 1, 1, 1, 1);
+    }
+    void setKernel(kernel_t kernel) {
+        vec4* kernelData = uboData.kernel_data;
+        uboData.kernel_w = kernel.w;
+        uboData.kernel_h = kernel.h;
+        for (int j = 0; j < (kernel.w * kernel.h); j++)
+            uboData.kernel_data[j] = vec4(kernel.data[j]);
+        bUbo.reset(createUniformBuffer(ctx, &uboData, sizeof(uboData)));
+    }
+    std::unique_ptr<Buffer> bUbo;
+    Texture* srcTexture = nullptr;
+    Texture* dstTexture = nullptr;
+protected:
+    void createPipeline() {
+        computePipeline = ComputePipeline::create(
+            ctx,
+            ComputeShaderModule::create(ctx->device, NGFX_TEST_DATA_DIR "/shaders/testConvolve.comp").get());
+    }
+    static const int MAX_KERNEL_SIZE = 64;
+    struct ConvolveUboData {
+        int kernel_w = 0, kernel_h = 0, padding_0 = 0, padding_1 = 0;
+        vec4 kernel_data[MAX_KERNEL_SIZE]{};
+    };
+    ConvolveUboData uboData;
+    ComputePipeline* computePipeline;
+    uint32_t U_UBO = 0, U_SRC_IMAGE = 1, U_DST_IMAGE = 2;
+};
+
+class GaussianOp : public ComputeOp {
+public:
+    GaussianOp(GraphicsContext* ctx) : ComputeOp(ctx) {}
+    virtual ~GaussianOp() {}
+    virtual void setRadius(int radius) {
+        this->radius = radius;
+        gaussianData.resize(radius + 1);
+        for (int j = 0; j < (radius + 1); j++) {
+            gaussianData[j] = gaussian(j);
+        }
+    }
+    vector<float> gaussianData;
+    int radius = 0;
+};
+
+class GaussianGPUOp : public GaussianOp {
+public:
+    GaussianGPUOp(GraphicsContext* ctx) : GaussianOp(ctx) {}
+    GaussianGPUOp(GraphicsContext* ctx, Graphics* graphics, Texture *srcTexture, Texture *dstTexture, int radius)
+        : GaussianGPUOp(ctx) {
+        setRadius(radius);
+        this->srcTexture = srcTexture;
+        this->dstTexture = dstTexture;
+        convolveGPUOp[0] = make_unique<ConvolveGPUOp>(ctx, graphics);
+        convolveGPUOp[1] = make_unique<ConvolveGPUOp>(ctx, graphics);
+        int w = srcTexture->w, h = srcTexture->h;
+        tex0.reset(Texture::create(ctx, graphics, nullptr, PIXELFORMAT_RGBA8_UNORM, w * h * 4, w, h,
+            1, 1, IMAGE_USAGE_STORAGE_BIT));
+        vector<float> kernelData(radius * 2 + 1);
+        for (int j = 0; j < kernelData.size(); j++) {
+            kernelData[j] = gaussianData[abs(j - radius)];
+        }
+        kernel_t kernel0 = { kernelData.data(), radius * 2 + 1, 1 };
+        kernel_t kernel1 = { kernelData.data(), 1, radius * 2 + 1 };
+        convolveGPUOp[0]->setKernel(kernel0);
+        convolveGPUOp[0]->srcTexture = srcTexture;
+        convolveGPUOp[0]->dstTexture = tex0.get();
+        convolveGPUOp[1]->setKernel(kernel1);
+        convolveGPUOp[1]->srcTexture = tex0.get();
+        convolveGPUOp[1]->dstTexture = dstTexture;
+    }
+    virtual ~GaussianGPUOp() {}
+    void apply(CommandBuffer* commandBuffer = nullptr,
+            Graphics* graphics = nullptr) override {
+        convolveGPUOp[0]->apply(commandBuffer, graphics);
+        convolveGPUOp[1]->apply(commandBuffer, graphics);
+    }
+    void setRadius(int radius) override {
+        GaussianOp::setRadius(radius);
+
+    }
+    Texture* srcTexture = nullptr;
+    Texture* dstTexture = nullptr;
+    std::unique_ptr<Texture> tex0;
+    std::unique_ptr<ConvolveGPUOp> convolveGPUOp[2];
+
+protected:
+    ComputePipeline* computePipeline;
+};
+
+#define TO_IMG(p) { (u8vec4*)p.data, p.w, p.h }
+
+class GaussianCPUOp : public GaussianOp {
+public:
+    GaussianCPUOp() : GaussianOp(nullptr) {}
+    GaussianCPUOp(const ImageData *srcImage, ImageData *dstImage, int radius) : GaussianOp(nullptr) {
+        this->srcImage = srcImage;
+        this->dstImage = dstImage;
+        setRadius(radius);
+    }
+    virtual ~GaussianCPUOp() {}
+    void apply(CommandBuffer* commandBuffer = nullptr,
+            Graphics* graphics = nullptr) override {
+        ImageData img0(srcImage->w, srcImage->h);
+        vector<float> kernelData(radius * 2 + 1);
+        for (int j = 0; j < kernelData.size(); j++) {
+            kernelData[j] = gaussianData[abs(j - radius)];
+        }
+        kernel_t kernel0 = { kernelData.data(), radius * 2 + 1, 1 };
+        kernel_t kernel1 = { kernelData.data(), 1, radius * 2 + 1 };
+        convolve(TO_IMG((*srcImage)), TO_IMG(img0), kernel0);
+        convolve(TO_IMG(img0), TO_IMG((*dstImage)), kernel1);
+    }
+    const ImageData *srcImage = nullptr;
+    ImageData* dstImage = nullptr;
+};
+
 static int testGaussian() {
-    //TODO
+    unique_ptr<GraphicsContext> ctx;
+    ctx.reset(GraphicsContext::create("compute_gaussian", false));
+    ctx->setSurface(nullptr);
+    unique_ptr<Graphics> graphics;
+    graphics.reset(Graphics::create(ctx.get()));
+    ImageData srcImage;
+    ImageUtil::load(NGFX_TEST_DATA_DIR "/images/bird.jpg", srcImage);
+    //test gaussian on GPU
+    unique_ptr<Texture> srcTexture(TextureUtil::load(ctx.get(), graphics.get(), srcImage, IMAGE_USAGE_STORAGE_BIT));
+    unique_ptr<Texture> dstTexture(Texture::create(ctx.get(), graphics.get(), nullptr, PIXELFORMAT_RGBA8_UNORM,
+        srcTexture->size, srcTexture->w, srcTexture->h, 1, 1, IMAGE_USAGE_STORAGE_BIT));
+    auto gpuOp = make_unique<GaussianGPUOp>(ctx.get(), graphics.get(), srcTexture.get(), dstTexture.get(), 3);
+    auto commandBuffer = ctx->computeCommandBuffer();
+    commandBuffer->begin();
+    gpuOp->apply(commandBuffer, graphics.get());
+    commandBuffer->end();
+    ctx->submit(commandBuffer);
+    ctx->queue->waitIdle();
+    TextureUtil::storePNG("tmp_gpu.png", dstTexture.get());
+    //compare against CPU
+    ImageData dstImage(srcImage.w, srcImage.h);
+    auto op = make_unique<GaussianCPUOp>(&srcImage, &dstImage, 3);
+    op->apply(nullptr, nullptr);
+    ImageUtil::storePNG("tmp.png", dstImage);
     return 1;
 }
 
@@ -93,6 +246,7 @@ public:
     SumGPUOp(GraphicsContext* ctx, const std::vector<float>& data) : SumGPUOp(ctx) {
         update(data);
         createPipeline();
+        computePipeline->getBindings({ &U_UBO, &SSBO_SRC, &SSBO_DST });
     }
     virtual ~SumGPUOp() {}
     void apply(CommandBuffer* commandBuffer = nullptr,

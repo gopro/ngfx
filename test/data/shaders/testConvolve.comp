@@ -1,0 +1,29 @@
+#version 320 es
+precision highp float;
+precision highp image2D;
+#define MAX_KERNEL_SIZE 64
+
+layout (std140, set = 0, binding = 0) uniform UBO_CS {
+	int kernel_w, kernel_h, padding_0, padding_1;
+	vec4 kernel_data[MAX_KERNEL_SIZE];
+
+}; 
+layout(rgba32f, set = 1, binding = 0) uniform readonly image2D src;
+layout(rgba32f, set = 2, binding = 0) uniform writeonly image2D dst;
+
+void main() {
+	int j = int(gl_GlobalInvocationID[1]),
+		k = int(gl_GlobalInvocationID[0]);
+	vec4 s = vec4(0.0f);
+	int kw2 = kernel_w / 2, kh2 = kernel_h / 2;
+	for (int i0 = 0; i0 < kernel_h; i0++) {
+		for (int i1 = 0; i1 < kernel_w; i1++) {
+			vec4 srcData = imageLoad(src, ivec2(k + i1 - kw2, j + i0 - kh2));
+			s += srcData * kernel_data[i0 * kernel_w + i1];
+		}
+	}
+	imageStore(dst, ivec2(k, j), s);
+}
+
+
+
