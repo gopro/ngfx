@@ -33,7 +33,7 @@ namespace ngfx {
 class FilterOp : public DrawOp {
 public:
    /** Create a filter with external output texture */
-   FilterOp(GraphicsContext* ctx, Graphics* graphics, Texture* outputTexture, bool enableDepthStencil);
+   FilterOp(GraphicsContext* ctx, Graphics* graphics, Texture* outputTexture, bool enableDepthStencil = false);
   /** Create a filter operation, and allocate the output texture
    *  @param ctx The graphics context
    *  @param graphics The graphics interface
