@@ -1,0 +1,24 @@
+#version 320 es
+precision highp float;
+
+layout (std140, set = 0, binding = 0) uniform UBO_CS {
+	int src_w, src_h;
+};
+layout(std430, set = 1, binding = 0) readonly buffer srcBuffer {
+	float data[];
+} src;
+layout(std430, set = 2, binding = 0) buffer dstBuffer {
+	float data[];
+} dst;
+
+void main() {
+	int dst_row = int(gl_GlobalInvocationID[1]);
+	int dst_offset = dst_row;
+	int src_offset = dst_row * src_w;
+	float c = 0.0f;
+	for (int j = 0; j < src_w; j++) {
+		c += src.data[src_offset + j];
+	}
+	dst.data[dst_offset] = c;
+}
+
