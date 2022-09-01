@@ -68,6 +68,6 @@ void MatrixMultiplyGPUOp::createPipeline() {
     return;
   computePipeline = ComputePipeline::create(
       ctx,
-      ComputeShaderModule::create(ctx->device, "matrixMultiply.comp").get());
+      ComputeShaderModule::create(ctx->device, NGFX_DATA_DIR "/matrixMultiply.comp").get());
   ctx->pipelineCache->add(key, computePipeline);
 }

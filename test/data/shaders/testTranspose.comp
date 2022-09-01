@@ -1,0 +1,13 @@
+#version 320 es
+precision highp float;
+precision highp image2D;
+
+layout(rgba32f, set = 1, binding = 0) uniform readonly image2D src;
+layout(rgba32f, set = 2, binding = 0) uniform writeonly image2D dst;
+
+void main() {
+	int j = int(gl_GlobalInvocationID[1]),
+		k = int(gl_GlobalInvocationID[0]);
+	vec4 srcData = imageLoad(src, ivec2(j, k));
+    imageStore(dst, ivec2(k, j), srcData);
+}

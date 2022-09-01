@@ -72,6 +72,7 @@ add_test(NAME buffer_download_subregion COMMAND test_buffer download_subregion)
 add_test(NAME buffer_map COMMAND test_buffer map)
 
 add_test(NAME compute_matrix_multiply COMMAND test_compute matrix_multiply)
+add_test(NAME compute_sum COMMAND test_compute sum)
 add_test(NAME compute_gaussian COMMAND test_compute gaussian)
 add_test(NAME compute_particles COMMAND test_compute particles)
 add_test(NAME compute_colorspace_conversion COMMAND test_compute colorspace_conversion)
