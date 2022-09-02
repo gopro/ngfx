@@ -2,6 +2,7 @@
 #include "ngfx/graphics/GraphicsContext.h"
 #include "ngfx/computeOps/MatrixMultiplyGPUOp.h"
 #include "ngfx/computeOps/MatrixMultiplyCPUOp.h"
+#include "ngfx/computeOps/ConvolveGPUOp.h"
 #include "test/common/UnitTest.h"
 #include "ngfx/graphics/BufferUtil.h"
 #include "ngfx/graphics/ImageData.h"
@@ -82,49 +83,6 @@ static int testMatrixMultiply() {
     return compareData(dstData[0].data(), dstData[1].data(), DIM * DIM);
 }
 
-class ConvolveGPUOp : public ComputeOp {
-public:
-    ConvolveGPUOp(GraphicsContext* ctx, Graphics* graphics) 
-        : ComputeOp(ctx) {
-        createPipeline();
-        computePipeline->getBindings({ &U_UBO, &U_SRC_IMAGE, &U_DST_IMAGE});
-    }
-    virtual ~ConvolveGPUOp() {}
-    void apply(CommandBuffer* commandBuffer = nullptr,
-            Graphics* graphics = nullptr) override {
-        graphics->bindComputePipeline(commandBuffer, computePipeline);
-        graphics->bindUniformBuffer(commandBuffer, bUbo.get(), U_UBO, SHADER_STAGE_COMPUTE_BIT);
-        graphics->bindTextureAsImage(commandBuffer, srcTexture, U_SRC_IMAGE);
-        graphics->bindTextureAsImage(commandBuffer, dstTexture, U_DST_IMAGE);
-        graphics->dispatch(commandBuffer, dstTexture->w, dstTexture->h, 1, 1, 1, 1);
-    }
-    void setKernel(kernel_t kernel) {
-        vec4* kernelData = uboData.kernel_data;
-        uboData.kernel_w = kernel.w;
-        uboData.kernel_h = kernel.h;
-        for (int j = 0; j < (kernel.w * kernel.h); j++)
-            uboData.kernel_data[j] = vec4(kernel.data[j]);
-        bUbo.reset(createUniformBuffer(ctx, &uboData, sizeof(uboData)));
-    }
-    std::unique_ptr<Buffer> bUbo;
-    Texture* srcTexture = nullptr;
-    Texture* dstTexture = nullptr;
-protected:
-    void createPipeline() {
-        computePipeline = ComputePipeline::create(
-            ctx,
-            ComputeShaderModule::create(ctx->device, NGFX_TEST_DATA_DIR "/shaders/testConvolve.comp").get());
-    }
-    static const int MAX_KERNEL_SIZE = 64;
-    struct ConvolveUboData {
-        int kernel_w = 0, kernel_h = 0, padding_0 = 0, padding_1 = 0;
-        vec4 kernel_data[MAX_KERNEL_SIZE]{};
-    };
-    ConvolveUboData uboData;
-    ComputePipeline* computePipeline;
-    uint32_t U_UBO = 0, U_SRC_IMAGE = 1, U_DST_IMAGE = 2;
-};
-
 class GaussianOp : public ComputeOp {
 public:
     GaussianOp(GraphicsContext* ctx) : ComputeOp(ctx) {}
@@ -159,12 +117,8 @@ public:
         }
         kernel_t kernel0 = { kernelData.data(), radius * 2 + 1, 1 };
         kernel_t kernel1 = { kernelData.data(), 1, radius * 2 + 1 };
-        convolveGPUOp[0]->setKernel(kernel0);
-        convolveGPUOp[0]->srcTexture = srcTexture;
-        convolveGPUOp[0]->dstTexture = tex0.get();
-        convolveGPUOp[1]->setKernel(kernel1);
-        convolveGPUOp[1]->srcTexture = tex0.get();
-        convolveGPUOp[1]->dstTexture = dstTexture;
+        convolveGPUOp[0]->update(srcTexture, tex0.get(), kernel0);
+        convolveGPUOp[1]->update(dstTexture, tex0.get(), kernel1);
     }
     virtual ~GaussianGPUOp() {}
     void apply(CommandBuffer* commandBuffer = nullptr,
