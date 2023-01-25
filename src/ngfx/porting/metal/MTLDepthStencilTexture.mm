@@ -27,6 +27,7 @@ void MTLDepthStencilTexture::create(MTLGraphicsContext* ctx, uint32_t w, uint32_
     this->format = fmt;
     auto device = ctx->mtlDevice.v;
     MTLTextureDescriptor *desc = [MTLTextureDescriptor new];
+    desc.textureType = ::MTLTextureType2D;
     desc.width = w;
     desc.height = h;
     desc.mipmapLevelCount = 1;

@@ -27,7 +27,7 @@ class MTLGraphicsContext;
 class MTLDepthStencilTexture {
 public:
   void create(MTLGraphicsContext *ctx, uint32_t w, uint32_t h,
-              ::MTLPixelFormat fmt = ::MTLPixelFormatDepth24Unorm_Stencil8);
+              ::MTLPixelFormat fmt = ::MTLPixelFormatDepth32Float_Stencil8);
   id<MTLTexture> v;
   ::MTLPixelFormat format;
 };

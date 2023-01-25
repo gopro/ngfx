@@ -63,7 +63,7 @@ else()
   if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       pkg_check_modules(GLM REQUIRED glm)
   elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-      set(GLM_INCLUDE_DIRS /usr/local/include)
+      pkg_check_modules(GLM REQUIRED glm)
   endif()
 endif()
 

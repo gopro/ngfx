@@ -22,7 +22,7 @@
 #pragma once
 #include "ngfx/regex/RegexUtil.h"
 #include <ctime>
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 #include <map>
 #include <regex>
 #include <shaderc/shaderc.hpp>
