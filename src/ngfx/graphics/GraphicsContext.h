@@ -71,6 +71,8 @@ public:
       @param graphics      The graphics interface for recording graphics commands to the command buffer */
   virtual void beginRenderPass(CommandBuffer *commandBuffer,
                                Graphics *graphics) {
+    if (currentImageIndex == -1)
+        currentImageIndex = 0;
     auto framebuffer = swapchainFramebuffers[currentImageIndex];
     uint32_t w = framebuffer->w, h = framebuffer->h;
     graphics->beginRenderPass(commandBuffer, defaultRenderPass, framebuffer,
