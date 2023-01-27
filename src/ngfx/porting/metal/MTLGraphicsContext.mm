@@ -32,7 +32,11 @@ void MTLGraphicsContext::create(const char* appName, bool enableDepthStencil, bo
     mtlDevice.create();
     mtlCommandQueue = [mtlDevice.v newCommandQueue];
     depthFormat = PixelFormat(MTLPixelFormatDepth32Float);
-    depthStencilFormat = PixelFormat(MTLPixelFormatDepth32Float_Stencil8);
+    if (mtlDevice.v.depth24Stencil8PixelFormatSupported) {
+        depthStencilFormat = PixelFormat(MTLPixelFormatDepth24Unorm_Stencil8);
+    } else {
+        depthStencilFormat = PixelFormat(MTLPixelFormatDepth32Float_Stencil8);
+    }
 }
 MTLGraphicsContext::~MTLGraphicsContext() {}
 
