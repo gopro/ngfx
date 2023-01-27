@@ -61,7 +61,12 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         if (!surface->offscreen && mtkView) mtkView.depthStencilPixelFormat = ::MTLPixelFormat(depthStencilFormat);
         else if (!surface->offscreen) {
             mtl_surface->depthStencilTexture.reset(new MTLDepthStencilTexture);
-            mtl_surface->depthStencilTexture->create(this, mtl_surface->w, mtl_surface->h);
+            if (mtlDevice.v.depth24Stencil8PixelFormatSupported) { 
+                mtl_surface->depthStencilTexture->create(this, mtl_surface->w, 
+                    mtl_surface->h, ::MTLPixelFormatDepth24Unorm_Stencil8);
+            } else {
+                mtl_surface->depthStencilTexture->create(this, mtl_surface->w, mtl_surface->h);
+            }
         }
         if (numSamples != 1) {
             NGFX_TODO("");
