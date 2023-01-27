@@ -26,7 +26,8 @@ void MTLCommandBuffer::commit() {
     [v commit];
 }
 void MTLCommandBuffer::waitUntilCompleted() {
-    if (v.status == MTLCommandBufferStatusCommitted) {
-        [v waitUntilCompleted];
-    }
+   //if (v.status == MTLCommandBufferStatusCommitted) {
+   if (v && v.status == MTLCommandBufferStatusCommitted) {
+       [v waitUntilCompleted];
+   }
 }
