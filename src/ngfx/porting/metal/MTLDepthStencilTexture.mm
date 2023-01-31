@@ -23,11 +23,16 @@
 #include "ngfx/porting/metal/MTLGraphicsContext.h"
 using namespace ngfx;
 
-void MTLDepthStencilTexture::create(MTLGraphicsContext* ctx, uint32_t w, uint32_t h, ::MTLPixelFormat fmt) {
+void MTLDepthStencilTexture::create(MTLGraphicsContext* ctx, uint32_t w, uint32_t h, 
+                                    ::MTLTextureType textureType,
+                                    ::MTLPixelFormat fmt, uint32_t samples) {
     this->format = fmt;
+    this->textureType = textureType;
+    this->numSamples = samples;
     auto device = ctx->mtlDevice.v;
     MTLTextureDescriptor *desc = [MTLTextureDescriptor new];
-    desc.textureType = ::MTLTextureType2D;
+    desc.textureType = textureType;
+    desc.sampleCount = this->numSamples;
     desc.width = w;
     desc.height = h;
     desc.mipmapLevelCount = 1;

@@ -21,6 +21,7 @@
 #pragma once
 #include "ngfx/graphics/Surface.h"
 #include "ngfx/porting/metal/MTLDepthStencilTexture.h"
+#include "ngfx/porting/metal/MTLTexture.h"
 #include "ngfx/porting/metal/MTLUtil.h"
 #include <memory>
 #include <MetalKit/MetalKit.h>
@@ -32,7 +33,9 @@ public:
   inline CAMetalLayer *getMetalLayer() { return (CAMetalLayer *)view.layer; }
   NSView *view = nullptr;
   id<CAMetalDrawable> drawable;
+  std::unique_ptr<MTLDepthStencilTexture> msaaDepthStencilTexture;
   std::unique_ptr<MTLDepthStencilTexture> depthStencilTexture;
+  std::unique_ptr<MTLTexture> msaaColorTexture;
 };
 MTL_CAST(Surface);
 } // namespace ngfx

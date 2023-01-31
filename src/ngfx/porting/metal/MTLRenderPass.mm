@@ -55,12 +55,27 @@ MTLRenderPassDescriptor* MTLRenderPass::getDescriptor(MTLGraphicsContext* mtlCtx
         else {
             mtlRenderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];
             auto colorAttachment = mtlRenderPassDescriptor.colorAttachments[0];
-            colorAttachment.texture = surface->drawable.texture;
+            if (mtlCtx->numSamples == 1) {
+                colorAttachment.texture = surface->drawable.texture;
+            } else {
+                colorAttachment.texture = surface->msaaColorTexture.get()->v;
+                colorAttachment.resolveTexture = surface->drawable.texture;
+            }
             colorAttachments.push_back(colorAttachment);
             auto depthAttachment = mtlRenderPassDescriptor.depthAttachment;
-            depthAttachment.texture = surface->depthStencilTexture.get()->v;
+            if (mtlCtx->numSamples == 1) {
+                depthAttachment.texture = surface->depthStencilTexture.get()->v;
+            } else {
+                depthAttachment.resolveTexture = surface->depthStencilTexture.get()->v;
+                depthAttachment.texture = surface->msaaDepthStencilTexture.get()->v;
+            }
             auto stencilAttachment = mtlRenderPassDescriptor.stencilAttachment;
-            stencilAttachment.texture = surface->depthStencilTexture.get()->v;
+            if (mtlCtx->numSamples == 1) {
+                stencilAttachment.texture = surface->depthStencilTexture.get()->v;
+            } else {
+                stencilAttachment.texture = surface->msaaDepthStencilTexture.get()->v;
+                stencilAttachment.resolveTexture = surface->depthStencilTexture.get()->v;
+            }
         }
     } else {
         mtlRenderPassDescriptor = [MTLRenderPassDescriptor renderPassDescriptor];

@@ -43,7 +43,8 @@
 namespace ngfx {
 class D3DGraphicsContext : public GraphicsContext {
 public:
-  void create(const char *appName, bool enableDepthStencil, bool debug);
+  void create(const char *appName, bool enableDepthStencil, bool debug,
+              uint32_t samples = 1);
   virtual ~D3DGraphicsContext();
   void setSurface(Surface *surface) override;
   CommandBuffer *drawCommandBuffer(int32_t index = -1) override;

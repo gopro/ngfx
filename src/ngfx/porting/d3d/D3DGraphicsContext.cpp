@@ -27,10 +27,11 @@ using namespace std;
 using Microsoft::WRL::ComPtr;
 #define MAX_DESCRIPTORS 1024
 
-void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil, bool debug) {
+void D3DGraphicsContext::create(const char *appName, bool enableDepthStencil, bool debug, uint32_t samples) {
   HRESULT hResult;
   this->debug = debug;
   this->enableDepthStencil = enableDepthStencil;
+  this->numSamples = samples;
 
   UINT dxgiFactoryFlags = 0;
 #ifdef ENABLE_GPU_CAPTURE_SUPPORT

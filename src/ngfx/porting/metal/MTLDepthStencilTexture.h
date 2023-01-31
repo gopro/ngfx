@@ -27,8 +27,12 @@ class MTLGraphicsContext;
 class MTLDepthStencilTexture {
 public:
   void create(MTLGraphicsContext *ctx, uint32_t w, uint32_t h,
-              ::MTLPixelFormat fmt = ::MTLPixelFormatDepth32Float_Stencil8);
+              ::MTLTextureType textureType,
+              ::MTLPixelFormat fmt = ::MTLPixelFormatDepth32Float_Stencil8,
+              uint32_t samples = 1);
   id<MTLTexture> v;
   ::MTLPixelFormat format;
+  ::MTLTextureType textureType;
+  uint32_t numSamples;
 };
 } // namespace ngfx

@@ -57,7 +57,8 @@ public:
   static GraphicsContext *create(const char *appName,
                                  bool enableDepthStencil = false,
                                  bool debug = true,
-                                 OnSelectDepthStencilFormats onSelectDepthStencilFormats = nullptr);
+                                 OnSelectDepthStencilFormats onSelectDepthStencilFormats = nullptr,
+                                 uint32_t samples = 1);
   virtual ~GraphicsContext() {}
   /** Set the surface for the graphics context 
    *  This can be an offscreen or onscreen surface.

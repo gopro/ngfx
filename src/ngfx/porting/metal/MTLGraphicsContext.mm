@@ -26,9 +26,11 @@
 using namespace ngfx;
 using namespace std;
 
-void MTLGraphicsContext::create(const char* appName, bool enableDepthStencil, bool debug) {
+void MTLGraphicsContext::create(const char* appName, bool enableDepthStencil, bool debug, uint32_t samples) {
     this->enableDepthStencil = enableDepthStencil;
     this->debug = debug;
+    this->numSamples = samples;
+
     mtlDevice.create();
     mtlCommandQueue = [mtlDevice.v newCommandQueue];
     depthFormat = PixelFormat(MTLPixelFormatDepth32Float);
@@ -59,21 +61,44 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         surfaceFormat = defaultOffscreenSurfaceFormat;
     }
     if (surface && numSamples != 1) {
-        NGFX_TODO("");
+        if (mtkView) {
+            mtkView.sampleCount = numSamples;
+        } else {
+            if (!surface->offscreen) {
+                mtl_surface->msaaColorTexture.reset(new MTLTexture);
+                mtl_surface->msaaColorTexture->create(this, nullptr, 
+                    mtlSurfaceFormat, 0, mtl_surface->w, 
+                    mtl_surface->h, 1, 1, IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+                    ::MTLTextureType2DMultisample, false, nullptr, numSamples); 
+            }    
+        
+        }
     }
+
     if (surface && enableDepthStencil) {
         if (!surface->offscreen && mtkView) mtkView.depthStencilPixelFormat = ::MTLPixelFormat(depthStencilFormat);
         else if (!surface->offscreen) {
             mtl_surface->depthStencilTexture.reset(new MTLDepthStencilTexture);
             if (mtlDevice.v.depth24Stencil8PixelFormatSupported) { 
                 mtl_surface->depthStencilTexture->create(this, mtl_surface->w, 
-                    mtl_surface->h, ::MTLPixelFormatDepth24Unorm_Stencil8);
+                    mtl_surface->h, ::MTLTextureType2D, 
+                    ::MTLPixelFormatDepth24Unorm_Stencil8);
             } else {
-                mtl_surface->depthStencilTexture->create(this, mtl_surface->w, mtl_surface->h);
+                mtl_surface->depthStencilTexture->create(this, mtl_surface->w, mtl_surface->h,
+                    ::MTLTextureType2D);
             }
         }
         if (numSamples != 1) {
-            NGFX_TODO("");
+            mtl_surface->msaaDepthStencilTexture.reset(new MTLDepthStencilTexture);
+            if (mtlDevice.v.depth24Stencil8PixelFormatSupported) {
+                mtl_surface->msaaDepthStencilTexture->create(this, 
+                    mtl_surface->w, mtl_surface->h, ::MTLTextureType2DMultisample, 
+                    ::MTLPixelFormatDepth24Unorm_Stencil8, numSamples);
+            } else {
+                mtl_surface->msaaDepthStencilTexture->create(this, 
+                    mtl_surface->w, mtl_surface->h, ::MTLTextureType2DMultisample,
+                    ::MTLPixelFormatDepth32Float_Stencil8, numSamples);
+            }
         }
     }
     std::optional<AttachmentDescription> depthAttachmentDescription;
@@ -164,10 +189,11 @@ void MTLGraphicsContext::submit(CommandBuffer* commandBuffer) {
 }
 
 GraphicsContext* GraphicsContext::create(const char* appName, bool enableDepthStencil, bool debug,
-                                         OnSelectDepthStencilFormats onSelectDepthStencilFormats) {
+                                         OnSelectDepthStencilFormats onSelectDepthStencilFormats, 
+                                         uint32_t samples) {
     NGFX_LOG("debug: %s", (debug)?"true": "false");
     auto mtlGraphicsContext = new MTLGraphicsContext();
     mtlGraphicsContext->onSelectDepthStencilFormats = onSelectDepthStencilFormats;
-    mtlGraphicsContext->create(appName, enableDepthStencil, debug);
+    mtlGraphicsContext->create(appName, enableDepthStencil, debug, samples);
     return mtlGraphicsContext;
 }
