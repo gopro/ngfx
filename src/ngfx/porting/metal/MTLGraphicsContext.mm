@@ -18,6 +18,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+#include <cmath>
 
 #include "ngfx/porting/metal/MTLGraphicsContext.h"
 #include "ngfx/porting/metal/MTLSurface.h"
@@ -29,9 +30,9 @@ using namespace std;
 void MTLGraphicsContext::create(const char* appName, bool enableDepthStencil, bool debug, uint32_t samples) {
     this->enableDepthStencil = enableDepthStencil;
     this->debug = debug;
-    this->numSamples = samples;
 
     mtlDevice.create();
+    this->numSamples = mtlDevice.getSupportedSampleCount(samples);
     mtlCommandQueue = [mtlDevice.v newCommandQueue];
     depthFormat = PixelFormat(MTLPixelFormatDepth32Float);
     if (mtlDevice.v.depth24Stencil8PixelFormatSupported) {

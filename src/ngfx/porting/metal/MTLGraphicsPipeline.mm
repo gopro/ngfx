@@ -50,7 +50,7 @@ void MTLGraphicsPipeline::create(MTLGraphicsContext* ctx, const State& state, MT
         colorAttachment.writeMask = state.colorWriteMask;
     }
     
-    pipelineStateDescriptor.rasterSampleCount = state.numSamples;
+    pipelineStateDescriptor.rasterSampleCount = ctx->mtlDevice.getSupportedSampleCount(state.numSamples);
     pipelineStateDescriptor.vertexDescriptor = vertexDescriptor;
     pipelineStateDescriptor.depthAttachmentPixelFormat = depthStencilFormat;
     const std::vector<MTLPixelFormat> stencilFormats = {

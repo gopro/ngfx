@@ -27,6 +27,7 @@ namespace ngfx {
 class MTLDevice : public Device {
 public:
   void create();
+  uint32_t getSupportedSampleCount(uint32_t count);
   id<MTLDevice> v;
 };
 MTL_CAST(Device);

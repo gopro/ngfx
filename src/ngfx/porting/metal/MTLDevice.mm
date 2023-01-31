@@ -18,6 +18,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
+#include <cmath>
 
 #include "ngfx/porting/metal/MTLDevice.h"
 #include "ngfx/core/DebugUtil.h"
@@ -29,4 +30,13 @@ void MTLDevice::create() {
     v = MTLCreateSystemDefaultDevice();
     NSCAssert(v, @"Failed to create metal device");
     _ngfx_mtl_device = v;
+}
+
+uint32_t MTLDevice::getSupportedSampleCount(uint32_t samples) {
+    uint32_t supportedSamples = std::pow(2, std::ceil(log(samples)/log(2)));
+    while (supportedSamples != 1 && [v supportsTextureSampleCount: supportedSamples] == NO) {
+        if (supportedSamples != 1)
+            supportedSamples >>= 1;
+    }
+    return supportedSamples;
 }
