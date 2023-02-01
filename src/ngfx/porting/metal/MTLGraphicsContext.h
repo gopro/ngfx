@@ -62,7 +62,7 @@ public:
   uint32_t numSamples = 1;
 
 private:
-  void createBindings();
+  void createBindings(bool onscreen);
   void createSwapchainFramebuffers(uint32_t w, uint32_t h);
 };
 MTL_CAST(GraphicsContext);

@@ -44,10 +44,16 @@ void MTLGraphicsContext::create(const char* appName, bool enableDepthStencil, bo
 MTLGraphicsContext::~MTLGraphicsContext() {}
 
 void MTLGraphicsContext::setSurface(Surface *surface) {
+    if (!surface) {
+    NGFX_LOG("debug: %s", (debug)?"true": "false");
+        NGFX_LOG("debug: in setSurface, surface is nullptr");
+        return;
+    }
+
     defaultOffscreenSurfaceFormat = PixelFormat(MTLPixelFormatRGBA8Unorm);
     MTLSurface *mtl_surface = mtl(surface);
     MTKView *mtkView = nullptr;
-    if (surface && !surface->offscreen) {
+    if (!surface->offscreen) {
         offscreen = false;
         NSView *view = mtl_surface->view;
         if ([view class] == [MTKView class]) {
@@ -60,8 +66,13 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
     } else {
         offscreen = true;
         surfaceFormat = defaultOffscreenSurfaceFormat;
+        mtl_surface->colorTexture.reset(new MTLTexture);
+        mtl_surface->colorTexture->create(this, nullptr, ::MTLPixelFormat(surfaceFormat), 0,
+            mtl_surface->w, mtl_surface->h, 1, 1,
+            IMAGE_USAGE_COLOR_ATTACHMENT_BIT, ::MTLTextureType2D,
+            false, nullptr, 1);
     }
-    if (surface && numSamples != 1) {
+    if (numSamples != 1) {
         if (mtkView) {
             mtkView.sampleCount = numSamples;
         } else {
@@ -76,9 +87,9 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         }
     }
 
-    if (surface && enableDepthStencil) {
+    if (enableDepthStencil) {
         if (!surface->offscreen && mtkView) mtkView.depthStencilPixelFormat = ::MTLPixelFormat(depthStencilFormat);
-        else if (!surface->offscreen) {
+        else {
             mtl_surface->depthStencilTexture.reset(new MTLDepthStencilTexture);
             if (mtlDevice.v.depth24Stencil8PixelFormatSupported) { 
                 mtl_surface->depthStencilTexture->create(this, mtl_surface->w, 
@@ -106,7 +117,7 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
     if (enableDepthStencil)
         depthAttachmentDescription = { depthStencilFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
     else depthAttachmentDescription = nullopt;
-    if (surface && !surface->offscreen) {
+    if (!surface->offscreen) {
         RenderPassConfig onscreenRenderPassConfig = {
             { { surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE } },
             depthAttachmentDescription, false, numSamples
@@ -120,12 +131,12 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         false,
         numSamples};
     mtlDefaultOffscreenRenderPass = (MTLRenderPass*)getRenderPass(offscreenRenderPassConfig);
-    if (surface && !surface->offscreen) {
+    if (!surface->offscreen) {
         CAMetalLayer* metalLayer = mtl_surface->getMetalLayer();
         numSwapchainImages = metalLayer.maximumDrawableCount;
         createSwapchainFramebuffers(metalLayer.drawableSize.width, metalLayer.drawableSize.height);
     }
-    createBindings();
+    createBindings(!surface->offscreen);
     this->surface = surface;
 }
 
@@ -158,12 +169,14 @@ void MTLGraphicsContext::createSwapchainFramebuffers(uint32_t w, uint32_t h) {
     }
 }
 
-void MTLGraphicsContext::createBindings() {
+void MTLGraphicsContext::createBindings(bool onscreen) {
     device = &mtlDevice;
     pipelineCache = &mtlPipelineCache;
-    swapchainFramebuffers.resize(numSwapchainImages);
-    for (int j = 0; j<mtlSwapchainFramebuffers.size(); j++)
-        swapchainFramebuffers[j] = &mtlSwapchainFramebuffers[j];
+    if (onscreen) {
+        swapchainFramebuffers.resize(numSwapchainImages);
+        for (int j = 0; j<mtlSwapchainFramebuffers.size(); j++)
+            swapchainFramebuffers[j] = &mtlSwapchainFramebuffers[j];
+    }
     defaultRenderPass = mtlDefaultRenderPass;
     defaultOffscreenRenderPass = mtlDefaultOffscreenRenderPass;
 }

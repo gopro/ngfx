@@ -1,5 +1,6 @@
 include(CTest)
 
+set(NGFX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/..)
 set(NGFX_TEST_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/data)
 set(NGFX_TEST_DATA_REF_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data/ref)
 file(GLOB_RECURSE NGFX_TEST_DATA_SHADER_FILES data/shaders/*)
@@ -23,6 +24,7 @@ set_target_properties(test_${name} PROPERTIES
     RESOURCE "${RESOURCE_FILES}"
     MACOSX_BUNDLE_INFO_PLIST ${NGFX_DIR}/src/ngfx/porting/appkit/Info.plist
 )
+target_include_directories(test_${name} PUBLIC . ${NGFX_DIR}/src/ngfx)
 else()
 add_executable(test_${name} ${TEST_SOURCE_FILES})
 endif()

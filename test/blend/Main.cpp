@@ -56,8 +56,8 @@ public:
         : FilterOp(ctx, graphics, w, h), blendMode(blendMode) {
         drawSrcTextureOp = make_unique<DrawInputTextureOp>(ctx, graphics, vec2(20, 80), vec2(180, 240), vec4(20, 160, 240, 128));
         drawDstTextureOp = make_unique<DrawInputTextureOp>(ctx, graphics, vec2(80, 20), vec2(240, 180), vec4(240, 20, 160, 255));
-        drawTextureOp = make_unique<DrawTextureOp>(ctx, drawDstTextureOp->outputTexture.get());
-        drawTextureBlendOp = make_unique<DrawTextureOp>(ctx, drawSrcTextureOp->outputTexture.get(),
+        drawTextureOp = make_unique<DrawTextureOp>(ctx, drawDstTextureOp->outputTexture);
+        drawTextureBlendOp = make_unique<DrawTextureOp>(ctx, drawSrcTextureOp->outputTexture,
             [&](GraphicsPipeline::State& state) {
                 state.setBlendMode(blendMode);
         });

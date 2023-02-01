@@ -35,6 +35,7 @@ public:
   id<CAMetalDrawable> drawable;
   std::unique_ptr<MTLDepthStencilTexture> msaaDepthStencilTexture;
   std::unique_ptr<MTLDepthStencilTexture> depthStencilTexture;
+  std::unique_ptr<MTLTexture> colorTexture;
   std::unique_ptr<MTLTexture> msaaColorTexture;
 };
 MTL_CAST(Surface);
