@@ -203,7 +203,7 @@ if (NGFX_GRAPHICS_BACKEND_VULKAN)
 elseif(NGFX_GRAPHICS_BACKEND_DIRECT3D12)
 build_tool(compile_shaders_dx12)
 elseif(NGFX_GRAPHICS_BACKEND_METAL)
-#build_tool(compile_shaders_mtl)
+build_tool(compile_shaders_mtl)
 endif()
 
 function(write_pkg_config_file target)

@@ -33,6 +33,8 @@ void MTLDevice::create() {
 }
 
 uint32_t MTLDevice::getSupportedSampleCount(uint32_t samples) {
+    if (samples <= 1) 
+        return 1;
     uint32_t supportedSamples = std::pow(2, std::ceil(log(samples)/log(2)));
     while (supportedSamples != 1 && [v supportsTextureSampleCount: supportedSamples] == NO) {
         if (supportedSamples != 1)
