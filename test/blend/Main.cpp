@@ -67,8 +67,8 @@ public:
         drawSrcTextureOp->apply(ctx, commandBuffer, graphics);
         drawDstTextureOp->apply(ctx, commandBuffer, graphics);
         commandBuffer->end();
-        ctx->queue->submit(commandBuffer);
-        ctx->queue->waitIdle();
+        ctx->submit(commandBuffer);
+        graphics->waitIdle(commandBuffer);
     }
     void draw(CommandBuffer *commandBuffer, Graphics *graphics) override {
         drawTextureOp->draw(commandBuffer, graphics);

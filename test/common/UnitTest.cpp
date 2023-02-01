@@ -20,8 +20,8 @@ int UnitTest::run() {
 	commandBuffer->begin();
 	op->apply(ctx.get(), commandBuffer, graphics.get());
 	commandBuffer->end();
-	ctx->queue->submit(commandBuffer);
-	ctx->queue->waitIdle();
+	ctx->submit(commandBuffer);
+	graphics->waitIdle(commandBuffer);
 	fs::path refFilePath = NGFX_TEST_DATA_REF_DIR "/" + testName + ".png";
 	if (genRefs) {
 		TextureUtil::storePNG(refFilePath.string(), op->outputTexture);
