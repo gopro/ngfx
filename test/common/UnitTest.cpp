@@ -10,11 +10,12 @@ UnitTest::UnitTest(std::string testName, int outputWidth, int outputHeight, bool
 	GraphicsContext::OnSelectDepthStencilFormats onSelectDepthStencilFormats) :
 		testName(testName), outputWidth(outputWidth), outputHeight(outputHeight) {
 	ctx.reset(GraphicsContext::create(testName.c_str(), enableDepthStencil, true, onSelectDepthStencilFormats));
-	surface.reset(new Surface(outputWidth, outputHeight, true));
+	surface.reset(Surface::create(outputWidth, outputHeight, true));
 	graphics.reset(Graphics::create(ctx.get()));
 	ctx->setSurface(surface.get());
 	genRefs = getenv("GEN_REFS") ? true : false;
 }
+
 int UnitTest::run() {
 	auto commandBuffer = ctx->drawCommandBuffer();
 	commandBuffer->begin();

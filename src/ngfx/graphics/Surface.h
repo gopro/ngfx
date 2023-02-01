@@ -35,10 +35,8 @@ namespace ngfx {
 
 class Surface {
 public:
-  Surface() {}
-  /** Construct the surface object */
-  Surface(uint32_t w, uint32_t h, bool offscreen = false)
-      : w(w), h(h), offscreen(offscreen) {}
+  static Surface *create();
+  static Surface *create(uint32_t w, uint32_t h, bool offscreen = false);
   /** Wrap an existing window handle */
   static Surface* createFromWindowHandle(uint32_t w, uint32_t h, void* handle);
   virtual ~Surface() {}

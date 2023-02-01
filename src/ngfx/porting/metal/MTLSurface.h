@@ -29,14 +29,15 @@
 namespace ngfx {
 class MTLSurface : public Surface {
 public:
+  void create(uint32_t w, uint32_t h, bool offscreen = true);
   virtual ~MTLSurface() {}
   inline CAMetalLayer *getMetalLayer() { return (CAMetalLayer *)view.layer; }
   NSView *view = nullptr;
   id<CAMetalDrawable> drawable;
-  std::unique_ptr<MTLDepthStencilTexture> msaaDepthStencilTexture;
-  std::unique_ptr<MTLDepthStencilTexture> depthStencilTexture;
-  std::unique_ptr<MTLTexture> colorTexture;
-  std::unique_ptr<MTLTexture> msaaColorTexture;
+  std::unique_ptr<MTLDepthStencilTexture> msaaDepthStencilTexture = nullptr;
+  std::unique_ptr<MTLDepthStencilTexture> depthStencilTexture = nullptr;
+  std::unique_ptr<MTLTexture> colorTexture = nullptr;
+  std::unique_ptr<MTLTexture> msaaColorTexture = nullptr;
 };
 MTL_CAST(Surface);
 } // namespace ngfx

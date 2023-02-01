@@ -27,3 +27,21 @@ Surface* Surface::createFromWindowHandle(uint32_t w, uint32_t h, void* handle) {
 	NGFX_ERR("not supported");
 	return nullptr;
 }
+
+Surface *Surface::create() {
+    MTLSurface *surface = new MTLSurface();
+    surface->create(0, 0);
+    return surface;
+}
+
+Surface *Surface::create(uint32_t w, uint32_t h, bool offscreen) {
+    MTLSurface *surface = new MTLSurface();
+    surface->create(w, h, offscreen);
+    return surface;
+}
+
+void MTLSurface::create(uint32_t w, uint32_t h, bool offscreen) {
+    this->w = w;
+    this->h = h;
+    this->offscreen = offscreen;
+}

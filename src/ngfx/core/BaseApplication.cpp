@@ -34,8 +34,10 @@ void BaseApplication::init() {
   auto &ctx = graphicsContext;
   ctx.reset(GraphicsContext::create(appName.c_str(), enableDepthStencil));
   if (offscreen) {
-    Surface surface(w, h, true);
-    graphicsContext->setSurface(&surface);
+    Surface *surface = Surface::create(w, h, true);
+    graphicsContext->setSurface(surface);
+    /* TODO(Henry) */
+    /* delete surface */
   } else {
     createWindow();
   }
