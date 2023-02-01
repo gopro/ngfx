@@ -127,12 +127,13 @@ private:
       const MacroDefinitions& defines, std::string& spv, bool verbose = true,
       shaderc_optimization_level optimizationLevel = shaderc_optimization_level_performance,
       std::string parentPath = ".");
-  inline int compileShaderGLSL(const std::string& src, shaderc_shader_kind shaderKind,
+  inline int compileShaderGLSL(const std::string& src, 
+          const std::string &parentPath, shaderc_shader_kind shaderKind,
           const MacroDefinitions& defines, std::string& spv,
           bool verbose = true,
           shaderc_optimization_level optimizationLevel =
           shaderc_optimization_level_performance) {
-      return compileShaderToSPV(src, shaderc_source_language_glsl, shaderKind, defines, spv, verbose, optimizationLevel);
+      return compileShaderToSPV(src, shaderc_source_language_glsl, shaderKind, defines, spv, verbose, optimizationLevel, parentPath);
   }
   int compileShaderGLSL(std::string filename, const MacroDefinitions &defines,
                         const std::string &outDir,

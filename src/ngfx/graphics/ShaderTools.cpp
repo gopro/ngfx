@@ -218,7 +218,7 @@ int ShaderTools::compileShaderGLSL(string filename,
   shaderc_shader_kind shaderKind = toShaderKind(ext);
   if ((flags & REMOVE_UNUSED_VARIABLES) || (flags & FLIP_VERT_Y) ) {
     string spv;
-    V(compileShaderGLSL(src, shaderKind, defines, spv, false));
+    V(compileShaderGLSL(src, parentPath, shaderKind, defines, spv, false));
     V(convertSPVToGLSL(spv, shaderKind, dst, flags));
     src = move(dst);
   }
@@ -226,7 +226,7 @@ int ShaderTools::compileShaderGLSL(string filename,
     V(patchShaderLayoutsGLSL(src, dst));
     src = move(dst);
   }
-  V(compileShaderGLSL(src, shaderKind, defines, dst));
+  V(compileShaderGLSL(src, parentPath, shaderKind, defines, dst));
   writeFile(outFileName, dst);
   outFiles.push_back(outFileName);
   return 0;
