@@ -32,11 +32,13 @@ ConvolveGPUOp::ConvolveGPUOp(GraphicsContext* ctx, Graphics* graphics)
 ConvolveGPUOp::~ConvolveGPUOp() {}
 void ConvolveGPUOp::apply(CommandBuffer* commandBuffer,
     Graphics* graphics) {
+    graphics->beginComputePass(commandBuffer);
     graphics->bindComputePipeline(commandBuffer, computePipeline);
     graphics->bindUniformBuffer(commandBuffer, bUbo.get(), U_UBO, SHADER_STAGE_COMPUTE_BIT);
     graphics->bindTextureAsImage(commandBuffer, srcTexture, U_SRC_IMAGE);
     graphics->bindTextureAsImage(commandBuffer, dstTexture, U_DST_IMAGE);
     graphics->dispatch(commandBuffer, dstTexture->w, dstTexture->h, 1, 1, 1, 1);
+    graphics->endComputePass(commandBuffer);
 }
 void ConvolveGPUOp::update(Texture* srcTexture, Texture* dstTexture, kernel_t kernel) {
     this->srcTexture = srcTexture;

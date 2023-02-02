@@ -35,6 +35,7 @@ MatrixMultiplyGPUOp::MatrixMultiplyGPUOp(GraphicsContext *ctx, MatrixParam src0,
 MatrixMultiplyGPUOp::~MatrixMultiplyGPUOp() {}
 void MatrixMultiplyGPUOp::apply(CommandBuffer *commandBuffer,
                                 Graphics *graphics) {
+  graphics->beginComputePass(commandBuffer);
   graphics->bindComputePipeline(commandBuffer, computePipeline);
   graphics->bindUniformBuffer(commandBuffer, bUbo.get(), U_UBO,
                               SHADER_STAGE_COMPUTE_BIT);
@@ -45,6 +46,7 @@ void MatrixMultiplyGPUOp::apply(CommandBuffer *commandBuffer,
   graphics->bindStorageBuffer(commandBuffer, bDst.get(), SSBO_DST,
                               SHADER_STAGE_COMPUTE_BIT, false);
   graphics->dispatch(commandBuffer, dst.w, dst.h, 1, 1, 1, 1);
+  graphics->endComputePass(commandBuffer);
 }
 
 void MatrixMultiplyGPUOp::update(MatrixParam src0, MatrixParam src1) {

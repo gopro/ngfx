@@ -73,7 +73,7 @@ static int testMatrixMultiply() {
     op->apply(commandBuffer, graphics.get());
     commandBuffer->end();
     ctx->submit(commandBuffer);
-    ctx->queue->waitIdle();
+    graphics->waitIdle(commandBuffer);
     op->bDst->download(dstData[0].data(), dstData[0].size() * sizeof(dstData[0][0]));
 
     //compare against CPU
@@ -184,7 +184,7 @@ static int testGaussian() {
     gpuOp->apply(commandBuffer, graphics.get());
     commandBuffer->end();
     ctx->submit(commandBuffer);
-    ctx->queue->waitIdle();
+    graphics->waitIdle(commandBuffer);
     TextureUtil::storePNG("tmp_gpu.png", dstTexture.get());
     //compare against CPU
     ImageData dstImage(srcImage.w, srcImage.h);
@@ -235,7 +235,7 @@ protected:
         const std::string key = "sumGPUOp";
         computePipeline = ComputePipeline::create(
             ctx,
-            ComputeShaderModule::create(ctx->device, NGFX_TEST_DATA_DIR "/shaders/testComputeSum.comp").get());
+            ComputeShaderModule::create(ctx->device, NGFX_TEST_DATA_DIR "/testComputeSum.comp").get());
     }
     ComputePipeline* computePipeline;
     uint32_t U_UBO = 0, SSBO_SRC = 1, SSBO_DST = 2;
@@ -258,7 +258,7 @@ static int testSum() {
     op->apply(commandBuffer, graphics.get());
     commandBuffer->end();
     ctx->submit(commandBuffer);
-    ctx->queue->waitIdle();
+    graphics->waitIdle(commandBuffer);
     vector<float> dst(1024);
     op->bDst->download(dst.data(), dst.size() * sizeof(dst[0]));
     float sum = 0.0f;
