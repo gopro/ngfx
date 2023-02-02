@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
     string dataDir = (argc > 2) ? argv[2] : NGFX_DATA_DIR;
     string outDir = dataDir;
     const vector<string> paths = { dataDir };
-    const vector<string> extensions = {".vert", ".frag", /*".comp"*/};
+    const vector<string> extensions = {".vert", ".frag", ".comp"};
     auto glslFiles = FileUtil::findFiles(paths, extensions);
     if (filter != "") {
         glslFiles = FileUtil::filterFiles(glslFiles, filter);

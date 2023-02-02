@@ -57,5 +57,5 @@ void ConvolveGPUOp::setKernel(kernel_t kernel) {
 void ConvolveGPUOp::createPipeline() {
     computePipeline = ComputePipeline::create(
         ctx,
-        ComputeShaderModule::create(ctx->device, NGFX_DATA_DIR "/shaders/convolve.comp").get());
+        ComputeShaderModule::create(ctx->device, NGFX_DATA_DIR "/convolve.comp").get());
 }

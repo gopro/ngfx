@@ -44,16 +44,10 @@ void MTLGraphicsContext::create(const char* appName, bool enableDepthStencil, bo
 MTLGraphicsContext::~MTLGraphicsContext() {}
 
 void MTLGraphicsContext::setSurface(Surface *surface) {
-    if (!surface) {
-    NGFX_LOG("debug: %s", (debug)?"true": "false");
-        NGFX_LOG("debug: in setSurface, surface is nullptr");
-        return;
-    }
-
     defaultOffscreenSurfaceFormat = PixelFormat(MTLPixelFormatRGBA8Unorm);
     MTLSurface *mtl_surface = mtl(surface);
     MTKView *mtkView = nullptr;
-    if (!surface->offscreen) {
+    if (surface && !surface->offscreen) {
         offscreen = false;
         NSView *view = mtl_surface->view;
         if ([view class] == [MTKView class]) {
@@ -63,7 +57,7 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         CAMetalLayer *layer = mtl_surface->getMetalLayer();
         mtlSurfaceFormat = layer.pixelFormat;
         surfaceFormat = PixelFormat(mtlSurfaceFormat);
-    } else {
+    } else if (surface) {
         offscreen = true;
         surfaceFormat = defaultOffscreenSurfaceFormat;
         mtl_surface->colorTexture.reset(new MTLTexture);
@@ -72,7 +66,7 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
             IMAGE_USAGE_COLOR_ATTACHMENT_BIT, ::MTLTextureType2D,
             false, nullptr, 1);
     }
-    if (numSamples != 1) {
+    if (surface && numSamples != 1) {
         if (mtkView) {
             mtkView.sampleCount = numSamples;
         } else {
@@ -87,7 +81,7 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         }
     }
 
-    if (enableDepthStencil) {
+    if (surface && enableDepthStencil) {
         if (!surface->offscreen && mtkView) mtkView.depthStencilPixelFormat = ::MTLPixelFormat(depthStencilFormat);
         else {
             mtl_surface->depthStencilTexture.reset(new MTLDepthStencilTexture);
@@ -117,7 +111,7 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
     if (enableDepthStencil)
         depthAttachmentDescription = { depthStencilFormat, nullopt, nullopt, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_DONT_CARE };
     else depthAttachmentDescription = nullopt;
-    if (!surface->offscreen) {
+    if (surface && !surface->offscreen) {
         RenderPassConfig onscreenRenderPassConfig = {
             { { surfaceFormat, IMAGE_LAYOUT_UNDEFINED, IMAGE_LAYOUT_PRESENT_SRC, ATTACHMENT_LOAD_OP_CLEAR, ATTACHMENT_STORE_OP_STORE } },
             depthAttachmentDescription, false, numSamples
@@ -131,12 +125,12 @@ void MTLGraphicsContext::setSurface(Surface *surface) {
         false,
         numSamples};
     mtlDefaultOffscreenRenderPass = (MTLRenderPass*)getRenderPass(offscreenRenderPassConfig);
-    if (!surface->offscreen) {
+    if (surface && !surface->offscreen) {
         CAMetalLayer* metalLayer = mtl_surface->getMetalLayer();
         numSwapchainImages = metalLayer.maximumDrawableCount;
         createSwapchainFramebuffers(metalLayer.drawableSize.width, metalLayer.drawableSize.height);
     }
-    createBindings(!surface->offscreen);
+    createBindings(surface && !surface->offscreen);
     this->surface = surface;
 }
 
