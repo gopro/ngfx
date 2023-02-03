@@ -13,7 +13,7 @@ public:
             FILTER_LINEAR, FILTER_LINEAR, FILTER_NEAREST,
             CLAMP_TO_EDGE, CLAMP_TO_EDGE, CLAMP_TO_EDGE
         };
-        texture.reset(TextureUtil::load(ctx, graphics, NGFX_TEST_DATA_DIR "/input.png", IMAGE_USAGE_SAMPLED_BIT, TEXTURE_TYPE_2D, false, 1, &samplerDesc));
+        texture.reset(TextureUtil::load(ctx, graphics, NGFX_TEST_DATA_DIR "/download.png", IMAGE_USAGE_SAMPLED_BIT, TEXTURE_TYPE_2D, false, 1, &samplerDesc));
         drawTextureOp = make_unique<DrawTextureOp>(ctx, texture.get());
     }
     void draw(CommandBuffer* commandBuffer, Graphics* graphics) override {
