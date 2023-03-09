@@ -24,6 +24,8 @@
 
 namespace ngfx {
 class D3DShaderModule {
+	// informative filename source for the shader
+    std::string mFilename;
 public:
   bool initFromFile(const std::string &filename);
   virtual ~D3DShaderModule();

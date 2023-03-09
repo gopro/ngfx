@@ -30,6 +30,7 @@ using namespace std;
 
 bool D3DShaderModule::initFromFile(const std::string &filename) {
   File file;
+  mFilename = filename;
 #ifdef USE_PRECOMPILED_SHADERS
   if (!file.read(filename + ".hlsl.dxc")) {
       NGFX_ERR("cannot read file: %s.hlsl.dxc", filename.c_str());
