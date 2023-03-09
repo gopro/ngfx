@@ -22,5 +22,5 @@
 #include <string>
 #define PREFERRED_NUM_SWAPCHAIN_IMAGES 3 /*<! The preferred number of swapchain images */
 #define ENABLE_VSYNC /*<! Enable vertical sync */
-#define USE_PRECOMPILED_SHADERS /*<! Use precompiled shaders */
+//#define USE_PRECOMPILED_SHADERS /*<! Use precompiled shaders */
 #define ORIGIN_BOTTOM_LEFT /*<! Define the NDC origin as bottom left */
