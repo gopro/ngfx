@@ -113,7 +113,7 @@ void D3DGraphicsContext::createDescriptorHeaps() {
       MAX_DESCRIPTORS * 3, D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
   d3dSamplerDescriptorHeap.create(
       d3dDevice.v.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, MAX_DESCRIPTORS,
-      D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE);
+      D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE); // the maximum number of samplers in a shader-visible descriptor heap is only 2048 (see D3D12 Hardware Tiers on MSDN)
   d3dDsvDescriptorHeap.create(d3dDevice.v.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV,
                               MAX_DESCRIPTORS, D3D12_DESCRIPTOR_HEAP_FLAG_NONE);
 }
