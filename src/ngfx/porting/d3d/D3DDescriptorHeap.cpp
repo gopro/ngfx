@@ -36,7 +36,15 @@ void D3DDescriptorHeap::create(ID3D12Device *d3dDevice,
   D3D_TRACE(head->cpuHandle = v->GetCPUDescriptorHandleForHeapStart());
   D3D_TRACE(descriptorSize =
                 d3dDevice->GetDescriptorHandleIncrementSize(type));
-  D3D_TRACE(head->gpuHandle = v->GetGPUDescriptorHandleForHeapStart());
+  if (flags != D3D12_DESCRIPTOR_HEAP_FLAG_NONE)
+  {
+      D3D_TRACE(head->gpuHandle = v->GetGPUDescriptorHandleForHeapStart());
+  }
+  else
+  {
+      head->gpuHandle.ptr = 0;
+  }
+  
   head->parent = this;
   index = 0;
   state.resize(maxDescriptors);
@@ -59,7 +67,10 @@ bool D3DDescriptorHeap::getHandle(D3DDescriptorHandle &handle) {
         }
     }
     handle.cpuHandle.ptr = head->cpuHandle.ptr + descriptorSize * index;
-    handle.gpuHandle.ptr = head->gpuHandle.ptr + descriptorSize * index;
+    if (head->gpuHandle.ptr)
+        handle.gpuHandle.ptr = head->gpuHandle.ptr + descriptorSize * index;
+    else
+        handle.gpuHandle.ptr = 0;
     handle.parent = this;
     state[index] = 1;
     numDescriptors++;
