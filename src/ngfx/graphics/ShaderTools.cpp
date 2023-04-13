@@ -216,9 +216,10 @@ int ShaderTools::compileShaderGLSL(string filename,
   src = FileUtil::readFile(inFileName);
   string ext = FileUtil::splitExt(inFileName)[1];
   shaderc_shader_kind shaderKind = toShaderKind(ext);
+  shaderc_optimization_level optimization_level = flags & REMOVE_UNUSED_VARIABLES ? shaderc_optimization_level_performance: shaderc_optimization_level_zero;
   if ((flags & REMOVE_UNUSED_VARIABLES) || (flags & FLIP_VERT_Y) ) {
     string spv;
-    V(compileShaderGLSL(src, shaderKind, defines, spv, false));
+    V(compileShaderGLSL(src, shaderKind, defines, spv, false, optimization_level));
     V(convertSPVToGLSL(spv, shaderKind, dst, flags));
     src = move(dst);
   }
@@ -226,7 +227,7 @@ int ShaderTools::compileShaderGLSL(string filename,
     V(patchShaderLayoutsGLSL(src, dst));
     src = move(dst);
   }
-  V(compileShaderGLSL(src, shaderKind, defines, dst));
+  V(compileShaderGLSL(src, shaderKind, defines, dst, true, optimization_level));
   writeFile(outFileName, dst);
   outFiles.push_back(outFileName);
   return 0;
@@ -523,7 +524,7 @@ string ShaderTools::parseReflectionData(const json &reflectData, string ext) {
   if (ext == ".vert") {
     json *inputs = getEntry(reflectData, "inputs");
     contents += "INPUT_ATTRIBUTES " + to_string(inputs ? inputs->size() : 0) + "\n";
-    if (inputs) 
+    if (inputs)
         for (const json &input : *inputs) {
           string inputName = input["name"];
           string inputSemantic = "";
